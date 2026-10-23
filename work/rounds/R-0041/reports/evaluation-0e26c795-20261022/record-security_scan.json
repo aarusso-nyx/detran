@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-security_scan.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:31:13.964Z",
+  "finished_at": "2026-10-22T02:31:14.992Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/security_scan/SR-ffa05f55b235592d.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"security-scan\",\"kind\":\"security_scan\"},\"timestamp\":\"2026-10-22T02:31:13.584Z\",\"status\":\"fail\",\"deterministic\":false,\"command\":\"pnpm audit --json\",\"command_hash\":\"f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247\",\"tier\":\"L0\",\"exit_code\":1,\"findings\":[{\"severity\":\"error\",\"code\":\"SECURITY_SCAN_HIGH_OVER_THRESHOLD\",\"message\":\"8 high-severity vulnerabilities exceed REVIEW threshold 5.\"}],\"metrics\":{\"tool\":\"pnpm\",\"total_vulnerabilities\":37,\"critical\":0,\"high\":8,\"moderate\":25,\"low\":4,\"info\":0,\"pass_max_high\":0,\"review_max_high\":5},\"id\":\"SR-ffa05f55b235592d\"}}}}\n",
+  "stderr": ""
+}

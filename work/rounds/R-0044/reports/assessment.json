@@ -1,0 +1,75 @@
+{
+  "round": "R-0044",
+  "baseline": "a97e6def6cc4b80d65c5ab0ee9579241f0b33446",
+  "source_commit": "981ffa22c1a676cb8dee0bb18fa41afe7fbba843",
+  "scope": "Independent dependency corrections; native runtime preservation",
+  "disposition": "25 audit occurrences corrected; 13 remain blocked, not waived or PASS",
+  "audit": {
+    "before": {
+      "critical": 0,
+      "high": 8,
+      "moderate": 26,
+      "low": 4,
+      "total": 38,
+      "advisoryEntries": 26,
+      "uniqueGHSA": 16
+    },
+    "after": {
+      "critical": 0,
+      "high": 1,
+      "moderate": 11,
+      "low": 1,
+      "total": 13,
+      "advisoryEntries": 7
+    },
+    "removedOccurrences": 25,
+    "removedAdvisoryEntries": 19,
+    "newAdvisoryEntries": 0,
+    "denominatorBefore": 1099,
+    "denominatorAfter": 1099,
+    "lockPackageVersionsBefore": 1027,
+    "lockPackageVersionsAfter": 1027,
+    "rawFinal": "audit-final-native-exact.json",
+    "comparison": "audit-comparison-safe.json",
+    "securityStatus": "Not clean; native-runtime advisories remain blocked under unchanged thresholds. No native security_scan PASS claimed."
+  },
+  "native_closure": {
+    "nodes": 211,
+    "exact_baseline_metadata_and_snapshots": true
+  },
+  "validation": {
+    "frontend_passed": 10508,
+    "frontend_todo_preserved": 147,
+    "passed_frontend_files": 392,
+    "skipped_frontend_files_preserved": 1,
+    "native_metadata_passed": 31,
+    "safe_commands_passed": 9,
+    "ledger": "raw/command-ledger-final.json.gz",
+    "provenance": "Guard, 31 metadata tests and first six frontend suites ran on850eba8c; RAIT spans the one-line coverage-context correction981ffa22. Tested direct contexts and guard bytes unchanged. The final complete native closure matches baseline exactly. Earlier builds/typecheck ran on superseded dd2ad455; unchanged Angular code/dependencies retain their exact candidate provenance."
+  },
+  "blockers": [
+    {
+      "scope": "approved native Vitest4.1.11/Vite7.3.6 dependency graph",
+      "occurrences": 13,
+      "severity": {
+        "high": 1,
+        "moderate": 11,
+        "low": 1
+      },
+      "next_action": "Separately review and approve a patched native runtime and its control bindings before implementation/adoption; do not change guards or assertions in this package."
+    }
+  ],
+  "preservation": {
+    "DEVAI": "2.6.3",
+    "STYNX": "1.5.3",
+    "assertions": "unchanged",
+    "thresholds": "unchanged",
+    "closed_rounds": "unchanged",
+    "C6": "blocked"
+  },
+  "limitations": [
+    "Complete audit covers the consulted advisory database, not universal vulnerability absence.",
+    "Host diagnostics are not native scorecard readings or a new overall scorecard.",
+    "No merge, release or round closure is performed."
+  ]
+}

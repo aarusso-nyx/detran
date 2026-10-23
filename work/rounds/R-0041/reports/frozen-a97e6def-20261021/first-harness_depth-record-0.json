@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-harness_depth-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:12:58.588Z",
+  "finished_at": "2026-10-22T01:13:00.309Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/harness_depth/SR-cf5491049c28bc2e.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"harness-depth\",\"kind\":\"harness_depth\"},\"timestamp\":\"2026-10-21T23:55:15.459Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-harness-depth\",\"command_hash\":\"eb6e3d4fd4f531b34a604012a272cf19dee306e2a797ec7331616b6bcf4f0007\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"workflow_count\":2,\"jobs_count\":9,\"steps_p95\":17,\"steps_median\":8,\"total_matrix_combinations\":0,\"threshold_pass\":3},\"id\":\"SR-cf5491049c28bc2e\"}}}}\n",
+  "stderr": ""
+}

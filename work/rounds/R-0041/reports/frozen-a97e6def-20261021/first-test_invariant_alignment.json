@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "test_invariant_alignment",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:54:39.720Z",
+  "finished_at": "2026-10-21T23:54:40.750Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"test_invariant_alignment\"},\"members\":[{\"kind\":\"test_invariant_alignment\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"test_invariant_alignment\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run test_invariant_alignment\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"test-invariant-alignment\\\",\\\"kind\\\":\\\"test_invariant_alignment\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:54:40.479Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-test-invariant-alignment\\\",\\\"command_hash\\\":\\\"f75642ea0a13026f643eef75b5e282f7d677fd30c4041b55ef3be3ec4b1faa5f\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"invariant_count\\\":12,\\\"unaligned_count\\\":0},\\\"id\\\":\\\"SR-83b7e6d5bf6f251f\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

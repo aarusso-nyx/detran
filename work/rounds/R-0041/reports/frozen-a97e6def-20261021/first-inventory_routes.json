@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_routes",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"framework\":\"angular\",\"scanDirs\":[\"apps/rait/web/src\",\"apps/portal/web/src\",\"apps/dashboard/web/src\",\"apps/teat/web/src\",\"apps/teat/mobile/src\",\"apps/boat/mobile/src\"]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:51:29.072Z",
+  "finished_at": "2026-10-21T23:51:30.554Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_routes\"},\"members\":[{\"kind\":\"inventory_routes\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_routes\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_routes\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-00e7a5b6777f6a1c\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:routes\\\",\\\"kind\\\":\\\"inventory_routes\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:51:29.778Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense routes --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran\\\",\\\"command_hash\\\":\\\"38b091b5f39250a9354d1b9fb96aba861eba835dd7e2abcec5921fd4ab9c4e13\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":650,\\\"metrics\\\":{\\\"route_count\\\":92,\\\"route_file_count\\\":22,\\\"routes_hash\\\":\\\"718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

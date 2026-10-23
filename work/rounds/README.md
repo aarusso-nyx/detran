@@ -1,9 +1,10 @@
 # rounds
 
-> **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
-> S1 security prerequisites integrated through #196–#201 and #203. R-0025/JW-01 remain open.
-> S2 is paused pending approval of its [exact backend-first packet](R-0025/reports/P4-02-S2-approval-packet.md).
-> Scorecard evaluation/remediation and protected local/recovery work stay separate.
+> **Current boundary — 2026-10-23:** S1 integrated; S2 approved via #205,
+> implemented in draft #211, not integrated. R-0025/JW-01 remain open.
+> [Approved RAIT schedule](../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md) separates integration/validation blockers
+> from Owner-approved parallel S3 packet preparation. S3 runtime and #211 merge remain paused.
+> Preserve local, recovery and separate scorecard work.
 
 **Authority:** Architect (Constitution Article 6).
 
@@ -62,7 +63,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0022 | `stynx-sse-tenancy` — ação 7c; parada 2026-10-14 no checkpoint `codex/detran-r22-adoption-160` `c22ea63a`, sem PR (A-C2-16) | parada            | —                                                      | —       | Opus 5.5                                            |
 | R-0023 | `authz-unification` — ação 7d; checkpoint em branch                                                                         | aberta            | —                                                      | —       | Sol 6                                               |
 | R-0024 | `stynx-dedup` — ação 7b                                                                                                     | proposta (C-0002) | —                                                      | —       | Opus 5.5                                            |
-| R-0025 | `rait-web-wiring` — admissibilidade #193 e escopo/replay S1 #203 integrados; audit exato YELLOW; S2 proposta/pausada        | aberta            | #193, #194, #196–#201, #203                            | —       | Sol 6                                               |
+| R-0025 | `rait-web-wiring` — admissibilidade #193 e escopo/replay S1 #203 integrados; audit YELLOW; S2 #205 aprovada; #211 draft     | aberta            | #193, #194, #196–#201, #203                            | —       | Sol 6                                               |
 | R-0026 | `dashboard-wiring` — ação 6; checkpoint em branch                                                                           | aberta            | —                                                      | —       | Opus 5.5                                            |
 | R-0027 | `portal-delegations` — ação 6; checkpoint em branch                                                                         | aberta            | —                                                      | —       | Sol 6                                               |
 | R-0028 | `boat-wiring` — ação 6; checkpoint em branch                                                                                | aberta            | —                                                      | —       | Opus 5.5                                            |
@@ -78,6 +79,9 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0038 | `C2` — ferramentas e Angular integrados por PR #208; CI pós-integração aprovada                                             | fechada           | [#208](https://github.com/aarusso-nyx/detran/pull/208) | PC-0024 | Codex                                               |
 | R-0039 | `C3/C4` — normalização suplementar integrada; lacunas preservadas                                                           | fechada           | [#209](https://github.com/aarusso-nyx/detran/pull/209) | PC-0025 | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
+| R-0042 | Seven scorecard measurement gaps (BL-0024); collector fidelity and separate provider repair; C6 held                        | aberta            | —                                                      | —       | Codex                                               |
+| R-0043 | E2E fixture isolation                                                                                                       | aberta            | —                                                      | —       | Codex                                               |
+| R-0044 | Current dependency vulnerabilities                                                                                          | aberta            | —                                                      | —       | Codex                                               |
 | R-0045 | Existing full-workspace lint                                                                                                | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)

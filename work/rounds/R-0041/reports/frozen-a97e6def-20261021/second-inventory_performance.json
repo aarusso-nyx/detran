@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_performance",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:15:13.674Z",
+  "finished_at": "2026-10-22T01:15:14.428Z",
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_performance\"},\"members\":[{\"kind\":\"inventory_performance\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_performance\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"review\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":1,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run inventory_performance\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory-performance\\\",\\\"kind\\\":\\\"inventory_performance\\\"},\\\"timestamp\\\":\\\"2026-10-22T01:15:14.312Z\\\",\\\"status\\\":\\\"review\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-inventory-performance\\\",\\\"command_hash\\\":\\\"ec3a466a92a730be6f15acd079d66bb789519e0b69ce38bfc3876fd15f1a43e6\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"INVENTORY_PERFORMANCE_SLOW\\\",\\\"message\\\":\\\"Inventory p95 2989ms above pass threshold 2000ms.\\\"}],\\\"metrics\\\":{\\\"kinds_observed\\\":7,\\\"total_observations\\\":17,\\\"overall_p95_ms\\\":2989,\\\"overall_mean_ms\\\":572,\\\"threshold_pass\\\":2000,\\\"threshold_review\\\":5000,\\\"inventory_api_count\\\":2,\\\"inventory_api_p95_ms\\\":778,\\\"inventory_api_mean_ms\\\":523,\\\"inventory_coverage_count\\\":3,\\\"inventory_coverage_p95_ms\\\":154,\\\"inventory_coverage_mean_ms\\\":77,\\\"inventory_data_handling_count\\\":3,\\\"inventory_data_handling_p95_ms\\\":72,\\\"inventory_data_handling_mean_ms\\\":24,\\\"inventory_data_model_count\\\":2,\\\"inventory_data_model_p95_ms\\\":62,\\\"inventory_data_model_mean_ms\\\":31,\\\"inventory_dep_graph_count\\\":2,\\\"inventory_dep_graph_p95_ms\\\":2917,\\\"inventory_dep_graph_mean_ms\\\":2268,\\\"inventory_rbac_count\\\":3,\\\"inventory_rbac_p95_ms\\\":141,\\\"inventory_rbac_mean_ms\\\":47,\\\"inventory_routes_count\\\":2,\\\"inventory_routes_p95_ms\\\":2989,\\\"inventory_routes_mean_ms\\\":1820},\\\"id\\\":\\\"SR-92e549a78c559adc\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":1}]}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

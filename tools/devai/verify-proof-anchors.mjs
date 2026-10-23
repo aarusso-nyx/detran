@@ -139,7 +139,7 @@ async function readProofLines(repositoryRoot) {
           `${relativePath}:${sequence}: round_id ${String(value.round_id)} does not match ${filename}`,
         );
       }
-      if (!['generic', 'historical-gap'].includes(value.kind)) {
+      if (!['generic', 'historical-gap', 'test'].includes(value.kind)) {
         fail(
           `${relativePath}:${sequence}: unsupported proof kind ${String(value.kind)}`,
         );
@@ -263,12 +263,12 @@ async function readAnchors(repositoryRoot, linesByKey) {
     // physical bytes. The installed verifier validates historical-gap payloads
     // and cutoff eligibility in the second half of verify:proof-anchors.
     if (
-      kind === 'historical-gap' &&
+      ['historical-gap', 'test'].includes(kind) &&
       (record.proof_path !== anchoredLine.relativePath ||
         record.proof_sequence !== anchoredLine.sequence ||
         record.proof_sha256 !== sha256(anchoredLine.bytes))
     ) {
-      errors.push(`invalid historical-gap anchor for ${display(anchoredLine)}`);
+      errors.push(`invalid ${kind} anchor for ${display(anchoredLine)}`);
       continue;
     }
 

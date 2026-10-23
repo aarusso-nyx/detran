@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-docs_drift.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:52:55.794Z",
+  "finished_at": "2026-10-22T02:52:57.614Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/docs_drift/SR-60d979f0af2f5b73.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"docs-drift\",\"kind\":\"docs_drift\"},\"timestamp\":\"2026-10-22T02:52:55.490Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-docs-drift\",\"command_hash\":\"d4eb8adce11fa0786742effb54c913b93dccac3cd1fb44c6b8258decdad01d01\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\",\"message\":\"README.md carries no schema-count claim (preferred state).\",\"file\":\"README.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\",\"message\":\"CLAUDE.md carries no schema-count claim (preferred state).\",\"file\":\"CLAUDE.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_DECISION_RANGE_CLAIM\",\"message\":\"README.md carries no decision-range claim (preferred state).\",\"file\":\"README.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_CAP_CHECK_DISABLED\",\"message\":\"worktree_cap_source not configured; cap-coherence check skipped.\"}],\"metrics\":{\"schema_file_count\":121,\"claims_checked\":2,\"drift_count\":0},\"id\":\"SR-60d979f0af2f5b73\"}}}}\n",
+  "stderr": ""
+}

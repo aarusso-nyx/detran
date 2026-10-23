@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "trace_resolution",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:50:56.023Z",
+  "finished_at": "2026-10-21T23:50:56.985Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"trace_resolution\"},\"members\":[{\"kind\":\"trace_resolution\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"trace_resolution\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run trace_resolution\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-40c1aa0acba482e8\\\",\\\"sensor\\\":{\\\"name\\\":\\\"trace-resolve\\\",\\\"kind\\\":\\\"trace_resolution\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:50:56.862Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense trace-resolve --trace /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/trace.json --invariants-dir /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/invariants\\\",\\\"command_hash\\\":\\\"844ff336b7ee9321a07aeee429a0229521fd6e87335681926059935aab51712c\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"unresolved_trace_entries\\\":0,\\\"missing_test_paths\\\":0,\\\"untraced_invariants\\\":0,\\\"invariants_total\\\":12,\\\"traced_invariants\\\":12,\\\"attestation_only_invariants\\\":0}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

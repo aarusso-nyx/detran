@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "task:scorecard-typecheck",
+    "kind": "type_check"
+  },
+  "timestamp": "2026-10-22T00:00:35.567Z",
+  "status": "pass",
+  "deterministic": true,
+  "command": "pnpm -r typecheck",
+  "command_hash": "90ef4d5e251f72070fced172add761fb79ffa15934809d536b215b7ad2744dfc",
+  "exit_code": 0,
+  "duration_ms": 62311,
+  "out_head": "Scope: 63 of 64 workspace projects\nbackend/domains/shared typecheck$ tsc --noEmit\nbackend/domains/inf/deadlines typecheck$ tsc --noEmit\npackages/sefaz-adapter typecheck$ tsc --noEmit\npackages/api-clients typecheck$ tsc --noEmit\nbackend/domains/inf/deadlines typecheck: Done\npackages/senatran-adapter typecheck$ tsc --noEmit\npackages/api-clients typecheck: Done\npackages/ui typecheck$ tsc -p tsconfig.spec.json --noEmit\npackages/sefaz-adapter typecheck: Done\nsenatran-mock typecheck$ tsc --noEmit\npackages/ui typecheck: Done\npackages/senatran-adapter typecheck: Done\nsenatran-mock typecheck: Done\nbackend/domains/shared typecheck: Done\napps/portal/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/dashboard/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/boat/mobile typecheck$ tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/rait/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/boat/mobile typecheck: Done\nbackend/domains/ch/clinical-network typecheck$ tsc --noEmit\napps/dashboard/web typecheck: Done\nbackend/domains/est/crash typecheck$ tsc --noEmit\nbackend/domains/ch/clinical-network typecheck: Done\nbackend/domains/inf/normative typecheck$ tsc --noEmit\napps/portal/web typecheck: Done\nbackend/domains/inf/rait-integration typecheck$ tsc --noEmit\nbackend/domains/est/crash typecheck: Done\n.../domains/integration/renaest-mirror typecheck$ tsc --noEmit\nbackend/domains/inf/normative typecheck: Done\nbackend/domains/ops/agency typecheck$ tsc --noEmit\napps/rait/web typecheck: Done\nbackend/domains/ops/core typecheck$ tsc --noEmit\n.../domains/integration/renaest-mirror typecheck: Done\nbackend/domains/ops/example typecheck$ tsc --noEmit\nbackend/domains/inf/rait-integration typecheck: Done\nbackend/domains/ops/parameter typecheck$ tsc --noEmit\nbackend/domains/ops/agency typecheck: Done\nbackend/domains/portal/complaints typecheck$ tsc --noEmit\nbackend/domains/ops/core typecheck: Done\nb",
+  "err_head": " WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "output_digests": "{\"stderr\":\"a813f263d6ff2ddc081d63430222d018e9f531cc967187eee451a3155f22e16d\",\"stdout\":\"b421f7ee5799df49bd1b03f0df653d479b70e5c569fb4919718c89e7f3155ef9\"}",
+    "task_id": "scorecard-typecheck",
+    "population": "detran-workspace-typecheck",
+    "runner": "node",
+    "task_key": "1c9e14fdb3391ec1e205f2b8c13e335f0faed4c0723905e0b3c1648bba9940d7",
+    "input_digest": "6eadaad0275261031d387f8439eff8ab39079f44f2a638057a8486b0fbbffdc2",
+    "stdout_sha256": "b421f7ee5799df49bd1b03f0df653d479b70e5c569fb4919718c89e7f3155ef9",
+    "stderr_sha256": "a813f263d6ff2ddc081d63430222d018e9f531cc967187eee451a3155f22e16d",
+    "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+    "task_policy_digest": "b5c113eef36f7f25891c0a8f8dcf564a9fecc313238ccdd8829536e89800815a",
+    "candidate_commit": "a97e6def6cc4b80d65c5ab0ee9579241f0b33446",
+    "candidate_tree": "15a0068b4386af4e79bbbcd4cadf589e4df63d50",
+    "prerequisite_digests": "{}"
+  },
+  "id": "SR-428ba9e3adf00fa8"
+}

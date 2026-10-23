@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_data_handling",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T00:31:37.614Z",
+  "finished_at": "2026-10-22T00:31:40.831Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_data_handling\"},\"members\":[{\"kind\":\"inventory_data_handling\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_data_handling\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_data_handling\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-c0825d021e660cf9\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:data-handling\\\",\\\"kind\\\":\\\"inventory_data_handling\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-22T00:31:40.322Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense data-handling --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran\\\",\\\"command_hash\\\":\\\"1747233df0b780ae540f32a6dde56ac059dbf70427144fce039c4615349ccbdb\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":72,\\\"metrics\\\":{\\\"table_count\\\":363,\\\"pii_column_count\\\":70,\\\"unlabeled_pii_column_count\\\":70,\\\"data_handling_hash\\\":\\\"d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

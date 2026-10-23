@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-test_robustness_coverage-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:28.521Z",
+  "finished_at": "2026-10-22T01:13:29.333Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/test_robustness_coverage/SR-b4efdb0e652d6a1f.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-b4efdb0e652d6a1f\",\"sensor\":{\"name\":\"test-robustness-coverage\",\"kind\":\"test_robustness_coverage\"},\"timestamp\":\"2026-10-21T23:55:13.710Z\",\"status\":\"error\",\"deterministic\":true,\"command\":\"devai sense-test-robustness-coverage\",\"command_hash\":\"d6de5ea6f2d8804d7ba4272f65600bd52cf98e8fdff70586159a5981864ca240\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"critical\",\"code\":\"TEST_EXECUTABLE_POPULATION_INCOMPLETE\",\"message\":\"Executable population contains a symbolic link: /Volumes/Development/.codex/worktrees/a97-scorecard/detran/apps/rait/web/src/app/preview/fixtures\"}],\"metrics\":{\"test_files\":794,\"robust_tests\":420,\"robust_pct\":52.9,\"threshold_pass\":10,\"threshold_review\":5}}}}}\n",
+  "stderr": ""
+}

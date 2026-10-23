@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "decision_citation_resolution",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:52:03.292Z",
+  "finished_at": "2026-10-22T02:52:06.333Z",
+  "exitCode": 3,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"decision_citation_resolution\"},\"members\":[{\"kind\":\"decision_citation_resolution\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"decision_citation_resolution\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run decision_citation_resolution\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"decision_citation_resolution\\\",\\\"kind\\\":\\\"decision_citation_resolution\\\"},\\\"timestamp\\\":\\\"2026-10-22T02:52:06.018Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense run decision_citation_resolution\\\",\\\"command_hash\\\":\\\"190a76c829ea0a34b275ccd66b08f17ca72a9660de52094fa2b16d072a2faa9b\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"DECISION_CITATION_UNRESOLVED\\\",\\\"message\\\":\\\"law/schemas/adr-validation-policy.schema.json cites missing ADR-014.\\\",\\\"file\\\":\\\"law/schemas/adr-validation-policy.schema.json\\\"},{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"DECISION_CITATION_UNRESOLVED\\\",\\\"message\\\":\\\"law/schemas/adr.schema.json cites missing ADR-014.\\\",\\\"file\\\":\\\"law/schemas/adr.schema.json\\\"},{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"DECISION_CITATION_UNRESOLVED\\\",\\\"message\\\":\\\"docs/meta/security/historical-compatibility.md cites missing ADR-014.\\\",\\\"file\\\":\\\"docs/meta/security/historical-compatibility.md\\\"}],\\\"metrics\\\":{\\\"finding_count\\\":3},\\\"id\\\":\\\"SR-fd02903602eb578a\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

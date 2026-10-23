@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-harness_coherence-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:12:55.818Z",
+  "finished_at": "2026-10-22T01:12:57.105Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/harness_coherence/SR-932961bdd2c8b6c8.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"harness-coherence\",\"kind\":\"harness_coherence\"},\"timestamp\":\"2026-10-21T23:55:16.364Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-harness-coherence\",\"command_hash\":\"b6c6e606ff19573cb165f392dbd2eaf5adf8f8d5b7febe611b3123414b7641fe\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"HARNESS_COHERENCE_CONCURRENCY_POLICY\",\"message\":\".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding).\"}],\"metrics\":{\"workflow_count\":2,\"action_version_drift_count\":0,\"permissions_mixed\":0,\"concurrency_mixed\":0,\"concurrency_semantic_issues\":1,\"incoherence_score\":1,\"max_review_incoherence\":3},\"id\":\"SR-932961bdd2c8b6c8\"}}}}\n",
+  "stderr": ""
+}
