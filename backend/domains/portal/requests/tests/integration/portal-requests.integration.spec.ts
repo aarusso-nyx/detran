@@ -27,6 +27,7 @@ import {
   identityOf,
 } from '../support/portal-fixtures.js';
 import {
+  PORTAL_DELEGATION_TARGETS,
   ReadServiceDelegationTarget,
   RequestDelegationService,
   UnavailableDelegationTarget,
@@ -112,6 +113,7 @@ function buildService(tx: SqlTx): PortalRequestsService {
   });
 }
 
+type Body = Record<string, unknown>;
 function unwrap<T>(result: unknown): T {
   const row = result as Record<string, unknown>;
   return (
