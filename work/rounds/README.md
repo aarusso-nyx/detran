@@ -78,6 +78,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0038 | `C2` — ferramentas e Angular integrados por PR #208; CI pós-integração aprovada                                             | fechada           | [#208](https://github.com/aarusso-nyx/detran/pull/208) | PC-0024 | Codex                                               |
 | R-0039 | `C3/C4` — normalização suplementar integrada; lacunas preservadas                                                           | fechada           | [#209](https://github.com/aarusso-nyx/detran/pull/209) | PC-0025 | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
+| R-0045 | Existing full-workspace lint                                                                                                | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
 
