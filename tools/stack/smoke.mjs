@@ -24,6 +24,36 @@ function evidenceRow(row) {
   return row;
 }
 
+const transportErrorNames = new Set([
+  'TypeError',
+  'Error',
+  'AbortError',
+  'TimeoutError',
+]);
+const transportCauseCodes = new Set([
+  'ECONNRESET',
+  'ECONNREFUSED',
+  'EPIPE',
+  'ETIMEDOUT',
+  'ENOTFOUND',
+  'EAI_AGAIN',
+  'UND_ERR_SOCKET',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'UND_ERR_HEADERS_TIMEOUT',
+  'UND_ERR_BODY_TIMEOUT',
+]);
+
+function transportDiagnostics(error) {
+  return {
+    transportErrorName: transportErrorNames.has(error?.name)
+      ? error.name
+      : 'unknown',
+    transportCauseCode: transportCauseCodes.has(error?.cause?.code)
+      ? error.cause.code
+      : 'unknown',
+  };
+}
+
 async function jsonRequest(fetchImpl, url, init = {}, expectJson = true) {
   try {
     const response = await fetchImpl(url, init);
@@ -36,8 +66,11 @@ async function jsonRequest(fetchImpl, url, init = {}, expectJson = true) {
       return { response, reason: 'invalid_json' };
     }
     return { response, body, contentType };
-  } catch {
-    return { reason: 'backend_unreachable' };
+  } catch (error) {
+    return {
+      reason: 'backend_unreachable',
+      transport: transportDiagnostics(error),
+    };
   }
 }
 
@@ -121,6 +154,7 @@ export async function runSmoke({ targets, fetchImpl = fetch, evidenceSuffix }) {
         target,
         result: 'failed',
         reason: result.reason,
+        ...result.transport,
         status: 0,
         url,
       });
@@ -190,6 +224,7 @@ export async function runSmoke({ targets, fetchImpl = fetch, evidenceSuffix }) {
         ...row,
         result: 'failed',
         reason: 'backend_unreachable',
+        ...result.transport,
         status: 0,
       });
     else if (result.response.status !== 200)
@@ -258,6 +293,7 @@ export async function runSmoke({ targets, fetchImpl = fetch, evidenceSuffix }) {
         ...row,
         result: 'blocked_before_adapter',
         reason: 'backend_unreachable',
+        ...result.transport,
         status: 0,
       });
     else if (result.response.status !== 503)
@@ -316,9 +352,11 @@ const defaultTargets = {
       'rait',
       4201,
       '/v1/inf/rait/cases',
-      'rait-coordinator',
+      'rait-secretary',
       'RAIT-FRESH-2026-000001',
       'inf:rait-case:read',
+      undefined,
+      '00000000-0000-4000-8000-0000b0000005',
     ],
     [
       'dashboard',
@@ -338,12 +376,22 @@ const defaultTargets = {
       'ops:field-operation:read',
     ],
   ].map(
-    ([name, port, readPath, persona, expectedId, policy, expectedLayer]) => ({
+    ([
+      name,
+      port,
+      readPath,
+      persona,
+      expectedId,
+      policy,
+      expectedLayer,
+      actorId,
+    ]) => ({
       name,
       rootUrl: `http://127.0.0.1:${port}`,
       proxyUrl: `http://127.0.0.1:${port}`,
       readPath,
       persona,
+      actorId,
       fixture: expectedId,
       expectedId,
       expectedLayer,
@@ -451,7 +499,7 @@ async function backendPreflight() {
     fetch,
     `${defaultTargets.backend.url}/healthz`,
   );
-  return result.response?.status === 200;
+  return result;
 }
 
 async function restartFor(role, actorId) {
@@ -470,7 +518,7 @@ async function restartFor(role, actorId) {
 async function runCli() {
   const rows = [];
   const preflight = await backendPreflight();
-  if (!preflight) {
+  if (preflight.response?.status !== 200) {
     const report = {
       complete: false,
       pec: { state: defaultTargets.pec.state },
@@ -479,6 +527,7 @@ async function runCli() {
           target: 'backend.healthz',
           result: 'failed',
           reason: 'backend_unreachable',
+          ...preflight.transport,
           status: 0,
         },
       ],
@@ -532,7 +581,7 @@ async function runCli() {
     });
     for (const frontend of defaultTargets.frontends) {
       restartAttempted = true;
-      if (!(await restartFor(frontend.persona))) {
+      if (!(await restartFor(frontend.persona, frontend.actorId))) {
         rows.push({
           target: `persona.${frontend.persona}`,
           result: 'failed',
