@@ -1,0 +1,12 @@
+{
+  "classification": "read-only source observation; published package contract still required",
+  "native_runtime_source": "https://github.com/aarusso-nyx/devai/pull/423",
+  "native_runtime_guard": "v24.20.0",
+  "native_guard_scope": "active governed native input preload only; diagnostic imports retain behavior",
+  "existing_rc_toolchain": {
+    "node": "v24.15.0",
+    "pnpm": "9.15.0"
+  },
+  "separation": "Do not silently change the existing RC toolchain or conflate it with the native sensor runtime. Inspect the published package contracts and official migration plan; if a policy transition is required, prepare its bounded ADR/binding separately before execution.",
+  "C6": "still blocked; runtime guard review is not native-producer approval"
+}
