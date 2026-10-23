@@ -1,0 +1,43 @@
+{
+  "round": "R-0045",
+  "source_commit": "82c74e276e044ede8a47b66745b4401db9bbf95a",
+  "refused_ci_run": "39903990406",
+  "failures": {
+    "custody": "Removing two unused declarations changed the byte-frozen complete Portal suite. Restored the exact approved bytes without changing any expected hash.",
+    "generator": "Retain the literal generic template and Portal dispatch required by the existing counterfactual test; deterministic postprocessing removes unused alias-free import without changing generated output."
+  },
+  "scope_files": [
+    "backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts",
+    "tools/blueprints/generate.mjs",
+    "work/rounds/R-0045/decisions.md"
+  ],
+  "validation": {
+    "focused_regressions_passed": 13,
+    "complete_devai_tests_passed": 243,
+    "skipped": 0,
+    "security_export_check": "pass; byte-identical output and all authorization semantics retained",
+    "local_blueprints_check": "running; final CI foundation must complete canonical comparison",
+    "workspace_lint": {
+      "files": 3619,
+      "errors": 2,
+      "warnings": 0,
+      "exit": 1,
+      "status": "blocked, not PASS",
+      "remaining": "Original PORTAL_DELEGATION_TARGETS and Body declarations in the byte-frozen Portal suite",
+      "next_action": "A separately reviewed change to the approved suite binding is required before removing the two declarations. No permission, waiver or guard change is inferred."
+    }
+  },
+  "supersedes": "The original zero-lint diagnostics are retained unchanged but are not the final candidate standing. Current total is1366baseline errors removed and2remaining.",
+  "preservation": {
+    "assertions": "All existing acceptance and semantic assertions unchanged",
+    "thresholds": "unchanged",
+    "closed_rounds": "unchanged",
+    "C6": "blocked",
+    "native_suite_sha256": "6378dbcf29b3723f13ae478ff874e23ef184fdd65cc5be731e76d50716b2fa34"
+  },
+  "limits": [
+    "These are diagnostics, not a recomputed scorecard or native PASS.",
+    "No merge, release or round closure is requested.",
+    "Exact raw lint output is kept privately; archived JSON removes only embedded source payload, retaining every diagnostic and population."
+  ]
+}
