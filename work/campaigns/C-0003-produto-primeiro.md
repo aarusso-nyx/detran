@@ -279,3 +279,12 @@ Upon integration, [COMPLETION-PLAN.md](../../COMPLETION-PLAN.md) replaces remain
 - **P3 approved:** distinguish development (D), institutional/provider qualification (Q), and operational release (O). Retain commissioned software scope and existing external/native exclusions; no production claim until applicable Q/O acceptance. No external execution is commissioned here.
 
 **Implementation hold:** P4's exact reconciled packet still needs explicit approval. P5–P7 remain unresolved for their affected work. Preserve local changes, recovery artifacts and the separate scorecard session. No round lifecycle, proof, permission or runtime state changes in this amendment.
+
+## Architect scheduling proposal — 2026-10-23
+
+S2 was approved through #205 and implemented in draft #211; integration and
+validation remain incomplete. Earlier “P4 pending” wording is historical.
+The [RAIT progress proposal](../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
+proposes preparing the exact S3 packet concurrently with S2 integration work.
+It changes no Owner decision, acceptance or runtime authorization. Approval of
+this scheduling amendment is pending review; S3 runtime and #211 merge stay paused.
