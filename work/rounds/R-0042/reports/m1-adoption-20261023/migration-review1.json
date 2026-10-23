@@ -1,0 +1,44 @@
+{
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "category": "contract",
+      "location": "ADR-0061 §Registered migration boundary: \"Retain the official binding journal and upgrade receipt as machine-originated state\"",
+      "summary": "The ADR asks for the binding journal to be retained, but in the published 2.7.0 CLI the journal only exists while a bind is running. Leaving one in place would mean the bind was interrupted.",
+      "evidence": "node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js: ADOPTER_POLICY_JOURNAL = \".devai/config/adopter-policy-binding.journal.json\". commitBindJournal() deletes it with rmSync on success. openBindJournal() throws ADOPTER_POLICY_BINDING_JOURNAL_OPEN if the file already exists. The dry plan reports interrupted_bind:false. The journal is not present today and has never been tracked. The receipt that persists is the tracked .devai/config/upgrade-receipt.json, currently marked stale in the plan.",
+      "recommendation": "Restate the expected effects for --write as follows. The five planned paths change. The CLI updates the tracked .devai/config/upgrade-receipt.json. After success the journal and any staged *-suffix files are gone. If a journal or staged file is still present, treat it as an interrupted bind: stop and diagnose. Never copy or hand-author the journal. If execution evidence is needed, capture the CLI's stdout/stderr outside the repo."
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "contract",
+      "location": "ADR-0061 §Registered migration boundary: \"The five planned materializations…\" / \"Review actual effects against this plan\"",
+      "summary": "The ADR does not name the receipt's path. A successful --write changes six tracked files (the five planned paths plus .devai/config/upgrade-receipt.json), so a strict comparison against 'five' could wrongly stop the run, or a loose one could hide a real unexpected effect.",
+      "evidence": "upgrade-plan.json lists five changed_files and \"receipt\":\"stale\". git ls-files shows .devai/config/upgrade-receipt.json is tracked, and the --help text says the command will \"record an upgrade receipt\".",
+      "recommendation": "List .devai/config/upgrade-receipt.json explicitly as the sixth, machine-written tracked effect. Any other path changed is an unexpected effect."
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "preservation",
+      "location": "ADR-0061 §Measurement and preservation: raw wrapper logs on the historical R-0036 path",
+      "summary": "The ADR repeats R-0042's permission to keep the ignored historical log path but leaves out the condition attached to it.",
+      "evidence": "work/rounds/R-0042/plan.md: \"Existing ignored runtime fixture logs may retain their historical path; copied diagnostic receipts must identify that origin and do not reopen a closed round.\" The ignored path is .devai/local/rounds/R-0036/ (.gitignore:61).",
+      "recommendation": "Add that any receipt or diagnostic copied from the historical R-0036 path must name that origin, and that this does not reopen R-0036. Do not change any other part of the permission."
+    }
+  ],
+  "verified": [
+    "The dirty diff is limited to package.json and pnpm-lock.yaml (6+/6-). It changes only the @aarusso-nyx/devai specifier, version, resolution and snapshot key from 2.6.3 to 2.7.0. No transitive lock nodes change.",
+    "The local tarball matches the lock integrity sha512-nRLn…7A== and sha1 bc4e3509…. Its sha256 69c844e3… matches the GitHub release v2.7.0 asset digest. The installed package.json version is 2.7.0.",
+    "engineer-handoff.json records tag commit ff8accd8… and PR #424 merge commit 5034e0cc…, as the ADR states.",
+    "The installed dist/law/constitution.md has sha256 8353c3b8…71270 and Version 1.1.0, against the pinned 1.0.2 (d7f8791f…). With version and date normalised, the diff touches only the Article 6 test row and extension class text, Article 7 Inspector/Engineer, and Article 10. The Inspector wording only clarifies which verbs it keeps. The ADR's description of the amendment is accurate.",
+    "The dry plan is status ready with no refusals, retired_keys or replaced_defaults, and interrupted_bind is false. It has exactly five changed_files, matching the ADR. The obligation 'constitution-version' is decision_required and satisfied-by-upgrade after Architect review, which the ADR supplies.",
+    "2.6.4 appears in the manifest as a cumulative 'unreleased' migration entry shipped inside 2.7.0. No unreleased package is installed.",
+    "Per closure-and-preservation.json, invariant-producers, thresholds, adopter-policy, devai-local-rc-toolchain, both sensor-inputs files and both evidence chains keep identical hashes before and after. Bindings are empty, no native capture ran, and neither the native graph nor the guard was modified.",
+    "The ADR keeps these separate: C6 (all nine bindings empty under ADR-0057), U1/B1 (no recovery granted), RC (Node 24.15.0 / pnpm 9.15.0), and native capture (the existing exact runtime, preflight v24.20.0). PR #211 stays unmerged. No replacement of identities, guards or verifier is allowed.",
+    "No other branch uses ADR-0061. ADR-0060 is already taken on two unmerged branches, so skipping to 0061 avoids a collision."
+  ],
+  "scope": "Read-only Architect review before execution. Reviewed: ADR-0061 draft; the package.json/pnpm-lock.yaml diff in the milestone1-devai-adoption worktree; the installed @aarusso-nyx/devai 2.7.0 constitution, CLI help and bind-journal implementation; upgrade-plan.json; closure-and-preservation.json; native-preflight, pack and release metadata; R-0042 plan, decisions and record. No files were edited and no CLI, binding, sensor or test was run. This review does not claim that the actual binding or any measurement passed."
+}

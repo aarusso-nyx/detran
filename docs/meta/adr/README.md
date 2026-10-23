@@ -73,6 +73,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0058](ADR-0058-scorecard-collector-fidelity.md)                   | Preserve compiler metadata and runtime names in scorecard collection                    | Accepted | —                                                                                 |
 | [ADR-0059](ADR-0059-official-test-proof-anchor-compatibility.md)       | Exact custody verification for official test proof anchors                              | Accepted | —                                                                                 |
 | [ADR-0060](ADR-0060-consolidated-completion-roadmap.md)                | Consolidated eight-milestone completion roadmap; original acceptance preserved          | Accepted | —                                                                                 |
+| [ADR-0061](ADR-0061-devai-270-measurement-adoption.md)                 | Governed DEVAI 2.7.0 measurement adoption and constitution review                       | Accepted | —                                                                                 |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
