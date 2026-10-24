@@ -1,0 +1,143 @@
+{
+  "verdict": "PASS",
+  "scope": {
+    "role": "Architect (Constitution Article 7), independent read-only reviewer",
+    "subject": "work/rounds/R-0042/decisions.md D-4 (uncommitted draft on top of delivery base 43ffc8695ffce22341d2d718b38aeb46e50ff94f), including D-3 marked 'withheld before execution; D-4 supersedes this proposal'",
+    "nature": "Pre-execution sequencing check only. This is not acceptance of any measurement, delivery, round closeout or operational readiness. It is conditional on checking the actual freeze, publication and manifests later.",
+    "original_frozen_source": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+    "future_candidate": "X is not predicted. It must be the actual clean published commit after preservation and review.",
+    "excluded": "The withheld C6 protocol (not reviewed or reconstructed), #211, S3 runtime, upstream releases, product behavior, calibration"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "info",
+      "result": "supported",
+      "subject": "D-3 withheld and D-4 replaces it",
+      "detail": "decisions.md:31 marks D-3 withheld and superseded, and D-4 (decisions.md:69-75) states why. resolveSensorReadingInstance (release-host.js:214661) only treats a prior reading as a supersession candidate if it is chain-recorded through 'sense.readings.record' with context.git.head_sha === the current HEAD, and only when chain.json in the same root verifies. recordSensorReading (247906) writes the file, appends to the chain and never re-resolves the instance. The instance is resolved during 'sense run' (248107) and attested by attestNativeTaskExecution (215151). A clean companion checkout therefore could not produce valid supersession that the origin root would honour. Withholding D-3 was correct. The retained copy reports/m1-capture-sequencing-20261023/d3-companion-proposal-not-executed.md has sha256 c78a2fba…074d, which matches proposal-retention.json."
+    },
+    {
+      "id": "F2",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Running inventory first on X",
+      "detail": "resolveCandidate (228232) calls priorRegenerationOutputs. That rejects any git status entry other than '??' (untracked) on a recognised inventory-body path or on .devai/state/sensor-readings/inventory_regeneration/SR-*.json, and it reads status with --untracked-files=all. Recording any reading modifies the tracked record/proofs/chain.json, which explains the old74 SOURCE_DIRTY result. Running the registered inventory_regeneration action before any proof append on a clean X is the only supported order, and it is the order D-4 requires. Both .devai/state/sensor-readings/ and .devai/state/inventory/ are gitignored (.gitignore:45,47), so outputs already present there do not by themselves make the tree dirty."
+    },
+    {
+      "id": "F3",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Clean-source prerequisites of the other seven task sensors",
+      "detail": "sensorTaskPrerequisites (208948) returns an empty object before reaching the plan.clean guard when task.dependencies is empty. That matches the reported dependencies:[] and the absence of any resultPopulation opt-in. assertFresh rebuilds the task binding and compares bindingIdentity before and after the task, so the remaining populations may run on the dirty X tree after inventory as long as they run one at a time and nothing mutates during a task. I found no hidden cleanliness requirement for the non-inventory tasks."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "result": "supported",
+      "subject": "New epoch is isolated from old74 results",
+      "detail": "The resolver filters candidates by recorded head === HEAD, so old74 readings, which are bound to other heads, can neither be superseded by X readings nor selected as X's current instance. Instance IDs hash {head, reading}, so they cannot collide across candidates. Committing the old74 tail into X is therefore safe for lineage, provided the stored bytes still match their chain digests. Otherwise the resolver throws SENSE_INSTANCE_CHAIN_DIGEST_MISMATCH."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "Supersession depends on HEAD staying fixed during the epoch",
+      "detail": "Same-root supersession for the one allowed whole-E2E retry only works if HEAD is still X when the retry is resolved, and only if the first attempt was already officially recorded at X. Any commit, rebase or checkout during the epoch would break the lineage silently: the retry would become an unlinked new instance, or resolution would be ambiguous. D-4 implies this but does not state it."
+    },
+    {
+      "id": "F6",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "No path to repeat inventory after a failure",
+      "detail": "If inventory_regeneration on X emits a failed or partial result, recording it immediately (which is required) dirties chain.json, so X can never again pass the inventory clean guard. Re-running before recording would discard an authentic emission. D-4 does not say what happens then. The only supported outcome is to preserve and record the failure, treat it and the five body-dependent consumers as literal gaps for X, and freeze any repeat only as a new clean candidate through the same D-4 order. No reset, no companion and no body import."
+    },
+    {
+      "id": "F7",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "Historical store input for inventory_performance",
+      "detail": "measureInventoryPerformance (194170) reads every *.json in every inventory_* subdirectory of .devai/state/sensor-readings (the default root; sensor-inputs.json overrides nothing). It admits any finite duration_ms ≥ 0 with no chain-binding, head, status or tracking check. It includes ignored files that were never committed, its own earlier inventory_performance readings, and X's new inventory_regeneration reading. D-4 keeps this historical meaning correctly, and an X-bound reading of this dataset is not borrowing an old result. However, the dataset depends on what is physically in the root, and the second store-reader pass sees the first pass's output. Stray diagnostics, failed captures or local untracked readings placed in the store would therefore change the result without any provenance."
+    },
+    {
+      "id": "F8",
+      "severity": "low",
+      "result": "discrepancy",
+      "subject": "prompt1.txt is not in the repository",
+      "detail": "The request says prompt1.txt is in the artifact directory as the unexecuted proposal. No prompt1.txt exists anywhere in the worktree outside node_modules. reports/m1-capture-sequencing-20261023 contains only d3-companion-proposal-not-executed.md and proposal-retention.json. The D-3 text is retained there with a matching hash. Whatever prompt1.txt refers to has not been preserved in this tree. This is a retention gap, not a sequencing defect."
+    },
+    {
+      "id": "F9",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Consistency with the original plan and Owner decisions",
+      "detail": "R-0042 plan.md step 3 ('freeze a new evaluation commit… record every native reading immediately… second-pass store readers… reconcile all 43 applicable coordinates plus the two existing N/A entries') and step 1 ('Partial runs are diagnostics only') agree with D-4. D-1 and D-2 boundaries are kept. scorecard-na.json keeps exactly F1:T1 and F4:T5. D-4 asks for no new API, guard change, calibration, context copy or chain splice."
+    }
+  ],
+  "execution_conditions": [
+    "EC1: Before X is frozen, the root must have an empty `git status --porcelain=v1 --untracked-files=all`. All current draft and untracked items (decisions.md, the m1-capture-sequencing reports, ci-checks.json, R-0043/AUTHORIZATION.md) must be committed in or before X, or kept outside the root. Freeze, preflight and manifest evidence must not write tracked or untracked files in the X root or append the chain before inventory_regeneration is recorded. Hold it outside the tree, or record it only afterwards.",
+    "EC2: Committing old74 must include every reading file the chain refers to. These live under the gitignored .devai/state/sensor-readings, so they need the force-add convention already used for the 211 tracked readings. Before freezing, show that every sense.readings.record artifact path and sha256 in the committed chain has a byte-identical committed file. Do not rewrite or reorder the chain.",
+    "EC3: Use one root for the whole X epoch, and keep HEAD equal to X from the inventory run until the final store readers and scorecard finish. No commit, rebase, checkout, stash or pull in between. Record each emission before the next run of the same kind. Only run the E2E retry after the first attempt is officially recorded at X.",
+    "EC4: If inventory_regeneration on X is not a complete successful publication of all 8 bodies with valid schema, hashes and candidate, record it as a gap. Do not repeat it on X after the record. Repeating is only allowed on a newly frozen clean candidate. Ignored bodies left over in .devai/state/inventory must not count as X's publication: each body hash must match the X reading's inventory_body_sha256 or <kind>_input_sha256 metric, and integration_head and integration_tree must equal X.",
+    "EC5: Before the X inventory run, inventory .devai/state/sensor-readings and .devai/state/inventory in the X root, including ignored files, and compare against the committed tracked set. Any extra local file must be listed and its provenance recorded. Raw captures, failed or partial artifacts and diagnostics must be kept outside .devai/state/sensor-readings. For every inventory_performance invocation, list each admitted file (path, ID, sha256, kind, head binding if any, timestamp, duration_ms) and each excluded file with its reason, and match the native per-kind and global counts. Do not remove, filter or move history to change the result.",
+    "EC6: Run tasks strictly one at a time, with no concurrent record, source change or other process writing to the root while a task runs (assertFresh / SENSE_TASK_BINDING_CHANGED). Check before execution that the seven task descriptors, assertions, fixtures, budgets, population roots, thresholds and N/A declarations are byte-identical to the original inputs.",
+    "EC7: Fill no X cell from an old74 reading or count. Selections for the X scorecard must be bound to X. The scorecard selection rule was not checked in this review (see limitations), so the final manifest must show each selected reading's recorded head equals X.",
+    "EC8: Heavy execution waits for an explicit release of the shared verification window. #211 stays open and unmerged, S3 runtime held, all nine C6 producers inactive with empty effective bindings, and no upstream writes or releases.",
+    "EC9: Fix the prompt1.txt discrepancy (F8) before closeout. Either preserve the actual file with a retention hash, or correct the claim to point at d3-companion-proposal-not-executed.md.",
+    "EC10: Step 5 is unchanged. Use #224's real merge identity only after review, required-green CI and protected merge. The closeout candidate needs its own new signed trusted RC and independent verification. The 805 attestation stays bound to 805 history only. R-0043 closes only #218's fixture repair, through official verbs and its own review."
+  ],
+  "evidence": [
+    {
+      "path": "work/rounds/R-0042/decisions.md",
+      "lines": "29-118",
+      "note": "D-3 withheld status and D-4 text (uncommitted, +91 lines on 43ffc869)"
+    },
+    {
+      "path": "work/rounds/R-0042/plan.md",
+      "lines": "7-11",
+      "note": "Original scope: freeze a new commit, record immediately, partial runs are diagnostics"
+    },
+    {
+      "path": "work/rounds/R-0042/reports/m1-capture-sequencing-20261023/proposal-retention.json",
+      "note": "sha256 c78a2fba… matches the retained D-3 file"
+    },
+    {
+      "path": "work/rounds/R-0043/AUTHORIZATION.md",
+      "note": "Limits R-0043 to #218 reconciliation, with no use of a predicted identity"
+    },
+    {
+      "path": ".devai/config/sensor-inputs.json",
+      "note": "Task IDs and populations; no override of inventory_performance readingsDir"
+    },
+    {
+      "path": ".devai/config/scorecard-na.json",
+      "note": "Exactly F1:T1 and F4:T5 N/A"
+    },
+    {
+      "path": ".gitignore",
+      "lines": "45,47",
+      "note": "sensor-readings and inventory directories ignored; 211 readings (38 inventory_*) force-tracked"
+    },
+    {
+      "path": "node_modules/.pnpm/@aarusso-nyx+devai@2.7.0/node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js",
+      "symbols": {
+        "measureInventoryPerformance": 194170,
+        "sensorTaskPrerequisites": 208948,
+        "attestNativeTaskExecution/resolve check": 215151,
+        "resolveSensorReadingInstance": 214661,
+        "resolveCandidate": 228232,
+        "priorRegenerationOutputs": "status-based clean guard admitting only untracked inventory bodies and inventory_regeneration readings",
+        "recordSensorReading": 247906,
+        "executeResolvedSenseSelection": 248107,
+        "DEFAULT_READINGS_DIR$2": 194295
+      }
+    }
+  ],
+  "limitations": [
+    "Static file reads only. Nothing was executed, no tests or sensors ran, and git was used only for read-only queries.",
+    "I did not inspect the native scorecard selection, both store-reader implementations beyond inventory_performance, or inventory_regeneration body publication beyond resolveCandidate. EC7 covers the scorecard gap.",
+    "I did not verify the old74 measurement numbers (coverage 26646/47135, unit, integration, E2E counts), the UNKNOWN emission, the pause/timer diagnostics, or the status of the 23 LIGHT operations. These are taken as reported.",
+    "I did not verify the seven task descriptors' dependencies:[] or the absence of resultPopulation directly. This review relies on the reported check plus the code path in sensorTaskPrerequisites.",
+    "I did not verify the F4T7 or BL0023 historical-timing precedents, #224/#218 CI or merge state, DEVAI 2.7.0 integrity, or the Constitution 1.1 pin.",
+    "The GitHub MCP server failed to connect, so I did not check remote PR or CI state."
+  ]
+}
