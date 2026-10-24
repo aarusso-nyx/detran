@@ -46,6 +46,19 @@ const KEYWORD_RE =
 const RENUMBERED_RE = /^Renumerada para \[ADR-\d{4}\]\(/;
 const STUB_LINE_RE = /^Renumerada para \[(ADR-\d{4})\]\(([^)\s]+)\)\.$/;
 
+function hasLeadingProvenance(text, origin) {
+  const lines = text.split('\n').map((line) => line.replace(/\r$/, ''));
+  if (!/^> \*\*Proveniência\.\*\* Renumerada de `[^`]+`/u.test(lines[2] ?? ''))
+    return false;
+  const separator = lines.findIndex((line) => line.trim() === '---');
+  if (separator <= 2) return false;
+  const block = lines.slice(2, separator);
+  if (block.some((line) => line.trim() !== '' && !line.startsWith('>')))
+    return false;
+  const expectedPrefix = `> **Proveniência.** Renumerada de \`${origin}\``;
+  return block.some((line) => line.startsWith(expectedPrefix));
+}
+
 export function classifyStatus(text, relPath, exceptions = {}) {
   let matched = null;
   const status = firstStatusLine(text);
@@ -423,9 +436,7 @@ export function checkStateIndex({ root, config }) {
     }
     if (result.valid) {
       const target = filesByRelPath.get(result.targetRelPath);
-      const lines = target.text.split('\n');
-      const expectedPrefix = `> **Proveniência.** Renumerada de \`${f.relPath}\``;
-      if (!(lines[2] && lines[2].startsWith(expectedPrefix))) {
+      if (!hasLeadingProvenance(target.text, f.relPath)) {
         findings.push({
           id: 'C-01-04',
           file: result.targetRelPath,

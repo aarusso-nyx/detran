@@ -1,0 +1,216 @@
+diff --git a/tools/docs/adr/renumber.mjs b/tools/docs/adr/renumber.mjs
+index ff5456c1..74a17227 100644
+--- a/tools/docs/adr/renumber.mjs
++++ b/tools/docs/adr/renumber.mjs
+@@ -39,0 +40,13 @@ const STUB_LINE_RE = /^Renumerada para \[(ADR-\d{4})\]\(([^)\s]+)\)\.$/;
++function hasLeadingProvenance(text, origin) {
++  const lines = text.split('\n').map((line) => line.replace(/\r$/, ''));
++  if (!/^> \*\*Proveniência\.\*\* Renumerada de `[^`]+`/u.test(lines[2] ?? ''))
++    return false;
++  const separator = lines.findIndex((line) => line.trim() === '---');
++  if (separator <= 2) return false;
++  const block = lines.slice(2, separator);
++  if (block.some((line) => line.trim() !== '' && !line.startsWith('>')))
++    return false;
++  const expectedPrefix = `> **Proveniência.** Renumerada de \`${origin}\``;
++  return block.some((line) => line.startsWith(expectedPrefix));
++}
++
+@@ -276,3 +289 @@ function analyzeEntry(root, entry) {
+-    const provenanceLine = toText.split('\n')[2] ?? '';
+-    const expectedPrefix = `> **Proveniência.** Renumerada de \`${entry.from}\``;
+-    if (!provenanceLine.startsWith(expectedPrefix)) {
++    if (!hasLeadingProvenance(toText, entry.from)) {
+diff --git a/tools/docs/adr/tests/renumber.test.mjs b/tools/docs/adr/tests/renumber.test.mjs
+index 71bbf8dd..ed3e8015 100644
+--- a/tools/docs/adr/tests/renumber.test.mjs
++++ b/tools/docs/adr/tests/renumber.test.mjs
+@@ -334,0 +335,89 @@ test('C-01-35 dado duas entradas em que a 2ª é inválida quando --write roda e
++
++for (const [label, mutation, singleOrigin] of [
++  ['valid multi-origin', 'valid', false],
++  ['body-only note', 'body', false],
++  ['forged source suffix', 'suffix', false],
++  ['missing origin', 'missing', false],
++  ['wrong source', 'wrong', false],
++  ['no separator', 'separator', true],
++  ['ordinary prose note', 'prose', false],
++  ['note after prose boundary', 'boundary', false],
++  ['wrong first provenance line', 'first', false],
++]) {
++  test(`ADR0035 repeated provenance helper: ${label}`, async () => {
++    const final = 'docs/meta/adr/ADR-0040-ops-field-fixture.md';
++    const origins = singleOrigin ? [FROM_PATH] : [TO_PATH, FROM_PATH];
++    const original = expectedToContent();
++    let primary = `> **Proveniência.** Renumerada de \`${origins[0]}\` pela política.`;
++    let secondary = singleOrigin
++      ? ''
++      : `\n> **Proveniência.** Renumerada de \`${FROM_PATH}\` em etapa anterior.`;
++    let body = original;
++    if (mutation === 'body') {
++      body += `\n> **Proveniência.** Renumerada de \`${FROM_PATH}\` apenas no corpo.\n`;
++      secondary = '';
++    }
++    if (mutation === 'suffix')
++      secondary = `\n> **Proveniência.** Renumerada de \`${FROM_PATH}.forged\` em etapa anterior.`;
++    if (mutation === 'missing') secondary = '';
++    if (mutation === 'wrong')
++      secondary =
++        '\n> **Proveniência.** Renumerada de `docs/meta/adr/ADR-0099-unrelated.md`.';
++    if (mutation === 'prose')
++      secondary = `\nProveniência. Renumerada de \`${FROM_PATH}\` em prosa comum.`;
++    if (mutation === 'boundary')
++      secondary = `\nTexto não citado interrompe o bloco.\n> **Proveniência.** Renumerada de \`${FROM_PATH}\`.`;
++    if (mutation === 'first')
++      primary = 'Proveniência em prosa, sem cabeçalho citado.';
++    const header = `# ADR-0040: Ops Field Fixture\n\n${primary}${secondary}\n\n${mutation === 'separator' ? '' : '---\n\n'}`;
++    await withRoot(
++      (root) => {
++        buildBaseTree(root, {
++          config: baseRenumberConfig({
++            livePaths: [],
++            entries: origins.map((from) => ({
++              from,
++              to: final,
++              reason: 'Repeated renumbering fixture.',
++            })),
++          }),
++        });
++        writeFile(root, final, header + body);
++        for (const origin of origins) {
++          const id = origin.match(/ADR-\d{4}/)[0];
++          writeFile(
++            root,
++            origin,
++            `# ${id}: Ops Field Fixture\n\n## Status\n\nRenumerada para [ADR-0040](ADR-0040-ops-field-fixture.md).\n\nRedirecionamento sem conteúdo normativo.\n`,
++          );
++        }
++      },
++      async (root) => {
++        const before = snapshotTree(root);
++        const result = await runRenumber(
++          root,
++          mutation === 'valid' ? [] : ['--write'],
++        );
++        assert.equal(
++          result.status,
++          mutation === 'valid' ? 0 : 2,
++          result.stdout + result.stderr,
++        );
++        assert.deepEqual(
++          snapshotTree(root),
++          before,
++          'Validation and dry-run must preserve every byte',
++        );
++        if (mutation === 'valid') {
++          assert.equal((result.stdout.match(/^SKIP /gm) ?? []).length, 2);
++          assert.match(lastLine(result.stdout), /0 pending/);
++          assert.equal(
++            readFile(root, final).slice(header.length),
++            original,
++            'Original accepted body remains byte-identical',
++          );
++        }
++      },
++    );
++  });
++}
+diff --git a/tools/docs/state-index/check.mjs b/tools/docs/state-index/check.mjs
+index 0069a715..ff740f43 100644
+--- a/tools/docs/state-index/check.mjs
++++ b/tools/docs/state-index/check.mjs
+@@ -48,0 +49,13 @@ const STUB_LINE_RE = /^Renumerada para \[(ADR-\d{4})\]\(([^)\s]+)\)\.$/;
++function hasLeadingProvenance(text, origin) {
++  const lines = text.split('\n').map((line) => line.replace(/\r$/, ''));
++  if (!/^> \*\*Proveniência\.\*\* Renumerada de `[^`]+`/u.test(lines[2] ?? ''))
++    return false;
++  const separator = lines.findIndex((line) => line.trim() === '---');
++  if (separator <= 2) return false;
++  const block = lines.slice(2, separator);
++  if (block.some((line) => line.trim() !== '' && !line.startsWith('>')))
++    return false;
++  const expectedPrefix = `> **Proveniência.** Renumerada de \`${origin}\``;
++  return block.some((line) => line.startsWith(expectedPrefix));
++}
++
+@@ -426,3 +439 @@ export function checkStateIndex({ root, config }) {
+-      const lines = target.text.split('\n');
+-      const expectedPrefix = `> **Proveniência.** Renumerada de \`${f.relPath}\``;
+-      if (!(lines[2] && lines[2].startsWith(expectedPrefix))) {
++      if (!hasLeadingProvenance(target.text, f.relPath)) {
+diff --git a/tools/docs/state-index/tests/gate.test.mjs b/tools/docs/state-index/tests/gate.test.mjs
+index a972aeff..22c1fb21 100644
+--- a/tools/docs/state-index/tests/gate.test.mjs
++++ b/tools/docs/state-index/tests/gate.test.mjs
+@@ -1989,0 +1990,71 @@ test('C-01-36 dado a mesma linha com `a|b` cru (sem escape) quando o gate roda e
++
++for (const [label, mutation, singleOrigin] of [
++  ['valid multi-origin', 'valid', false],
++  ['body-only note', 'body', false],
++  ['forged source suffix', 'suffix', false],
++  ['missing origin', 'missing', false],
++  ['wrong source', 'wrong', false],
++  ['no separator', 'separator', true],
++  ['ordinary prose note', 'prose', false],
++  ['note after prose boundary', 'boundary', false],
++  ['wrong first provenance line', 'first', false],
++]) {
++  test(`ADR0035 repeated provenance gate: ${label}`, async () => {
++    const older = 'docs/meta/adr/ADR-0009-older.md';
++    const recent = 'docs/meta/adr/ADR-0010-recent.md';
++    const target = 'docs/meta/adr/ADR-0011-final.md';
++    const origins = singleOrigin ? [older] : [recent, older];
++    const original =
++      '# ADR-0009: Original\n\n## Status\n\nAccepted on 2026-02-01.\n';
++    let primary = `> **Proveniência.** Renumerada de \`${origins[0]}\` pela política.`;
++    let secondary = singleOrigin
++      ? ''
++      : `\n> **Proveniência.** Renumerada de \`${older}\` em etapa anterior.`;
++    let body = original;
++    if (mutation === 'body') {
++      body += `\n> **Proveniência.** Renumerada de \`${older}\` apenas no corpo.\n`;
++      secondary = '';
++    }
++    if (mutation === 'suffix')
++      secondary = `\n> **Proveniência.** Renumerada de \`${older}.forged\` em etapa anterior.`;
++    if (mutation === 'missing') secondary = '';
++    if (mutation === 'wrong')
++      secondary =
++        '\n> **Proveniência.** Renumerada de `docs/meta/adr/ADR-0008-unrelated.md`.';
++    if (mutation === 'prose')
++      secondary = `\nProveniência. Renumerada de \`${older}\` em prosa comum.`;
++    if (mutation === 'boundary')
++      secondary = `\nTexto não citado interrompe o bloco.\n> **Proveniência.** Renumerada de \`${older}\`.`;
++    if (mutation === 'first')
++      primary = 'Proveniência em prosa, sem cabeçalho citado.';
++    const header = `# ADR-0011: Final\n\n${primary}${secondary}\n\n${mutation === 'separator' ? '' : '---\n\n'}`;
++    await withRoot(
++      (root) => {
++        buildBaseTree(root);
++        writeFile(root, target, header + body);
++        for (const origin of origins) {
++          const id = origin.match(/ADR-\d{4}/)[0];
++          writeFile(
++            root,
++            origin,
++            `# ${id}: Original\n\n## Status\n\nRenumerada para [ADR-0011](ADR-0011-final.md).\n\nRedirecionamento sem conteúdo normativo.\n`,
++          );
++        }
++      },
++      async (root) => {
++        const result = await runGate(root);
++        const findings = findingIds(combined(result));
++        assert.equal(
++          findings.has('C-01-04'),
++          mutation !== 'valid',
++          combined(result),
++        );
++        assert.equal(
++          findings.has('C-01-02'),
++          false,
++          'Both aliases must remain direct and structurally valid',
++        );
++      },
++    );
++  });
++}

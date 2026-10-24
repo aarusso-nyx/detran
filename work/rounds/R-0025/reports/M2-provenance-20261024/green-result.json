@@ -1,0 +1,419 @@
+{
+  "role": "Inspector",
+  "source_commit": "46234ef9bc405cdc13ca3aaacda816faf4e2f22f",
+  "total_seconds": 6.239281042013317,
+  "budget_seconds": 120,
+  "records": [
+    {
+      "name": "focused-helper",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-isolation=none",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern=^ADR0035 repeated provenance helper:",
+        "tools/docs/adr/tests/renumber.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/completion-roadmap/detran",
+      "safe_environment": {
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Volumes/Development/.codex/artifacts/detran/goal-u1b1-20261024/inspector/green-temp",
+        "NODE_OPTIONS": "--max-old-space-size=128"
+      },
+      "exit": 0,
+      "wall_seconds": 1.0645111249759793,
+      "stopped_or_timedout": false,
+      "counts": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "observed_shapes": [
+        [
+          {
+            "pid": 98578,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap --test-name-pattern=^ADR0035 repeated provenance helper: tools/docs/adr/tests/renumber.test.mjs"
+          }
+        ],
+        [
+          {
+            "pid": 98578,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap --test-name-pattern=^ADR0035 repeated provenance helper: tools/docs/adr/tests/renumber.test.mjs"
+          },
+          {
+            "pid": 98600,
+            "ppid": 98578,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98578,
+            "ppid": 98573,
+            "command": "(node)"
+          },
+          {
+            "pid": 98608,
+            "ppid": 98578,
+            "command": "(node)"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "focused-gate",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-isolation=none",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "--test-name-pattern=^ADR0035 repeated provenance gate:",
+        "tools/docs/state-index/tests/gate.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/completion-roadmap/detran",
+      "safe_environment": {
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Volumes/Development/.codex/artifacts/detran/goal-u1b1-20261024/inspector/green-temp",
+        "NODE_OPTIONS": "--max-old-space-size=128"
+      },
+      "exit": 0,
+      "wall_seconds": 0.4404904169496149,
+      "stopped_or_timedout": false,
+      "counts": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "observed_shapes": [
+        [
+          {
+            "pid": 98610,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap --test-name-pattern=^ADR0035 repeated provenance gate: tools/docs/state-index/tests/gate.test.mjs"
+          },
+          {
+            "pid": 98633,
+            "ppid": 98610,
+            "command": "(node)"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "full-affected",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--max-old-space-size=128",
+        "--test",
+        "--test-isolation=none",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        "tools/docs/adr/tests/renumber.test.mjs",
+        "tools/docs/state-index/tests/gate.test.mjs",
+        "tools/docs/state-index/tests/classify-status.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/completion-roadmap/detran",
+      "safe_environment": {
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Volumes/Development/.codex/artifacts/detran/goal-u1b1-20261024/inspector/green-temp",
+        "NODE_OPTIONS": "--max-old-space-size=128"
+      },
+      "exit": 0,
+      "wall_seconds": 4.578311874996871,
+      "stopped_or_timedout": false,
+      "counts": {
+        "tests": 122,
+        "pass": 122,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "observed_shapes": [
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98645,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98653,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98660,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98669,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98676,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98684,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98691,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98699,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98707,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98714,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98721,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98728,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98735,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98745,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98766,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98773,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98783,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ],
+        [
+          {
+            "pid": 98640,
+            "ppid": 98573,
+            "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node --max-old-space-size=128 --test --test-isolation=none --test-concurrency=1 --test-reporter=tap tools/docs/adr/tests/renumber.test.mjs tools/docs/state-index/tests/gate.test.mjs tools/docs/state-index/tests/classify-status.test.mjs"
+          },
+          {
+            "pid": 98791,
+            "ppid": 98640,
+            "command": "(node)"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "verify-state-index",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--max-old-space-size=128",
+        "tools/docs/state-index/check.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/completion-roadmap/detran",
+      "safe_environment": {
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Volumes/Development/.codex/artifacts/detran/goal-u1b1-20261024/inspector/green-temp",
+        "NODE_OPTIONS": "--max-old-space-size=128"
+      },
+      "exit": 0,
+      "wall_seconds": 0.07418741704896092,
+      "stopped_or_timedout": false,
+      "counts": {
+        "tests": null,
+        "pass": null,
+        "fail": null,
+        "cancelled": null,
+        "skipped": null,
+        "todo": null
+      },
+      "observed_shapes": []
+    },
+    {
+      "name": "adr-renumber-dryrun",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--max-old-space-size=128",
+        "tools/docs/adr/renumber.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/completion-roadmap/detran",
+      "safe_environment": {
+        "PATH": "/usr/bin:/bin",
+        "TMPDIR": "/Volumes/Development/.codex/artifacts/detran/goal-u1b1-20261024/inspector/green-temp",
+        "NODE_OPTIONS": "--max-old-space-size=128"
+      },
+      "exit": 0,
+      "wall_seconds": 0.05438579199835658,
+      "stopped_or_timedout": false,
+      "counts": {
+        "tests": null,
+        "pass": null,
+        "fail": null,
+        "cancelled": null,
+        "skipped": null,
+        "todo": null
+      },
+      "observed_shapes": []
+    }
+  ],
+  "source_status_after": "",
+  "temporary_roots_remaining": [],
+  "no_stage_commit_or_source_edit": true
+}
