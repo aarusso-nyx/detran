@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "task:scorecard-performance",
+    "kind": "perf_test"
+  },
+  "timestamp": "2026-10-24T03:10:04.315Z",
+  "status": "pass",
+  "deterministic": false,
+  "command": "node tools/devai/scorecard-local-task.mjs perf",
+  "command_hash": "42e5a86be35bb8b4e449edd8dee73634db40a194c8fbc39cd235a274507f4420",
+  "exit_code": 0,
+  "duration_ms": 48431,
+  "out_head": "SCORECARD_TASK_LOGS=/Volumes/Development/.codex/worktrees/completion-roadmap/detran/.devai/local/rounds/R-0036/tasks/perf-1792811353276-2859\n pg_advisory_xact_lock \n-----------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-----------------------",
+  "err_head": "psql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/12-audit-functions.sql:109: NOTICE:  trigger \"audit_events_prevent_mutation\" for relation \"audit.events\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-agency.sql:5: NOTICE:  schema \"ops\" already exists, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-agency.sql:58: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_unit\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-agency.sql:60: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_jurisdiction\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-agency.sql:62: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_competence\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-field-operations.sql:5: NOTICE:  schema \"ops\" already exists, skipping\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-field-operations.sql:22: NOTICE:  identifier \"ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_number\" will be truncated to \"ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_n\"\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-field-operations.sql:73: NOTICE:  identifier \"ux_ops_homologation_tenant_id_traffic_agency_id_homologation_number\" will be truncated to \"ux_ops_homologation_tenant_id_traffic_agency_id_homologation_nu\"\npsql:/Volumes/Development/.codex/worktrees/completion-roadmap/detran/backend/database/ddl/13-ops-field-operations.sql:209: NOTICE:  identifier \"ux_ops_measurement_instrument_tenant_id_instrument_type_serial_number\" will be truncated to \"ux_ops_measurement_instrument_tenant_id_ins",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "output_digests": "{\"stderr\":\"5d93648a3676cdf6d005d39b9904de865e86d166bacb01cbce96a6231c40a99a\",\"stdout\":\"6ad122b23ce692f98e988985b0b7557d99ec14537b5bf1c9898ed330f186f47d\"}",
+    "task_id": "scorecard-performance",
+    "population": "detran-request-path-baseline-v1",
+    "runner": "node",
+    "task_key": "e22e0a442ae183374dc837f9aed79cdcf7ee1eb1643d64e66495d93a23f5032d",
+    "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+    "stdout_sha256": "6ad122b23ce692f98e988985b0b7557d99ec14537b5bf1c9898ed330f186f47d",
+    "stderr_sha256": "5d93648a3676cdf6d005d39b9904de865e86d166bacb01cbce96a6231c40a99a",
+    "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+    "task_policy_digest": "f8f8918694e9b0e7b08e7c48d2cccbf3afe83724bc827677af54b0ce94de788f",
+    "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+    "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+    "prerequisite_digests": "{}",
+    "p50_ms": 18.999417000000903,
+    "p95_ms": 31.660083000000668,
+    "throughput_rps": 48.1243854435772
+  },
+  "id": "SR-fab8551dde80debb"
+}

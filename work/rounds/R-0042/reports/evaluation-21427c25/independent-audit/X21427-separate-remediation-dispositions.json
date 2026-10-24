@@ -1,0 +1,848 @@
+{
+  "source": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+  "role": "Auditor proposals only; no backlog/roundwrites",
+  "native_overall": "FAIL",
+  "cell_measurement_complete": true,
+  "remediation_dispositions": [
+    {
+      "scope": "measurement/R0042/BL0024",
+      "observation": "All43cells measured; all7originaltargetgaps supported.",
+      "factual_disposition": "Complete measurement evidence for later review/integration/official closeout; remain active/open until actual #224merge/postintegrationgates. No futureSHA orPC.",
+      "evidence": [
+        {
+          "kind": "unit_test",
+          "reading_id": "SR-6b063226558199a0",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"fbc6efce32d911c44d0c5fffdc8a7eb043d7400982803b303cabc17ff2bb0bc0\",\"stdout\":\"90f45be3cdaae2fd4b45b1ee5cbc383620bb6490631725823d0cc2fcc7c7bd9a\"}",
+            "task_id": "scorecard-unit",
+            "population": "detran-workspace-unit",
+            "runner": "node",
+            "task_key": "16bb53e5b82007f591b7ee938c0f47cfa0039e858ca230ac2fe2410cce144f45",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "90f45be3cdaae2fd4b45b1ee5cbc383620bb6490631725823d0cc2fcc7c7bd9a",
+            "stderr_sha256": "fbc6efce32d911c44d0c5fffdc8a7eb043d7400982803b303cabc17ff2bb0bc0",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "5473bbf0760769afe0a452ad0c1cddc1be510210cf43ff218cb506cda7dd087b",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 13641,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "integration_test",
+          "reading_id": "SR-61e4abf05176c420",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"13b149a4235d29b010b2969a02757ba54e64ac3835ee6f5e9ca8704faea3fb7a\",\"stdout\":\"66f59c13b67d345460d7a358e78325c9f01ea00eb9654df14cfae53828351ca4\"}",
+            "task_id": "scorecard-integration",
+            "population": "detran-workspace-integration",
+            "runner": "node",
+            "task_key": "f4cfffc20bf1fcae115526995dcfff2a40cc6dc17128985413f1a00392992acc",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "66f59c13b67d345460d7a358e78325c9f01ea00eb9654df14cfae53828351ca4",
+            "stderr_sha256": "13b149a4235d29b010b2969a02757ba54e64ac3835ee6f5e9ca8704faea3fb7a",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "c42a242f3432eb5f2e5e9ed55ec5d2b0129635065137ce6aa70bff9835e46096",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 1518,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "e2e_test",
+          "reading_id": "SR-798e235338298d7f",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf\",\"stdout\":\"58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833\"}",
+            "task_id": "scorecard-e2e",
+            "population": "detran-workspace-e2e",
+            "runner": "node",
+            "task_key": "ff112f22a37c5d1a4d3e27fec965177fee24d15594815673b110a01910d04c46",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833",
+            "stderr_sha256": "472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "ccc22d59cf0ab42460616ec6ee3b39e4504a96691fe90712867c0b989afebc0a",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 2260,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "test_coverage_depth",
+          "reading_id": "SR-7be24fd212156452",
+          "status": "review",
+          "metrics": {
+            "population": "local",
+            "lines_total": 47135,
+            "lines_covered": 26646,
+            "lines_pct": 56.53,
+            "threshold_pass": 80,
+            "threshold_review": 50
+          },
+          "finding_codes": [
+            "TEST_COVERAGE_PARTIAL"
+          ]
+        },
+        {
+          "kind": "test_coherence",
+          "reading_id": "SR-4adcfb1b02d1b5ec",
+          "status": "review",
+          "metrics": {
+            "packages_scanned": 63,
+            "source_files": 2759,
+            "test_files": 745,
+            "global_ratio": 0.27,
+            "packages_below_min_ratio": 23,
+            "naming_uses_test": 1,
+            "naming_uses_spec": 744,
+            "naming_consistent": 0
+          },
+          "finding_codes": [
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_NAMING_MIXED"
+          ]
+        },
+        {
+          "kind": "test_idiomaticity",
+          "reading_id": "SR-f41542cde25aa859",
+          "status": "review",
+          "metrics": {
+            "test_files": 795,
+            "mock_calls": 2383,
+            "call_through_observers": 29,
+            "observed_fault_injections": 0,
+            "external_port_substitutions": 2,
+            "fixture_calls": 457,
+            "snapshot_calls": 0,
+            "mock_heavy_files": 342,
+            "mock_heavy_ratio": 0.43,
+            "mocks_in_integration_files": 45
+          },
+          "finding_codes": [
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION"
+          ]
+        },
+        {
+          "kind": "test_security_coverage",
+          "reading_id": "SR-f355048fc1a66939",
+          "status": "pass",
+          "metrics": {
+            "test_files": 795,
+            "security_tests": 156,
+            "security_pct": 19.62,
+            "threshold_pass": 5,
+            "threshold_review": 2
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "test_performance_coverage",
+          "reading_id": "SR-b97147623c5e2eda",
+          "status": "pass",
+          "metrics": {
+            "test_files": 795,
+            "perf_tests": 55,
+            "perf_pct": 6.92
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "test_robustness_coverage",
+          "reading_id": "SR-e791f4c9fe8e1ca2",
+          "status": "pass",
+          "metrics": {
+            "test_files": 795,
+            "robust_tests": 421,
+            "robust_pct": 52.96,
+            "threshold_pass": 10,
+            "threshold_review": 5
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_regeneration",
+          "reading_id": "SR-2ee21ddee4cf26df",
+          "status": "review",
+          "metrics": {
+            "kinds_touched": 7,
+            "kinds_rebuilt": 7,
+            "kinds_up_to_date": 0,
+            "error_count": 0,
+            "required_kinds": 7,
+            "missing_required_kinds": 0,
+            "obsolete_bodies_removed": 0,
+            "integration_head": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "integration_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "inventory_body_sha256": "d9d0fa3a49484ff0e63553f8b809c1a4b337261556faefef19a88a5e563db548",
+            "inventory_api_status": "pass",
+            "inventory_routes_status": "pass",
+            "inventory_data_model_status": "pass",
+            "inventory_rbac_status": "review",
+            "inventory_data_handling_status": "pass",
+            "inventory_dep_graph_status": "pass",
+            "inventory_coverage_status": "review",
+            "inventory_api_command_hash": "2fd9b081da0a617904c4f9818727a695d5b4018d99fcd36dbf2d1bc4dd65fefd",
+            "inventory_api_input_sha256": "2e1984682bc1cc8ed7eaff557df183abeca1feee874aad8b92100551f14f2c01",
+            "inventory_api_finding_count": 0,
+            "inventory_api_metric_endpoint_count": 1139,
+            "inventory_api_metric_controller_file_count": 257,
+            "inventory_api_metric_endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9",
+            "inventory_routes_command_hash": "1ef384f5e9a286148abd2fc91c894ae089483f1c30f9cfd99e9a2676fefa4dea",
+            "inventory_routes_input_sha256": "4d9bc67100f05eeef72a076cc1773b7c5d692252375ce0975f8ee69b7fe22a55",
+            "inventory_routes_finding_count": 0,
+            "inventory_routes_metric_route_count": 92,
+            "inventory_routes_metric_route_file_count": 22,
+            "inventory_routes_metric_routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4",
+            "inventory_data_model_command_hash": "774aab33dc0461289604dd2c110541d181acc272c62ae400c20ac701b6f198c3",
+            "inventory_data_model_input_sha256": "7df56fce22a76122bc090597cd3bee1b508357c22ba08b774e018cdad0012a23",
+            "inventory_data_model_finding_count": 0,
+            "inventory_data_model_metric_table_count": 363,
+            "inventory_data_model_metric_column_count": 4122,
+            "inventory_data_model_metric_foreign_key_count": 323,
+            "inventory_data_model_metric_migration_file_count": 83,
+            "inventory_data_model_metric_tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+            "inventory_data_model_metric_dialect": "postgres",
+            "inventory_rbac_command_hash": "272ef20871952bb66e5a8ba49a84e426bb36ec16fd3c588c9bd53907cb431de8",
+            "inventory_rbac_input_sha256": "3317193e17b7d3d8a5dc876b72087d433ca306edb5dcf077b14d341494985240",
+            "inventory_rbac_finding_count": 45,
+            "inventory_rbac_metric_role_table_count": 2,
+            "inventory_rbac_metric_permission_table_count": 0,
+            "inventory_rbac_metric_join_table_count": 0,
+            "inventory_rbac_metric_endpoint_binding_count": 45,
+            "inventory_rbac_metric_endpoints_without_role_count": 1094,
+            "inventory_rbac_metric_synthetic_guard_permission_count": 2,
+            "inventory_rbac_metric_synthetic_role_permission_count": 0,
+            "inventory_rbac_metric_rbac_hash": "73f9a550d0990e6695f8589b6e55d733c088a6d88021cf39d4117724cfd9a097",
+            "inventory_data_handling_command_hash": "6207f3051fd4396bfb891ad6bb340e71be59686735096c8249c474660417f71a",
+            "inventory_data_handling_input_sha256": "c22d66e2be9ab0c63742251672cd272567af59344dc289d32103a8b66aee2926",
+            "inventory_data_handling_finding_count": 0,
+            "inventory_data_handling_metric_table_count": 363,
+            "inventory_data_handling_metric_pii_column_count": 70,
+            "inventory_data_handling_metric_unlabeled_pii_column_count": 70,
+            "inventory_data_handling_metric_data_handling_hash": "d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35",
+            "inventory_dep_graph_command_hash": "0b32644b4401db879396e7491de25cbaee2b1c8c10086b6c2fdc1faa40c3cf25",
+            "inventory_dep_graph_input_sha256": "a3a6bf185ee9201d41b8ba56131c2cce5e86e05ad067e4541cd8bcf365d9dc88",
+            "inventory_dep_graph_finding_count": 0,
+            "inventory_dep_graph_metric_node_count": 3462,
+            "inventory_dep_graph_metric_edge_count": 16435,
+            "inventory_coverage_command_hash": "71e984c4ee70290ddf18d385d30c50d7cffd297afc46250c9924931ca8d109ea",
+            "inventory_coverage_input_sha256": "4cff40fb5ea5b82f346bc0a1e9ddc6c058d5b7c6935d31c9cba5477d5ef73e65",
+            "inventory_coverage_finding_count": 1,
+            "inventory_coverage_metric_route_count": 92,
+            "inventory_coverage_metric_endpoint_count": 1139,
+            "inventory_coverage_metric_use_case_count": 110,
+            "inventory_coverage_metric_link_count": 0,
+            "inventory_coverage_metric_unmapped_route_count": 92,
+            "inventory_coverage_metric_unmapped_endpoint_count": 1139,
+            "inventory_coverage_metric_inferred_path_match_count": 0,
+            "inventory_coverage_metric_coverage_hash": "921445a467246c31d0c81b13272d06b44351b37211a227bc0629b635cfc37c75"
+          },
+          "finding_codes": [
+            "INVENTORY_REGENERATION_KIND_REVIEW",
+            "INVENTORY_REGENERATION_PRODUCER_FINDING"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0025",
+      "observation": "FreshXfullE2E2260PASS/0FAIL; no retry. Old74socket failure/short-circuit retained.",
+      "factual_disposition": "KeepOPEN. NewsourcePASS does not establish oldcause or justify closing flaky/socket finding. No assertions/budgets changed.",
+      "evidence": [
+        {
+          "kind": "e2e_test",
+          "reading_id": "SR-798e235338298d7f",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf\",\"stdout\":\"58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833\"}",
+            "task_id": "scorecard-e2e",
+            "population": "detran-workspace-e2e",
+            "runner": "node",
+            "task_key": "ff112f22a37c5d1a4d3e27fec965177fee24d15594815673b110a01910d04c46",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833",
+            "stderr_sha256": "472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "ccc22d59cf0ab42460616ec6ee3b39e4504a96691fe90712867c0b989afebc0a",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 2260,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        }
+      ]
+    },
+    {
+      "scope": "BL0016/R0043",
+      "observation": "Bounded oldmock402repair closedPC0026/resolved via actual#218 and separate067descendant acceptance.",
+      "factual_disposition": "Retain originalfailurebody/origin/R0036; do not reopen oldround or claim newnativeE2EPASS alone closed it.",
+      "evidence": [
+        {
+          "kind": "e2e_test",
+          "reading_id": "SR-798e235338298d7f",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf\",\"stdout\":\"58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833\"}",
+            "task_id": "scorecard-e2e",
+            "population": "detran-workspace-e2e",
+            "runner": "node",
+            "task_key": "ff112f22a37c5d1a4d3e27fec965177fee24d15594815673b110a01910d04c46",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833",
+            "stderr_sha256": "472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "ccc22d59cf0ab42460616ec6ee3b39e4504a96691fe90712867c0b989afebc0a",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 2260,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        }
+      ]
+    },
+    {
+      "scope": "BL0014/R0045",
+      "observation": "Two unuseddeclarations remain inbyte-frozenPortalsuite.",
+      "factual_disposition": "KeepOPEN; separate reviewed sourcebinding needed before removingdeclarations; no lintwaiver/rulechange.",
+      "evidence": [
+        {
+          "kind": "lint",
+          "reading_id": "SR-30db6cc3808b50e6",
+          "status": "fail",
+          "metrics": {
+            "error_count": 2,
+            "warning_count": 0,
+            "timeout_ms": 120000
+          },
+          "finding_codes": [
+            "@typescript-eslint/no-unused-vars"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "R0044/security",
+      "observation": "Nativecurrentaudit24findings:6high/15moderate/3low. Historicalpartialdelivery removed25occurrences with13nativegraph residuals at its ownsource.",
+      "factual_disposition": "KeepOPEN. Review actualadvisory/graph/sourceidentity before attributingdifference; preserve approvednativegraph/guards; no riskacceptance.",
+      "evidence": [
+        {
+          "kind": "security_scan",
+          "reading_id": "SR-8fc7c18023cdbcf2",
+          "status": "fail",
+          "metrics": {
+            "tool": "pnpm",
+            "total_vulnerabilities": 24,
+            "critical": 0,
+            "high": 6,
+            "moderate": 15,
+            "low": 3,
+            "info": 0,
+            "pass_max_high": 0,
+            "review_max_high": 5
+          },
+          "finding_codes": [
+            "SECURITY_SCAN_HIGH_OVER_THRESHOLD"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0017",
+      "observation": "Freshlocalcoverage56.53%;23sparsepackages/mixednaming measured.",
+      "factual_disposition": "Separate focusedtest/product work; original80/50thresholds/packagegates/TODO/assertions retained.",
+      "evidence": [
+        {
+          "kind": "test_coverage_depth",
+          "reading_id": "SR-7be24fd212156452",
+          "status": "review",
+          "metrics": {
+            "population": "local",
+            "lines_total": 47135,
+            "lines_covered": 26646,
+            "lines_pct": 56.53,
+            "threshold_pass": 80,
+            "threshold_review": 50
+          },
+          "finding_codes": [
+            "TEST_COVERAGE_PARTIAL"
+          ]
+        },
+        {
+          "kind": "test_coherence",
+          "reading_id": "SR-4adcfb1b02d1b5ec",
+          "status": "review",
+          "metrics": {
+            "packages_scanned": 63,
+            "source_files": 2759,
+            "test_files": 745,
+            "global_ratio": 0.27,
+            "packages_below_min_ratio": 23,
+            "naming_uses_test": 1,
+            "naming_uses_spec": 744,
+            "naming_consistent": 0
+          },
+          "finding_codes": [
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_NAMING_MIXED"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0021",
+      "observation": "45integration/E2Emockownership findings over795files.",
+      "factual_disposition": "Review each actualmockrole/portsubstitution onmerit; no blanketdeletion or timeoutweakening.",
+      "evidence": [
+        {
+          "kind": "test_idiomaticity",
+          "reading_id": "SR-f41542cde25aa859",
+          "status": "review",
+          "metrics": {
+            "test_files": 795,
+            "mock_calls": 2383,
+            "call_through_observers": 29,
+            "observed_fault_injections": 0,
+            "external_port_substitutions": 2,
+            "fixture_calls": 457,
+            "snapshot_calls": 0,
+            "mock_heavy_files": 342,
+            "mock_heavy_ratio": 0.43,
+            "mocks_in_integration_files": 45
+          },
+          "finding_codes": [
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0018",
+      "observation": "Reverse12.23%; zerolinks for110UCs/92routes/1139endpoints;5461orphans of6139(max50).",
+      "factual_disposition": "KeepOPEN; complete canonicalsource/UCtraces fromactualrequirements, no generated-source blanketexclusion to gamepredicate.",
+      "evidence": [
+        {
+          "kind": "spec_alignment",
+          "reading_id": "SR-df75318f901bf716",
+          "status": "review",
+          "metrics": {
+            "invariants_scanned": 12,
+            "invariants_broken_forward": 0,
+            "source_files_scanned": 3156,
+            "source_files_claimed": 386,
+            "reverse_pct": 12.23,
+            "reverse_threshold_pct": 80
+          },
+          "finding_codes": [
+            "SPEC_ALIGNMENT_REVERSE_BELOW_THRESHOLD"
+          ]
+        },
+        {
+          "kind": "inventory_coverage",
+          "reading_id": "SR-64c7c6f61045edde",
+          "status": "review",
+          "metrics": {
+            "route_count": 92,
+            "endpoint_count": 1139,
+            "use_case_count": 110,
+            "link_count": 0,
+            "unmapped_route_count": 92,
+            "unmapped_endpoint_count": 1139,
+            "inferred_path_match_count": 0,
+            "coverage_hash": "921445a467246c31d0c81b13272d06b44351b37211a227bc0629b635cfc37c75"
+          },
+          "finding_codes": [
+            "COVERAGE_PARTIAL_USE_CASE_LINKING"
+          ]
+        },
+        {
+          "kind": "inventory_adherence",
+          "reading_id": "SR-db67fa4f93b3915b",
+          "status": "fail",
+          "metrics": {
+            "total_count": 6139,
+            "claimed_count": 678,
+            "orphan_count": 5461,
+            "max_orphans": 50
+          },
+          "finding_codes": [
+            "INVENTORY_ADHERENCE_BELOW_THRESHOLD",
+            "INVENTORY_ADHERENCE_ORPHAN"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0019/BL0020",
+      "observation": "NativePIIspecsignal absent;1094endpointrolesunresolved;70name-basedPIIcandidates allunlabeled despite nativePASS. Supplemental211field representation has ownpurpose/legal/retentiongaps.",
+      "factual_disposition": "KeepOPEN. Staticabsence/unresolvedmapping notproof runtimeunprotected/legalviolation; invent no legalbasis,purpose,retention orpermissions.",
+      "evidence": [
+        {
+          "kind": "spec_security_coverage",
+          "reading_id": "SR-6ec5b09b0d218f05",
+          "status": "review",
+          "metrics": {
+            "threat_model_present": 1,
+            "pii_registry_present": 0,
+            "rbac_invariant_present": 1,
+            "signals_present": 2
+          },
+          "finding_codes": [
+            "SPEC_SECURITY_NO_PII_REGISTRY"
+          ]
+        },
+        {
+          "kind": "inventory_rbac",
+          "reading_id": "SR-c9cf4a2d85aee6ee",
+          "status": "review",
+          "metrics": {
+            "role_table_count": 2,
+            "permission_table_count": 0,
+            "join_table_count": 0,
+            "endpoint_binding_count": 45,
+            "endpoints_without_role_count": 1094,
+            "synthetic_guard_permission_count": 2,
+            "synthetic_role_permission_count": 0,
+            "rbac_hash": "73f9a550d0990e6695f8589b6e55d733c088a6d88021cf39d4117724cfd9a097"
+          },
+          "finding_codes": [
+            "RBAC_AUTHORIZATION_UNRESOLVED"
+          ]
+        },
+        {
+          "kind": "inventory_data_handling",
+          "reading_id": "SR-51890bacf5369d59",
+          "status": "pass",
+          "metrics": {
+            "table_count": 363,
+            "pii_column_count": 70,
+            "unlabeled_pii_column_count": 70,
+            "data_handling_hash": "d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35"
+          },
+          "finding_codes": []
+        }
+      ]
+    },
+    {
+      "scope": "BL0015",
+      "observation": "VerifiedhistoricalmainCI median1736s/p952276s exceeds900/1800s.",
+      "factual_disposition": "KeepOPEN; optimizeactualpipeline withoutfilteringrequiredchecks/history/samplewindow.",
+      "evidence": [
+        {
+          "kind": "harness_performance",
+          "reading_id": "SR-4610c53cbdff0173",
+          "status": "fail",
+          "metrics": {
+            "run_count": 84,
+            "success_count": 82,
+            "sample_size": 82,
+            "median_ms": 1736000,
+            "p95_ms": 2276000,
+            "pass_median_ms": 900000,
+            "pass_p95_ms": 1800000,
+            "minimum_sample": 10,
+            "population_workflow": "ci.yml",
+            "population_event": "push",
+            "population_head_branch": "main",
+            "population_base_branch": "main",
+            "population_attempts": "last",
+            "population_include_cancelled": false,
+            "population_lookback_days": 30,
+            "population_base_branch_verified": true,
+            "population_excluded_jobs_unverified": 0,
+            "population_unverified": ""
+          },
+          "finding_codes": [
+            "HARNESS_PERFORMANCE_TOO_SLOW"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0023",
+      "observation": "38admittedhistoricaldurations/7kinds,p952917ms/mean469ms;2000/5000thresholds.",
+      "factual_disposition": "KeepOPEN; disclosehistoricaldataset, do notpurge/filter/relabelcurrent-onlybenchmark.",
+      "evidence": [
+        {
+          "kind": "inventory_performance",
+          "reading_id": "SR-d1b3263b85f59167",
+          "status": "review",
+          "metrics": {
+            "kinds_observed": 7,
+            "total_observations": 38,
+            "overall_p95_ms": 2917,
+            "overall_mean_ms": 469,
+            "threshold_pass": 2000,
+            "threshold_review": 5000,
+            "inventory_api_count": 5,
+            "inventory_api_p95_ms": 778,
+            "inventory_api_mean_ms": 457,
+            "inventory_coverage_count": 6,
+            "inventory_coverage_p95_ms": 154,
+            "inventory_coverage_mean_ms": 60,
+            "inventory_data_handling_count": 6,
+            "inventory_data_handling_p95_ms": 72,
+            "inventory_data_handling_mean_ms": 20,
+            "inventory_data_model_count": 5,
+            "inventory_data_model_p95_ms": 98,
+            "inventory_data_model_mean_ms": 51,
+            "inventory_dep_graph_count": 5,
+            "inventory_dep_graph_p95_ms": 2917,
+            "inventory_dep_graph_mean_ms": 1841,
+            "inventory_rbac_count": 6,
+            "inventory_rbac_p95_ms": 141,
+            "inventory_rbac_mean_ms": 35,
+            "inventory_routes_count": 5,
+            "inventory_routes_p95_ms": 2989,
+            "inventory_routes_mean_ms": 1078
+          },
+          "finding_codes": [
+            "INVENTORY_PERFORMANCE_SLOW"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "BL0022/R0041/C6",
+      "observation": "Seveninvariantslackmeasurable_via; workflowadvisories; actualhistoricalfrontmatter/citation/roundrecordfindings.",
+      "factual_disposition": "KeepOPEN andC6whole-nineblocked. Forwardcompatibility/approvedarchitecture only, no rewritingsealedhistory or syntheticnativecustody.",
+      "evidence": [
+        {
+          "kind": "harness_invariant_alignment",
+          "reading_id": "SR-4c619987a13efaf7",
+          "status": "fail",
+          "metrics": {
+            "gate_invariants": 7,
+            "misaligned": 7,
+            "workflow_count": 2,
+            "executable_run_steps": 55,
+            "evidence_records": 324,
+            "candidate_head_resolved": true
+          },
+          "finding_codes": [
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA"
+          ]
+        },
+        {
+          "kind": "harness_coherence",
+          "reading_id": "SR-33a106dde4777062",
+          "status": "review",
+          "metrics": {
+            "workflow_count": 2,
+            "action_version_drift_count": 0,
+            "permissions_mixed": 0,
+            "concurrency_mixed": 0,
+            "concurrency_semantic_issues": 1,
+            "incoherence_score": 1,
+            "max_review_incoherence": 3
+          },
+          "finding_codes": [
+            "HARNESS_COHERENCE_CONCURRENCY_POLICY"
+          ]
+        },
+        {
+          "kind": "harness_idiomaticity",
+          "reading_id": "SR-02f0abb5eb3ff28a",
+          "status": "review",
+          "metrics": {
+            "workflow_count": 2,
+            "composite_action_uses": 0,
+            "reusable_workflow_uses": 0,
+            "cache_present": 1,
+            "idiomaticity_score": 1
+          },
+          "finding_codes": [
+            "HARNESS_IDIOMATICITY_NO_COMPOSITE_ACTIONS",
+            "HARNESS_IDIOMATICITY_NO_REUSABLE_WORKFLOWS"
+          ]
+        },
+        {
+          "kind": "decision_record_integrity",
+          "reading_id": "SR-24887c971143fad9",
+          "status": "fail",
+          "metrics": {
+            "finding_count": 1
+          },
+          "finding_codes": [
+            "DECISION_FRONTMATTER_INVALID"
+          ]
+        },
+        {
+          "kind": "decision_citation_resolution",
+          "reading_id": "SR-c1dc518c40f27d52",
+          "status": "fail",
+          "metrics": {
+            "finding_count": 5
+          },
+          "finding_codes": [
+            "DECISION_CITATION_UNRESOLVED"
+          ]
+        },
+        {
+          "kind": "round_record_integrity",
+          "reading_id": "SR-d78108bceb233df8",
+          "status": "fail",
+          "metrics": {
+            "finding_count": 15
+          },
+          "finding_codes": [
+            "ROUND_RECORD_MISSING",
+            "ROUND_ARCHIVE_MUTATED"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "non-cell diagnosticgaps",
+      "observation": "Publishedsourceunreachable; actioneffectinputmissing.",
+      "factual_disposition": "RemainexplicitUNKNOWNgaps outside43cell denominator. Diagnoseconfiguredinput/provenance separately withoutborrowingresult.",
+      "evidence": [
+        {
+          "kind": "site_drift",
+          "reading_id": "SR-5d333a3e20a9d025",
+          "status": "unknown",
+          "metrics": {
+            "repository_head": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "published_source_provenance": "journal",
+            "journal_intent_id": "7055059128"
+          },
+          "finding_codes": [
+            "SITE_DRIFT_SOURCE_UNREACHABLE"
+          ]
+        },
+        {
+          "kind": "action_effect_inference",
+          "reading_id": "SR-e88b9607ff8ad807",
+          "status": "unknown",
+          "metrics": {},
+          "finding_codes": [
+            "ACTION_EFFECT_INFERENCE_INPUT_MISSING"
+          ]
+        }
+      ]
+    },
+    {
+      "scope": "R0020",
+      "observation": "Current43measurementdoesnotreplaceR0020A1fourmandatoryactualPASS/16CIchecks/maestroRGR/crosswalk/sealobligations; lintFAILstillreal.",
+      "factual_disposition": "KeepOPEN with priorno-lossinventory andacceptedA1authority. No wholebranchmerge orautomaticstatusrewrite.",
+      "evidence": [
+        {
+          "kind": "lint",
+          "reading_id": "SR-30db6cc3808b50e6",
+          "status": "fail",
+          "metrics": {
+            "error_count": 2,
+            "warning_count": 0,
+            "timeout_ms": 120000
+          },
+          "finding_codes": [
+            "@typescript-eslint/no-unused-vars"
+          ]
+        },
+        {
+          "kind": "unit_test",
+          "reading_id": "SR-6b063226558199a0",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"fbc6efce32d911c44d0c5fffdc8a7eb043d7400982803b303cabc17ff2bb0bc0\",\"stdout\":\"90f45be3cdaae2fd4b45b1ee5cbc383620bb6490631725823d0cc2fcc7c7bd9a\"}",
+            "task_id": "scorecard-unit",
+            "population": "detran-workspace-unit",
+            "runner": "node",
+            "task_key": "16bb53e5b82007f591b7ee938c0f47cfa0039e858ca230ac2fe2410cce144f45",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "90f45be3cdaae2fd4b45b1ee5cbc383620bb6490631725823d0cc2fcc7c7bd9a",
+            "stderr_sha256": "fbc6efce32d911c44d0c5fffdc8a7eb043d7400982803b303cabc17ff2bb0bc0",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "5473bbf0760769afe0a452ad0c1cddc1be510210cf43ff218cb506cda7dd087b",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 13641,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "integration_test",
+          "reading_id": "SR-61e4abf05176c420",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"13b149a4235d29b010b2969a02757ba54e64ac3835ee6f5e9ca8704faea3fb7a\",\"stdout\":\"66f59c13b67d345460d7a358e78325c9f01ea00eb9654df14cfae53828351ca4\"}",
+            "task_id": "scorecard-integration",
+            "population": "detran-workspace-integration",
+            "runner": "node",
+            "task_key": "f4cfffc20bf1fcae115526995dcfff2a40cc6dc17128985413f1a00392992acc",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "66f59c13b67d345460d7a358e78325c9f01ea00eb9654df14cfae53828351ca4",
+            "stderr_sha256": "13b149a4235d29b010b2969a02757ba54e64ac3835ee6f5e9ca8704faea3fb7a",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "c42a242f3432eb5f2e5e9ed55ec5d2b0129635065137ce6aa70bff9835e46096",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 1518,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "e2e_test",
+          "reading_id": "SR-798e235338298d7f",
+          "status": "pass",
+          "metrics": {
+            "output_digests": "{\"stderr\":\"472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf\",\"stdout\":\"58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833\"}",
+            "task_id": "scorecard-e2e",
+            "population": "detran-workspace-e2e",
+            "runner": "node",
+            "task_key": "ff112f22a37c5d1a4d3e27fec965177fee24d15594815673b110a01910d04c46",
+            "input_digest": "5f92d7da0e96820ef12fd31c0c6241fc5f97e752137a24b44c18cab7a3d465b8",
+            "stdout_sha256": "58540056d84b2a65caba2c0b382b969bad97f66ef4398a0f569f8fcb614b7833",
+            "stderr_sha256": "472729d086a0951152754791fefd9e7ad7a2f199e5330f581210972a2ac14bbf",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "ccc22d59cf0ab42460616ec6ee3b39e4504a96691fe90712867c0b989afebc0a",
+            "candidate_commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+            "candidate_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+            "prerequisite_digests": "{}",
+            "tests_passed": 2260,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        }
+      ]
+    }
+  ],
+  "holds": [
+    "#211unmerged",
+    "S3runtimeheld",
+    "C6allnineinactive/emptybindings/no withheldreviewretry",
+    "Originalthresholds/NAs/descriptor/assertions/historypreserved"
+  ],
+  "backlog_status_snapshot": {
+    "BL-0014": "open",
+    "BL-0015": "open",
+    "BL-0016": "resolved",
+    "BL-0017": "open",
+    "BL-0018": "open",
+    "BL-0019": "open",
+    "BL-0020": "open",
+    "BL-0021": "open",
+    "BL-0022": "open",
+    "BL-0023": "open",
+    "BL-0024": "open",
+    "BL-0025": "open"
+  }
+}
