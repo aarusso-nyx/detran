@@ -1,14 +1,15 @@
 {
   "schemaVersion": "1.0.0",
-  "from": "2.6.2",
-  "to": "2.6.3",
-  "upgraded_at": "2026-10-19T02:50:24.748Z",
+  "from": "2.6.3",
+  "to": "2.7.0",
+  "upgraded_at": "2026-10-23T22:45:32.275Z",
   "constitution": {
     "from": "1.0.2",
-    "to": "1.0.2"
+    "to": "1.1.0"
   },
   "migrations": [
-    "MIG-2.6.3-measurement-repair-identity-refresh"
+    "MIG-2.6.4-native-reporter-identity-refresh",
+    "MIG-2.7.0-constitution-1-1-0"
   ],
   "retired_keys": [],
   "changed_files": [
@@ -16,42 +17,54 @@
       "path": ".devai/config/project.json",
       "operation": "update",
       "segment": "adopter-policy",
-      "sha256": "4af18ddfe257896db047b74ea43ffcfb8a94115d875dfe0a04d466658e72bd79"
+      "sha256": "4d8c5f68117d3b4998d423b0198d4acd6bdb86765d6df0c9bdf879599735e01e"
     },
     {
       "path": ".devai/config/adopter-policy-binding.json",
       "operation": "update",
       "segment": "adopter-policy",
-      "sha256": "6c8b8980d4a19eaf3726bd4fa2cf277f3332b86167354df1de1abb44797a6219"
+      "sha256": "1ef74b68cedd93666989e7fa39f60a835a30741ba1412cb46666425f3c4ef95b"
     },
     {
       "path": ".devai/config/authority-policy.json",
       "operation": "update",
       "segment": "authority",
-      "sha256": "01b9fbb88ab59841d1826f7b0bff3a06956429b142007a6125de86e8ac80654b"
+      "sha256": "6b4bf3157b8ba82fde9ec62b5117fbd91a60e89b40ba57935c303eef69c24d11"
+    },
+    {
+      "path": ".devai/pin/constitution.md",
+      "operation": "update",
+      "segment": "constitution",
+      "sha256": "8353c3b81d38e0f9b913cbeb6762bc149605989c1b16f52d2c63ba9892f71270"
     },
     {
       "path": ".devai/constitution.md",
       "operation": "update",
       "segment": "constitution",
-      "sha256": "5a18159814d8ccecc4613b1001ee75410d4ddccd293a9a6aac5cc20400fe3cdb"
+      "sha256": "3ec86f7329fdf9ce4c8b44bc9822ce7d64fff5723b82e01de3dd10b260752116"
     }
   ],
   "stale_version_stamps": [
     {
       "path": ".devai/constitution.md",
       "field": "generated-by",
-      "version": "2.6.2",
+      "version": "2.6.3",
       "refreshed": true
     },
     {
       "path": ".devai/config/project.json",
       "field": "devai_version",
-      "version": "2.6.2",
+      "version": "2.6.3",
       "refreshed": true
     }
   ],
-  "obligations": [],
+  "obligations": [
+    {
+      "change": "MIG-2.7.0-constitution-1-1-0",
+      "check": "constitution-version",
+      "status": "satisfied-by-upgrade"
+    }
+  ],
   "postchecks": [
     {
       "name": "policy-materialization-current",

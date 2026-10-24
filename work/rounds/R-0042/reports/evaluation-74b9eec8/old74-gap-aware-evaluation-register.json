@@ -1,0 +1,2898 @@
+{
+  "title": "OLD74 PARTIAL MEASUREMENT; new clean epoch pending",
+  "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+  "native_overall": {
+    "verdict": "FAIL"
+  },
+  "native_counts": {
+    "N/A": 2,
+    "PASS": 24,
+    "REVIEW": 11,
+    "FAIL": 6,
+    "UNKNOWN": 2
+  },
+  "evaluation_disposition_counts": {
+    "not-applicable": 2,
+    "measured": 36,
+    "observation-gap": 7
+  },
+  "measured_native_verdict_counts": {
+    "PASS": 24,
+    "REVIEW": 8,
+    "FAIL": 4
+  },
+  "original_seven_targets": {
+    "F3:T1": "observation-gap",
+    "F3:T2": "measured",
+    "F3:T3": "measured",
+    "F3:T5": "measured",
+    "F3:T6": "measured",
+    "F3:T7": "measured",
+    "F3:T8": "measured"
+  },
+  "cells": [
+    {
+      "cell": "F1:T1",
+      "native_verdict": "N/A",
+      "evaluation_disposition": "not-applicable",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [],
+      "limitations": "Original configured N/A retained.",
+      "baseline_0e26c795": {
+        "native_verdict": "N/A",
+        "evaluation_disposition": "not-applicable"
+      }
+    },
+    {
+      "cell": "F1:T2",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_depth",
+          "reading_id": "SR-cb1b66b0589c6229",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/spec_depth/SR-cb1b66b0589c6229.json",
+          "canonical_sha256": "77392fbd9a4060667b6625c87897ae06f1643447e6ea3434c3a04dd4016e3c94",
+          "record_id": "EV-4d2375bcdf69ba24",
+          "record_sequence": 357,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_depth.json",
+          "official_receipt": "first-spec_depth-record-0.json",
+          "declared_input": {
+            "adrDir": "docs/meta/adr",
+            "invariantsDir": "law/invariants"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "invariant_count": 12,
+            "adr_count": 67,
+            "use_case_count": 6,
+            "component_count": 14
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T3",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "trace_resolution",
+          "reading_id": "SR-eebe46b0994cf484",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/trace_resolution/SR-eebe46b0994cf484.json",
+          "canonical_sha256": "0da3c874acc16773ed517b19913bc7949ddcee4f9fdf20247c296fc9ff45f524",
+          "record_id": "EV-84af508b11f1a6c8",
+          "record_sequence": 347,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-trace_resolution.json",
+          "official_receipt": "first-trace_resolution-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "unresolved_trace_entries": 0,
+            "missing_test_paths": 0,
+            "untraced_invariants": 0,
+            "invariants_total": 12,
+            "traced_invariants": 12,
+            "attestation_only_invariants": 0
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T4",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_alignment",
+          "reading_id": "SR-dc5973ed0a93e954",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/spec_alignment/SR-dc5973ed0a93e954.json",
+          "canonical_sha256": "be13f2666c3df52e9e1a04f141958fe6ffcbf4410fc2842f747b4f947bb33e7a",
+          "record_id": "EV-2c58bb8e17decbfe",
+          "record_sequence": 367,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_alignment.json",
+          "official_receipt": "first-spec_alignment-record-0.json",
+          "declared_input": {
+            "sourceRoots": [
+              "apps/boat/mobile/src",
+              "apps/dashboard/web/src",
+              "apps/portal/web/src",
+              "apps/rait/web/src",
+              "apps/teat/mobile/src",
+              "apps/teat/web/src",
+              "backend/app/src",
+              "backend/domains/ch/billing/src",
+              "backend/domains/ch/biometrics/src",
+              "backend/domains/ch/clinical-controls/src",
+              "backend/domains/ch/clinical-network/src",
+              "backend/domains/ch/clinical-reports/src",
+              "backend/domains/ch/encounters/src",
+              "backend/domains/ch/exams/src",
+              "backend/domains/ch/inconsistencies/src",
+              "backend/domains/ch/juntas/src",
+              "backend/domains/ch/operational-controls/src",
+              "backend/domains/ch/patients/src",
+              "backend/domains/ch/process-blocks/src",
+              "backend/domains/ch/restrictions/src",
+              "backend/domains/ch/retention/src",
+              "backend/domains/ch/scheduling/src",
+              "backend/domains/ch/telehealth/src",
+              "backend/domains/ch/toxicology/src",
+              "backend/domains/dashboard/crashes/src",
+              "backend/domains/dashboard/monitor/src",
+              "backend/domains/est/crash/src",
+              "backend/domains/inf/ait/src",
+              "backend/domains/inf/alcohol/src",
+              "backend/domains/inf/collection/src",
+              "backend/domains/inf/deadlines/src",
+              "backend/domains/inf/infraction/src",
+              "backend/domains/inf/measures/src",
+              "backend/domains/inf/normative/src",
+              "backend/domains/inf/notification/src",
+              "backend/domains/inf/rait-case/src",
+              "backend/domains/inf/rait-integration/src",
+              "backend/domains/inf/rait-org/src",
+              "backend/domains/inf/rait-session/src",
+              "backend/domains/inf/rait-worklist/src",
+              "backend/domains/inf/speed/src",
+              "backend/domains/integration/renaest-mirror/src",
+              "backend/domains/ops/agency/src",
+              "backend/domains/ops/core/src",
+              "backend/domains/ops/evidence/src",
+              "backend/domains/ops/example/src",
+              "backend/domains/ops/field/src",
+              "backend/domains/ops/offline-sync/src",
+              "backend/domains/ops/parameter/src",
+              "backend/domains/ops/provisioning/src",
+              "backend/domains/ops/snapshots/src",
+              "backend/domains/portal/citizen-service/src",
+              "backend/domains/portal/complaints/src",
+              "backend/domains/portal/identity/src",
+              "backend/domains/portal/inbox/src",
+              "backend/domains/portal/projections/src",
+              "backend/domains/portal/requests/src",
+              "backend/domains/shared/src",
+              "packages/api-clients/src",
+              "packages/sefaz-adapter/src",
+              "packages/senatran-adapter/src",
+              "packages/ui/src",
+              "senatran-mock/apps/api/src",
+              "senatran-mock/domain/autorizacoes/api/src",
+              "senatran-mock/domain/cdt/api/src",
+              "senatran-mock/domain/condutores/api/src",
+              "senatran-mock/domain/consulta-csv/api/src",
+              "senatran-mock/domain/detran/api/src",
+              "senatran-mock/domain/indicadores/api/src",
+              "senatran-mock/domain/infracoes/api/src",
+              "senatran-mock/domain/renach/api/src",
+              "senatran-mock/domain/renaest/api/src",
+              "senatran-mock/domain/renainf/api/src",
+              "senatran-mock/domain/restricoes-judiciais/api/src",
+              "senatran-mock/domain/roubo-furto/api/src",
+              "senatran-mock/domain/shared/api/src",
+              "senatran-mock/domain/sne/api/src",
+              "senatran-mock/domain/veiculos/api/src"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "invariants_scanned": 12,
+            "invariants_broken_forward": 0,
+            "source_files_scanned": 3156,
+            "source_files_claimed": 386,
+            "reverse_pct": 12.23,
+            "reverse_threshold_pct": 80
+          },
+          "finding_codes": [
+            "SPEC_ALIGNMENT_REVERSE_BELOW_THRESHOLD"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T5",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_idiomaticity",
+          "reading_id": "SR-ed15b0e9ba6fe7e6",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/spec_idiomaticity/SR-ed15b0e9ba6fe7e6.json",
+          "canonical_sha256": "2fb9334f73634b7538ddf8076e2a9c244c1bce019719e6c2198b9821fcedf69e",
+          "record_id": "EV-868e4fe1ecc1865e",
+          "record_sequence": 358,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_idiomaticity.json",
+          "official_receipt": "first-spec_idiomaticity-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "cnl_modal_warnings": 0,
+            "other_errors": 0,
+            "files_scanned": 12
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T6",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_security_coverage",
+          "reading_id": "SR-7d8a5d7d264b70e9",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/spec_security_coverage/SR-7d8a5d7d264b70e9.json",
+          "canonical_sha256": "cbdd29919c0225be296ffa0a3824f439816871d370883c56c9e2dce4e63520f1",
+          "record_id": "EV-fe2676485f9b438a",
+          "record_sequence": 368,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_security_coverage.json",
+          "official_receipt": "first-spec_security_coverage-record-0.json",
+          "declared_input": {
+            "threatModelDirs": [
+              "docs",
+              "docs/_ia",
+              "docs/adopters",
+              "docs/adopters/integrations",
+              "docs/dev/operations",
+              "docs/dev/operations/workflows",
+              "docs/dev/security",
+              "docs/framework",
+              "docs/framework/arch",
+              "docs/framework/arch/fixtures",
+              "docs/framework/arch/i18n",
+              "docs/framework/arch/rait-web-journeys",
+              "docs/framework/blueprints",
+              "docs/framework/contracts",
+              "docs/framework/contracts/dashboard-feeds",
+              "docs/framework/contracts/manual",
+              "docs/framework/glossary",
+              "docs/framework/product",
+              "docs/framework/product/domains/ch",
+              "docs/framework/product/domains/ch/pec",
+              "docs/framework/product/domains/ch/pec/_intake",
+              "docs/framework/product/domains/ch/pec/journeys",
+              "docs/framework/product/domains/ch/pec/rules",
+              "docs/framework/product/domains/ch/pec/screens",
+              "docs/framework/product/domains/ch/pec/use-cases",
+              "docs/framework/product/domains/ch/pec/workflows",
+              "docs/framework/product/domains/est",
+              "docs/framework/product/domains/est/boat",
+              "docs/framework/product/domains/est/boat/_intake",
+              "docs/framework/product/domains/est/boat/journeys",
+              "docs/framework/product/domains/est/boat/rules",
+              "docs/framework/product/domains/est/boat/screens",
+              "docs/framework/product/domains/est/boat/use-cases",
+              "docs/framework/product/domains/est/boat/workflows",
+              "docs/framework/product/domains/inf",
+              "docs/framework/product/domains/inf/rait",
+              "docs/framework/product/domains/inf/rait/_intake",
+              "docs/framework/product/domains/inf/rait/journeys",
+              "docs/framework/product/domains/inf/rait/rules",
+              "docs/framework/product/domains/inf/rait/screens",
+              "docs/framework/product/domains/inf/rait/use-cases",
+              "docs/framework/product/domains/inf/rait/workflows",
+              "docs/framework/product/domains/inf/teat",
+              "docs/framework/product/domains/inf/teat/_intake",
+              "docs/framework/product/domains/inf/teat/journeys",
+              "docs/framework/product/domains/inf/teat/rules",
+              "docs/framework/product/domains/inf/teat/screens",
+              "docs/framework/product/domains/inf/teat/use-cases",
+              "docs/framework/product/domains/inf/teat/ux-parity",
+              "docs/framework/product/domains/inf/teat/workflows",
+              "docs/framework/product/shared",
+              "docs/framework/product/shared/workflows",
+              "docs/framework/product/transversal/dashboard",
+              "docs/framework/product/transversal/dashboard/_intake",
+              "docs/framework/product/transversal/dashboard/journeys",
+              "docs/framework/product/transversal/dashboard/rules",
+              "docs/framework/product/transversal/dashboard/screens",
+              "docs/framework/product/transversal/dashboard/use-cases",
+              "docs/framework/product/transversal/dashboard/workflows",
+              "docs/framework/product/transversal/portal",
+              "docs/framework/product/transversal/portal/_intake",
+              "docs/framework/product/transversal/portal/journeys",
+              "docs/framework/product/transversal/portal/rules",
+              "docs/framework/product/transversal/portal/screens",
+              "docs/framework/product/transversal/portal/use-cases",
+              "docs/framework/product/transversal/portal/workflows",
+              "docs/framework/schemas",
+              "docs/framework/schemas/events",
+              "docs/meta",
+              "docs/meta/adr",
+              "docs/meta/agents",
+              "docs/meta/agents/orchestra",
+              "docs/meta/decisions",
+              "docs/meta/eng",
+              "docs/meta/knowledge-base",
+              "docs/meta/knowledge-base/owner-ballots",
+              "docs/meta/knowledge-base/owner-ballots/letters",
+              "docs/meta/knowledge-base/session-artifacts",
+              "docs/meta/knowledge-base/templates",
+              "docs/meta/ops",
+              "docs/meta/security",
+              "docs/reference",
+              "docs/reference/institutional",
+              "docs/reference/legal",
+              "docs/reference/legal/conselhos",
+              "docs/reference/legal/contran",
+              "docs/reference/legal/ctb",
+              "docs/reference/legal/decretos",
+              "docs/reference/legal/detran-am",
+              "docs/reference/legal/inmetro",
+              "docs/reference/legal/leis",
+              "docs/reference/legal/other-states",
+              "docs/reference/legal/senatran",
+              "docs/roles",
+              "docs/site",
+              "docs/site/security",
+              "docs/site/vendor/braces",
+              "docs/site/vendor/image-size",
+              "docs/start",
+              "docs/theory",
+              "senatran-mock/docs/_ia",
+              "senatran-mock/docs/framework",
+              "senatran-mock/docs/framework/arch",
+              "senatran-mock/docs/framework/arch/invariants",
+              "senatran-mock/docs/framework/contracts",
+              "senatran-mock/docs/framework/glossary",
+              "senatran-mock/docs/framework/product",
+              "senatran-mock/docs/integration",
+              "senatran-mock/docs/meta/adr",
+              "senatran-mock/docs/meta/ops",
+              "senatran-mock/docs/meta/security",
+              "senatran-mock/docs/reference/senatran-canonical-api",
+              "senatran-mock/docs/reference/senatran-canonical-api/adapters/README",
+              "senatran-mock/docs/reference/senatran-canonical-api/docs",
+              "senatran-mock/docs/reference/senatran-canonical-api/examples/renach",
+              "senatran-mock/docs/reference/senatran-canonical-api/examples/renainf",
+              "senatran-mock/docs/reference/senatran-canonical-api/schemas/renach",
+              "senatran-mock/docs/reference/senatran-canonical-api/schemas/renainf",
+              "senatran-mock/docs/site",
+              "senatran-mock/docs/start"
+            ],
+            "piiMigrationDirs": [
+              "backend/database/ddl",
+              "senatran-mock/database/ddl"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "threat_model_present": 1,
+            "pii_registry_present": 0,
+            "rbac_invariant_present": 1,
+            "signals_present": 2
+          },
+          "finding_codes": [
+            "SPEC_SECURITY_NO_PII_REGISTRY"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T7",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_performance_targets",
+          "reading_id": "SR-150ad0b6659a2960",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/spec_performance_targets/SR-150ad0b6659a2960.json",
+          "canonical_sha256": "9b6e1ff540ccbd6430d01643c9cec8f0e2d38da4e7b8c35c9adc7001119882f9",
+          "record_id": "EV-2e62e4c21d40fe74",
+          "record_sequence": 369,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_performance_targets.json",
+          "official_receipt": "first-spec_performance_targets-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "perf_invariants": 1,
+            "perf_use_cases": 0,
+            "targets_total": 1,
+            "perf_relevant_code_detected": 1
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T8",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_robustness_targets",
+          "reading_id": "SR-fc8f707e9d07f58c",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/spec_robustness_targets/SR-fc8f707e9d07f58c.json",
+          "canonical_sha256": "30a8ee353a2f8b4fccfdc55b5053d923c97a25ab22e50d18bc05dcc160b76e82",
+          "record_id": "EV-d7d62e962d304175",
+          "record_sequence": 370,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_robustness_targets.json",
+          "official_receipt": "first-spec_robustness_targets-record-0.json",
+          "declared_input": {
+            "errorContractDirs": [
+              "docs",
+              "docs/_ia",
+              "docs/adopters",
+              "docs/adopters/integrations",
+              "docs/dev/operations",
+              "docs/dev/operations/workflows",
+              "docs/dev/security",
+              "docs/framework",
+              "docs/framework/arch",
+              "docs/framework/arch/fixtures",
+              "docs/framework/arch/i18n",
+              "docs/framework/arch/rait-web-journeys",
+              "docs/framework/blueprints",
+              "docs/framework/contracts",
+              "docs/framework/contracts/dashboard-feeds",
+              "docs/framework/contracts/manual",
+              "docs/framework/glossary",
+              "docs/framework/product",
+              "docs/framework/product/domains/ch",
+              "docs/framework/product/domains/ch/pec",
+              "docs/framework/product/domains/ch/pec/_intake",
+              "docs/framework/product/domains/ch/pec/journeys",
+              "docs/framework/product/domains/ch/pec/rules",
+              "docs/framework/product/domains/ch/pec/screens",
+              "docs/framework/product/domains/ch/pec/use-cases",
+              "docs/framework/product/domains/ch/pec/workflows",
+              "docs/framework/product/domains/est",
+              "docs/framework/product/domains/est/boat",
+              "docs/framework/product/domains/est/boat/_intake",
+              "docs/framework/product/domains/est/boat/journeys",
+              "docs/framework/product/domains/est/boat/rules",
+              "docs/framework/product/domains/est/boat/screens",
+              "docs/framework/product/domains/est/boat/use-cases",
+              "docs/framework/product/domains/est/boat/workflows",
+              "docs/framework/product/domains/inf",
+              "docs/framework/product/domains/inf/rait",
+              "docs/framework/product/domains/inf/rait/_intake",
+              "docs/framework/product/domains/inf/rait/journeys",
+              "docs/framework/product/domains/inf/rait/rules",
+              "docs/framework/product/domains/inf/rait/screens",
+              "docs/framework/product/domains/inf/rait/use-cases",
+              "docs/framework/product/domains/inf/rait/workflows",
+              "docs/framework/product/domains/inf/teat",
+              "docs/framework/product/domains/inf/teat/_intake",
+              "docs/framework/product/domains/inf/teat/journeys",
+              "docs/framework/product/domains/inf/teat/rules",
+              "docs/framework/product/domains/inf/teat/screens",
+              "docs/framework/product/domains/inf/teat/use-cases",
+              "docs/framework/product/domains/inf/teat/ux-parity",
+              "docs/framework/product/domains/inf/teat/workflows",
+              "docs/framework/product/shared",
+              "docs/framework/product/shared/workflows",
+              "docs/framework/product/transversal/dashboard",
+              "docs/framework/product/transversal/dashboard/_intake",
+              "docs/framework/product/transversal/dashboard/journeys",
+              "docs/framework/product/transversal/dashboard/rules",
+              "docs/framework/product/transversal/dashboard/screens",
+              "docs/framework/product/transversal/dashboard/use-cases",
+              "docs/framework/product/transversal/dashboard/workflows",
+              "docs/framework/product/transversal/portal",
+              "docs/framework/product/transversal/portal/_intake",
+              "docs/framework/product/transversal/portal/journeys",
+              "docs/framework/product/transversal/portal/rules",
+              "docs/framework/product/transversal/portal/screens",
+              "docs/framework/product/transversal/portal/use-cases",
+              "docs/framework/product/transversal/portal/workflows",
+              "docs/framework/schemas",
+              "docs/framework/schemas/events",
+              "docs/meta",
+              "docs/meta/adr",
+              "docs/meta/agents",
+              "docs/meta/agents/orchestra",
+              "docs/meta/decisions",
+              "docs/meta/eng",
+              "docs/meta/knowledge-base",
+              "docs/meta/knowledge-base/owner-ballots",
+              "docs/meta/knowledge-base/owner-ballots/letters",
+              "docs/meta/knowledge-base/session-artifacts",
+              "docs/meta/knowledge-base/templates",
+              "docs/meta/ops",
+              "docs/meta/security",
+              "docs/reference",
+              "docs/reference/institutional",
+              "docs/reference/legal",
+              "docs/reference/legal/conselhos",
+              "docs/reference/legal/contran",
+              "docs/reference/legal/ctb",
+              "docs/reference/legal/decretos",
+              "docs/reference/legal/detran-am",
+              "docs/reference/legal/inmetro",
+              "docs/reference/legal/leis",
+              "docs/reference/legal/other-states",
+              "docs/reference/legal/senatran",
+              "docs/roles",
+              "docs/site",
+              "docs/site/security",
+              "docs/site/vendor/braces",
+              "docs/site/vendor/image-size",
+              "docs/start",
+              "docs/theory",
+              "senatran-mock/docs/_ia",
+              "senatran-mock/docs/framework",
+              "senatran-mock/docs/framework/arch",
+              "senatran-mock/docs/framework/arch/invariants",
+              "senatran-mock/docs/framework/contracts",
+              "senatran-mock/docs/framework/glossary",
+              "senatran-mock/docs/framework/product",
+              "senatran-mock/docs/integration",
+              "senatran-mock/docs/meta/adr",
+              "senatran-mock/docs/meta/ops",
+              "senatran-mock/docs/meta/security",
+              "senatran-mock/docs/reference/senatran-canonical-api",
+              "senatran-mock/docs/reference/senatran-canonical-api/adapters/README",
+              "senatran-mock/docs/reference/senatran-canonical-api/docs",
+              "senatran-mock/docs/reference/senatran-canonical-api/examples/renach",
+              "senatran-mock/docs/reference/senatran-canonical-api/examples/renainf",
+              "senatran-mock/docs/reference/senatran-canonical-api/schemas/renach",
+              "senatran-mock/docs/reference/senatran-canonical-api/schemas/renainf",
+              "senatran-mock/docs/site",
+              "senatran-mock/docs/start"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "error_semantics_invariants": 1,
+            "error_contract_files": 1,
+            "targets_total": 2
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F1:T9",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "spec_freshness",
+          "reading_id": "SR-75a890c87bd4dd22",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/spec_freshness/SR-75a890c87bd4dd22.json",
+          "canonical_sha256": "feae1075549a67d9c16f62fd52b6f755a7cb21b4535349f90a5e0e47a8cc19de",
+          "record_id": "EV-a4d3e7dc08841645",
+          "record_sequence": 359,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-spec_freshness.json",
+          "official_receipt": "first-spec_freshness-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "invariants_scanned": 12,
+            "stale_count": 0,
+            "threshold_days": 90
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T1",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "plant_coverage",
+          "reading_id": "SR-235350ccb0a48720",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/plant_coverage/SR-235350ccb0a48720.json",
+          "canonical_sha256": "0d3fda28d9ed2848bc02bac5c50393c628f5ff3a4174b284c289ba4c8c5c1dbe",
+          "record_id": "EV-53c9dff4ecc7f292",
+          "record_sequence": 360,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-plant_coverage.json",
+          "official_receipt": "first-plant_coverage-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "endpoint_count": 0,
+            "route_count": 0,
+            "missing_files": 0
+          },
+          "finding_codes": [
+            "PLANT_COVERAGE_NO_INVENTORY"
+          ]
+        }
+      ],
+      "limitations": "PLANT_COVERAGE_NO_INVENTORY: required bodies absent; endpoint/route counts zero are not a measured product coverage failure.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T2",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "plant_depth",
+          "reading_id": "SR-624ef0ceaafbae78",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/plant_depth/SR-624ef0ceaafbae78.json",
+          "canonical_sha256": "fee70507fe44540f7bea4f0f7bbe4cad9a27f0c721749d215ea5eb0faa29069a",
+          "record_id": "EV-9af31ed973d27d15",
+          "record_sequence": 371,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-plant_depth.json",
+          "official_receipt": "first-plant_depth-record-0.json",
+          "declared_input": {
+            "sourceRoots": [
+              "apps/boat/mobile/src",
+              "apps/dashboard/web/src",
+              "apps/portal/web/src",
+              "apps/rait/web/src",
+              "apps/teat/mobile/src",
+              "apps/teat/web/src",
+              "backend/app/src",
+              "backend/domains/ch/billing/src",
+              "backend/domains/ch/biometrics/src",
+              "backend/domains/ch/clinical-controls/src",
+              "backend/domains/ch/clinical-network/src",
+              "backend/domains/ch/clinical-reports/src",
+              "backend/domains/ch/encounters/src",
+              "backend/domains/ch/exams/src",
+              "backend/domains/ch/inconsistencies/src",
+              "backend/domains/ch/juntas/src",
+              "backend/domains/ch/operational-controls/src",
+              "backend/domains/ch/patients/src",
+              "backend/domains/ch/process-blocks/src",
+              "backend/domains/ch/restrictions/src",
+              "backend/domains/ch/retention/src",
+              "backend/domains/ch/scheduling/src",
+              "backend/domains/ch/telehealth/src",
+              "backend/domains/ch/toxicology/src",
+              "backend/domains/dashboard/crashes/src",
+              "backend/domains/dashboard/monitor/src",
+              "backend/domains/est/crash/src",
+              "backend/domains/inf/ait/src",
+              "backend/domains/inf/alcohol/src",
+              "backend/domains/inf/collection/src",
+              "backend/domains/inf/deadlines/src",
+              "backend/domains/inf/infraction/src",
+              "backend/domains/inf/measures/src",
+              "backend/domains/inf/normative/src",
+              "backend/domains/inf/notification/src",
+              "backend/domains/inf/rait-case/src",
+              "backend/domains/inf/rait-integration/src",
+              "backend/domains/inf/rait-org/src",
+              "backend/domains/inf/rait-session/src",
+              "backend/domains/inf/rait-worklist/src",
+              "backend/domains/inf/speed/src",
+              "backend/domains/integration/renaest-mirror/src",
+              "backend/domains/ops/agency/src",
+              "backend/domains/ops/core/src",
+              "backend/domains/ops/evidence/src",
+              "backend/domains/ops/example/src",
+              "backend/domains/ops/field/src",
+              "backend/domains/ops/offline-sync/src",
+              "backend/domains/ops/parameter/src",
+              "backend/domains/ops/provisioning/src",
+              "backend/domains/ops/snapshots/src",
+              "backend/domains/portal/citizen-service/src",
+              "backend/domains/portal/complaints/src",
+              "backend/domains/portal/identity/src",
+              "backend/domains/portal/inbox/src",
+              "backend/domains/portal/projections/src",
+              "backend/domains/portal/requests/src",
+              "backend/domains/shared/src",
+              "packages/api-clients/src",
+              "packages/sefaz-adapter/src",
+              "packages/senatran-adapter/src",
+              "packages/ui/src",
+              "senatran-mock/apps/api/src",
+              "senatran-mock/domain/autorizacoes/api/src",
+              "senatran-mock/domain/cdt/api/src",
+              "senatran-mock/domain/condutores/api/src",
+              "senatran-mock/domain/consulta-csv/api/src",
+              "senatran-mock/domain/detran/api/src",
+              "senatran-mock/domain/indicadores/api/src",
+              "senatran-mock/domain/infracoes/api/src",
+              "senatran-mock/domain/renach/api/src",
+              "senatran-mock/domain/renaest/api/src",
+              "senatran-mock/domain/renainf/api/src",
+              "senatran-mock/domain/restricoes-judiciais/api/src",
+              "senatran-mock/domain/roubo-furto/api/src",
+              "senatran-mock/domain/shared/api/src",
+              "senatran-mock/domain/sne/api/src",
+              "senatran-mock/domain/veiculos/api/src"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "files_count": 3156,
+            "lines_total": 425623,
+            "lines_max": 6656,
+            "lines_mean": 135,
+            "lines_p95": 425,
+            "threshold_pass": 500,
+            "threshold_review": 1000
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T3",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "plant_coherence",
+          "reading_id": "SR-47866e15bb69bf7f",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/plant_coherence/SR-47866e15bb69bf7f.json",
+          "canonical_sha256": "2ffaa694d97cf66f921787ad13e126651df06ea18e3a7357a74a4d75aabdebc4",
+          "record_id": "EV-23d6c7deeca10b85",
+          "record_sequence": 372,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-plant_coherence.json",
+          "official_receipt": "first-plant_coherence-record-0.json",
+          "declared_input": {
+            "sourceRoots": [
+              "apps/boat/mobile/src",
+              "apps/dashboard/web/src",
+              "apps/portal/web/src",
+              "apps/rait/web/src",
+              "apps/teat/mobile/src",
+              "apps/teat/web/src",
+              "backend/app/src",
+              "backend/domains/ch/billing/src",
+              "backend/domains/ch/biometrics/src",
+              "backend/domains/ch/clinical-controls/src",
+              "backend/domains/ch/clinical-network/src",
+              "backend/domains/ch/clinical-reports/src",
+              "backend/domains/ch/encounters/src",
+              "backend/domains/ch/exams/src",
+              "backend/domains/ch/inconsistencies/src",
+              "backend/domains/ch/juntas/src",
+              "backend/domains/ch/operational-controls/src",
+              "backend/domains/ch/patients/src",
+              "backend/domains/ch/process-blocks/src",
+              "backend/domains/ch/restrictions/src",
+              "backend/domains/ch/retention/src",
+              "backend/domains/ch/scheduling/src",
+              "backend/domains/ch/telehealth/src",
+              "backend/domains/ch/toxicology/src",
+              "backend/domains/dashboard/crashes/src",
+              "backend/domains/dashboard/monitor/src",
+              "backend/domains/est/crash/src",
+              "backend/domains/inf/ait/src",
+              "backend/domains/inf/alcohol/src",
+              "backend/domains/inf/collection/src",
+              "backend/domains/inf/deadlines/src",
+              "backend/domains/inf/infraction/src",
+              "backend/domains/inf/measures/src",
+              "backend/domains/inf/normative/src",
+              "backend/domains/inf/notification/src",
+              "backend/domains/inf/rait-case/src",
+              "backend/domains/inf/rait-integration/src",
+              "backend/domains/inf/rait-org/src",
+              "backend/domains/inf/rait-session/src",
+              "backend/domains/inf/rait-worklist/src",
+              "backend/domains/inf/speed/src",
+              "backend/domains/integration/renaest-mirror/src",
+              "backend/domains/ops/agency/src",
+              "backend/domains/ops/core/src",
+              "backend/domains/ops/evidence/src",
+              "backend/domains/ops/example/src",
+              "backend/domains/ops/field/src",
+              "backend/domains/ops/offline-sync/src",
+              "backend/domains/ops/parameter/src",
+              "backend/domains/ops/provisioning/src",
+              "backend/domains/ops/snapshots/src",
+              "backend/domains/portal/citizen-service/src",
+              "backend/domains/portal/complaints/src",
+              "backend/domains/portal/identity/src",
+              "backend/domains/portal/inbox/src",
+              "backend/domains/portal/projections/src",
+              "backend/domains/portal/requests/src",
+              "backend/domains/shared/src",
+              "packages/api-clients/src",
+              "packages/sefaz-adapter/src",
+              "packages/senatran-adapter/src",
+              "packages/ui/src",
+              "senatran-mock/apps/api/src",
+              "senatran-mock/domain/autorizacoes/api/src",
+              "senatran-mock/domain/cdt/api/src",
+              "senatran-mock/domain/condutores/api/src",
+              "senatran-mock/domain/consulta-csv/api/src",
+              "senatran-mock/domain/detran/api/src",
+              "senatran-mock/domain/indicadores/api/src",
+              "senatran-mock/domain/infracoes/api/src",
+              "senatran-mock/domain/renach/api/src",
+              "senatran-mock/domain/renaest/api/src",
+              "senatran-mock/domain/renainf/api/src",
+              "senatran-mock/domain/restricoes-judiciais/api/src",
+              "senatran-mock/domain/roubo-furto/api/src",
+              "senatran-mock/domain/shared/api/src",
+              "senatran-mock/domain/sne/api/src",
+              "senatran-mock/domain/veiculos/api/src"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "dirs_scanned": 542,
+            "incoherent_dirs": 0,
+            "max_review_incoherent": 3
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T4",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "migration_check",
+          "reading_id": "SR-5a7644d31758f3c4",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/migration_check/SR-5a7644d31758f3c4.json",
+          "canonical_sha256": "3837044d59c41e8c31fad03d59be5e54061b4c4fe9f5a1b4c58b17a32eb6d897",
+          "record_id": "EV-dd2dddac7c71569f",
+          "record_sequence": 342,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-migration_check.json",
+          "official_receipt": "separate-migration_check-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-migration",
+            "population": "detran-workspace-migration"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"0463bcb551a4c6ea5e8932a7ce3f3f38108c1405069174d5c18def9ee5222544\",\"stdout\":\"e58fdc31f77e800545267c2241902f58adc3f01ca5ea8e7b2048ff3d2a8c975f\"}",
+            "task_id": "scorecard-migration",
+            "population": "detran-workspace-migration",
+            "runner": "node",
+            "task_key": "348e9480e06a226830f0e025bc93e2341a588d29023a878582c9dedfba9ec5a8",
+            "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+            "stdout_sha256": "e58fdc31f77e800545267c2241902f58adc3f01ca5ea8e7b2048ff3d2a8c975f",
+            "stderr_sha256": "0463bcb551a4c6ea5e8932a7ce3f3f38108c1405069174d5c18def9ee5222544",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "77db600a4b4cfd75bc6e57f7958aa9aaf3f96db3eecd4cc2094931dbf06b39fa",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}"
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T5",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "lint",
+          "reading_id": "SR-fde8f7f70de4dd44",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/lint/SR-fde8f7f70de4dd44.json",
+          "canonical_sha256": "05d7663058a4ddb47607ab21c1b660fcb7abf66edfcc06d221b5c21eab86fde3",
+          "record_id": "EV-8e50e64b0d1ac575",
+          "record_sequence": 345,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-lint.json",
+          "official_receipt": "first-lint-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "error_count": 2,
+            "warning_count": 0,
+            "timeout_ms": 120000
+          },
+          "finding_codes": [
+            "@typescript-eslint/no-unused-vars",
+            "@typescript-eslint/no-unused-vars"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T6",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "security_scan",
+          "reading_id": "SR-a0017b967c034c60",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/security_scan/SR-a0017b967c034c60.json",
+          "canonical_sha256": "eccf2eade312a24848ae36f298902e81455a23e1ec5d472056582ef4e8395467",
+          "record_id": "EV-9813bca8d21d367a",
+          "record_sequence": 348,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-security_scan.json",
+          "official_receipt": "first-security_scan-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "tool": "pnpm",
+            "total_vulnerabilities": 24,
+            "critical": 0,
+            "high": 6,
+            "moderate": 15,
+            "low": 3,
+            "info": 0,
+            "pass_max_high": 0,
+            "review_max_high": 5
+          },
+          "finding_codes": [
+            "SECURITY_SCAN_HIGH_OVER_THRESHOLD"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T7",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "perf_test",
+          "reading_id": "SR-a0b48bbe26cf738e",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/perf_test/SR-a0b48bbe26cf738e.json",
+          "canonical_sha256": "1b710fb383401d80d9d45cd33c13d3ff9e68e2caeaa7880a3707c5eb00f5d7a2",
+          "record_id": "EV-a04ff988f723c191",
+          "record_sequence": 349,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-perf_test.json",
+          "official_receipt": "first-perf_test-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-performance",
+            "population": "detran-request-path-baseline-v1"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"c92d86bc4075e1e56f4aa9600310464f1fef3698bb18cd91ca33d13eacc52aaf\",\"stdout\":\"7ca9429841b3814539687bf7dc8a8c6fb86c1cb27b9f3146afa0687596c42a9c\"}",
+            "task_id": "scorecard-performance",
+            "population": "detran-request-path-baseline-v1",
+            "runner": "node",
+            "task_key": "b2864dd0d1cd9aa6ddd295a33fd0f82eac5e3e94e748a87a8d9f6b932ebebad9",
+            "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+            "stdout_sha256": "7ca9429841b3814539687bf7dc8a8c6fb86c1cb27b9f3146afa0687596c42a9c",
+            "stderr_sha256": "c92d86bc4075e1e56f4aa9600310464f1fef3698bb18cd91ca33d13eacc52aaf",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "d8dc85c98c10de91b19f267386aab8c335e3a82c9946dc2fecb3a3765f03f4de",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}",
+            "p50_ms": 22.0367499999993,
+            "p95_ms": 44.83295800000269,
+            "throughput_rps": 33.383671570183964
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T8",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "type_check",
+          "reading_id": "SR-61bd39222957ce22",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/type_check/SR-61bd39222957ce22.json",
+          "canonical_sha256": "6579056624f32bc7d47607d62d9c6cd66b44613fae3e755c2cf805a85679e145",
+          "record_id": "EV-0bb774c1452ca49c",
+          "record_sequence": 344,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-type_check.json",
+          "official_receipt": "first-type_check-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-typecheck",
+            "population": "detran-workspace-typecheck"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"324fab31526a898d170775ca416f373e92fa3b13fd7031613c62fa086740dde8\",\"stdout\":\"8dbe1cffc2c1b43555be4e389827f030444967cc653c9429efee791676b32249\"}",
+            "task_id": "scorecard-typecheck",
+            "population": "detran-workspace-typecheck",
+            "runner": "node",
+            "task_key": "470b802811acb47b54ab1b88c408d58fa6a8a9bd2ee9a7ea52d01722dab7101f",
+            "input_digest": "290ae315e4bbd7b34aa4f82f01675b4a4b2861953e3343b7b3ab010eebef249e",
+            "stdout_sha256": "8dbe1cffc2c1b43555be4e389827f030444967cc653c9429efee791676b32249",
+            "stderr_sha256": "324fab31526a898d170775ca416f373e92fa3b13fd7031613c62fa086740dde8",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "4e52aa246fc4ac19852ef6f46b5d99b28641ade06358ae80245f427194110abf",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}"
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F2:T9",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "build",
+          "reading_id": "SR-3ca66c75c81eb1c4",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/build/SR-3ca66c75c81eb1c4.json",
+          "canonical_sha256": "89cb7cfacf82ed6d3cf2c00528ac864633e7829f9482f49eceeab683e35b3343",
+          "record_id": "EV-5f7bb3d4e83d3815",
+          "record_sequence": 338,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-build.json",
+          "official_receipt": "separate-build-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {},
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F3:T1",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "e2e_test",
+          "reading_id": "SR-70e89a872c5f8c59",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/e2e_test/SR-70e89a872c5f8c59.json",
+          "canonical_sha256": "ef1d2157d1fdfae146c699b40b73feabf3e35cd4d770e64c02ce8c095efdabf5",
+          "record_id": "EV-3c2cf479319bb919",
+          "record_sequence": 341,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-e2e_test.json",
+          "official_receipt": "separate-e2e_test-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-e2e",
+            "population": "detran-workspace-e2e"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"5f4328bb3bdf686c4b1c68875afbc656611bd38456adf17a349ed423f40aa9e5\",\"stdout\":\"29618fa764c237adc32ffce22ac6b548e77f15da96e60d633618a14fdba027c5\"}",
+            "task_id": "scorecard-e2e",
+            "population": "detran-workspace-e2e",
+            "runner": "node",
+            "task_key": "5ed2a6a9a23c1e8bf6aa0efee52b1ff2057c3f937861340c2cf4a0d57ba45556",
+            "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+            "stdout_sha256": "29618fa764c237adc32ffce22ac6b548e77f15da96e60d633618a14fdba027c5",
+            "stderr_sha256": "5f4328bb3bdf686c4b1c68875afbc656611bd38456adf17a349ed423f40aa9e5",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "53d291f4fc6d3362e3ebccc7b8fc159786f39af22c523fdfad222bbfd60dcb06",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}",
+            "tests_passed": 2248,
+            "tests_failed": 1
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "integration_test",
+          "reading_id": "SR-6cdfb450218fec93",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/integration_test/SR-6cdfb450218fec93.json",
+          "canonical_sha256": "f0181049914226d1ff106f6375b0e6c13b5c86e6abbe3e722ce01f1e69a80f86",
+          "record_id": "EV-6e0ffd88f8ed1d02",
+          "record_sequence": 340,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-integration_test.json",
+          "official_receipt": "separate-integration_test-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-integration",
+            "population": "detran-workspace-integration"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"2bb1f005f88fa9da7e619579af287659777c179865849ce48e576cf0f2b9285a\",\"stdout\":\"1068a75d2833649f3b9be450487f269d784e86b3f6754a6693e1a4881362ca47\"}",
+            "task_id": "scorecard-integration",
+            "population": "detran-workspace-integration",
+            "runner": "node",
+            "task_key": "9aa5369b666ea3011b2b6f83ddc6b1ca8752300bfe40279f88b3ee5346451dc8",
+            "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+            "stdout_sha256": "1068a75d2833649f3b9be450487f269d784e86b3f6754a6693e1a4881362ca47",
+            "stderr_sha256": "2bb1f005f88fa9da7e619579af287659777c179865849ce48e576cf0f2b9285a",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "931db923e7b3ae5cfb1b0326f5c8f592d7cf9591e2a412e513a431a2f580a847",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}",
+            "tests_passed": 1518,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "unit_test",
+          "reading_id": "SR-3a19919bc4f536b8",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/unit_test/SR-3a19919bc4f536b8.json",
+          "canonical_sha256": "dcdd27605584fa6ef57c7bc0a51268ee7fdde7782d5b35c7fc7405ee6e5e43f6",
+          "record_id": "EV-d4439772d9aca68f",
+          "record_sequence": 339,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-unit_test.json",
+          "official_receipt": "separate-unit_test-record-0.json",
+          "declared_input": {
+            "taskId": "scorecard-unit",
+            "population": "detran-workspace-unit"
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "output_digests": "{\"stderr\":\"fd57ff07f36840393df5c41f8ff60c1929e0a52b01df90ff51f037625c4cd388\",\"stdout\":\"6456ee342f88460c435607680ffd7714787b05e238c54440a5d898d0fdd33064\"}",
+            "task_id": "scorecard-unit",
+            "population": "detran-workspace-unit",
+            "runner": "node",
+            "task_key": "5f28f428012855fa31afb4676bfcfac5a5a4ba3ac6e7958fc3905801b055ea52",
+            "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+            "stdout_sha256": "6456ee342f88460c435607680ffd7714787b05e238c54440a5d898d0fdd33064",
+            "stderr_sha256": "fd57ff07f36840393df5c41f8ff60c1929e0a52b01df90ff51f037625c4cd388",
+            "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+            "task_policy_digest": "c308663ec86efb9936f37157a0318f97f10d049d74077efe0517750052a12141",
+            "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+            "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+            "prerequisite_digests": "{}",
+            "tests_passed": 13641,
+            "tests_failed": 0
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Actual E2E socket failure retained, but && short-circuit left backend-package E2E population unexecuted; cell population incomplete despite completed unit/integration.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T2",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_coverage_depth",
+          "reading_id": "SR-01d9bca900c51904",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/test_coverage_depth/SR-01d9bca900c51904.json",
+          "canonical_sha256": "264d6e66cbf17864109d51135e1cad00aa399a5b25d3c92e2cefd8c0df39bae4",
+          "record_id": "EV-87dcfcc2b27bbaaf",
+          "record_sequence": 361,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_coverage_depth.json",
+          "official_receipt": "first-test_coverage_depth-record-0.json",
+          "declared_input": {
+            "coveragePath": "coverage/coverage-final.json",
+            "population": "local",
+            "exclusions": [
+              "backend/app/tests/e2e",
+              "backend/app/tests/in-house",
+              "backend/app/tests/integration",
+              "backend/app/tests/real",
+              "backend/domains/ch/billing/tests/integration",
+              "backend/domains/ch/clinical-reports/tests/integration",
+              "backend/domains/dashboard/monitor/tests/integration",
+              "backend/domains/est/crash/tests/integration",
+              "backend/domains/inf/ait/tests/e2e",
+              "backend/domains/inf/ait/tests/integration",
+              "backend/domains/inf/alcohol/tests/integration",
+              "backend/domains/inf/collection/tests/integration",
+              "backend/domains/inf/infraction/tests/integration",
+              "backend/domains/inf/measures/tests/integration",
+              "backend/domains/inf/normative/tests/integration",
+              "backend/domains/inf/notification/tests/integration",
+              "backend/domains/inf/rait-case/tests/integration",
+              "backend/domains/inf/rait-integration/tests/integration",
+              "backend/domains/inf/rait-org/tests/integration",
+              "backend/domains/inf/rait-session/tests/integration",
+              "backend/domains/inf/rait-worklist/tests/integration",
+              "backend/domains/ops/evidence/tests/integration",
+              "backend/domains/ops/field/tests/integration",
+              "backend/domains/ops/offline-sync/tests/integration",
+              "backend/domains/ops/parameter/tests/integration",
+              "backend/domains/ops/provisioning/tests/e2e",
+              "backend/domains/ops/provisioning/tests/integration",
+              "backend/domains/ops/snapshots/tests/integration",
+              "backend/domains/portal/citizen-service/tests/integration",
+              "backend/domains/portal/identity/tests/integration",
+              "backend/domains/portal/inbox/tests/integration",
+              "backend/domains/portal/projections/tests/integration",
+              "backend/domains/portal/requests/tests/integration",
+              "senatran-mock/tests/e2e",
+              "senatran-mock/tests/integration",
+              "tests",
+              "tools"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "population": "local",
+            "lines_total": 47135,
+            "lines_covered": 26646,
+            "lines_pct": 56.53,
+            "threshold_pass": 80,
+            "threshold_review": 50
+          },
+          "finding_codes": [
+            "TEST_COVERAGE_PARTIAL"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T3",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_coherence",
+          "reading_id": "SR-5c1093f89779898c",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/test_coherence/SR-5c1093f89779898c.json",
+          "canonical_sha256": "cef8fd5cc28c56b31f858dc816beba9f54a598b1e35d3cd5b42007636a2a08ca",
+          "record_id": "EV-91b3c791841929fa",
+          "record_sequence": 373,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_coherence.json",
+          "official_receipt": "first-test_coherence-record-0.json",
+          "declared_input": {
+            "packageRoots": [
+              "apps/boat/mobile",
+              "apps/dashboard/web",
+              "apps/portal/web",
+              "apps/rait/web",
+              "apps/teat/mobile",
+              "apps/teat/web",
+              "backend/app",
+              "backend/domains/ch/billing",
+              "backend/domains/ch/biometrics",
+              "backend/domains/ch/clinical-controls",
+              "backend/domains/ch/clinical-network",
+              "backend/domains/ch/clinical-reports",
+              "backend/domains/ch/encounters",
+              "backend/domains/ch/exams",
+              "backend/domains/ch/inconsistencies",
+              "backend/domains/ch/juntas",
+              "backend/domains/ch/operational-controls",
+              "backend/domains/ch/patients",
+              "backend/domains/ch/process-blocks",
+              "backend/domains/ch/restrictions",
+              "backend/domains/ch/retention",
+              "backend/domains/ch/scheduling",
+              "backend/domains/ch/telehealth",
+              "backend/domains/ch/toxicology",
+              "backend/domains/dashboard/crashes",
+              "backend/domains/dashboard/monitor",
+              "backend/domains/est/crash",
+              "backend/domains/inf/ait",
+              "backend/domains/inf/alcohol",
+              "backend/domains/inf/collection",
+              "backend/domains/inf/deadlines",
+              "backend/domains/inf/infraction",
+              "backend/domains/inf/measures",
+              "backend/domains/inf/normative",
+              "backend/domains/inf/notification",
+              "backend/domains/inf/rait-case",
+              "backend/domains/inf/rait-integration",
+              "backend/domains/inf/rait-org",
+              "backend/domains/inf/rait-session",
+              "backend/domains/inf/rait-worklist",
+              "backend/domains/inf/speed",
+              "backend/domains/integration/renaest-mirror",
+              "backend/domains/ops/agency",
+              "backend/domains/ops/core",
+              "backend/domains/ops/evidence",
+              "backend/domains/ops/example",
+              "backend/domains/ops/field",
+              "backend/domains/ops/offline-sync",
+              "backend/domains/ops/parameter",
+              "backend/domains/ops/provisioning",
+              "backend/domains/ops/snapshots",
+              "backend/domains/portal/citizen-service",
+              "backend/domains/portal/complaints",
+              "backend/domains/portal/identity",
+              "backend/domains/portal/inbox",
+              "backend/domains/portal/projections",
+              "backend/domains/portal/requests",
+              "backend/domains/shared",
+              "packages/api-clients",
+              "packages/sefaz-adapter",
+              "packages/senatran-adapter",
+              "packages/ui",
+              "senatran-mock"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "packages_scanned": 63,
+            "source_files": 2759,
+            "test_files": 745,
+            "global_ratio": 0.27,
+            "packages_below_min_ratio": 23,
+            "naming_uses_test": 1,
+            "naming_uses_spec": 744,
+            "naming_consistent": 0
+          },
+          "finding_codes": [
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+            "TEST_COHERENCE_NAMING_MIXED"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T4",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_invariant_alignment",
+          "reading_id": "SR-d3e09f9a7aac639f",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/test_invariant_alignment/SR-d3e09f9a7aac639f.json",
+          "canonical_sha256": "751dc47d0787c53c55b9d1f972a4fe49d4a1d2fc4d71bcd88ca67e3f51b0caf9",
+          "record_id": "EV-91a0f66d7666ee6c",
+          "record_sequence": 362,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_invariant_alignment.json",
+          "official_receipt": "first-test_invariant_alignment-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "invariant_count": 12,
+            "unaligned_count": 0
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F3:T5",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_idiomaticity",
+          "reading_id": "SR-84e5231ef1ec406e",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/test_idiomaticity/SR-84e5231ef1ec406e.json",
+          "canonical_sha256": "43d6176277588d14a5c45ab5d64d4e505175e99e94b3453a9b61f6160a3a3582",
+          "record_id": "EV-3ff73ca8c70779b8",
+          "record_sequence": 374,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_idiomaticity.json",
+          "official_receipt": "first-test_idiomaticity-record-0.json",
+          "declared_input": {
+            "testGlobs": [
+              "backend",
+              "packages",
+              "apps",
+              "senatran-mock",
+              "tools",
+              "tests"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "test_files": 794,
+            "mock_calls": 2383,
+            "call_through_observers": 29,
+            "observed_fault_injections": 0,
+            "external_port_substitutions": 2,
+            "fixture_calls": 457,
+            "snapshot_calls": 0,
+            "mock_heavy_files": 342,
+            "mock_heavy_ratio": 0.431,
+            "mocks_in_integration_files": 45
+          },
+          "finding_codes": [
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION",
+            "TEST_IDIOMATICITY_MOCK_IN_INTEGRATION"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T6",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_security_coverage",
+          "reading_id": "SR-8cbcbbeedb23feda",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/test_security_coverage/SR-8cbcbbeedb23feda.json",
+          "canonical_sha256": "9a1e690e2049147324491bea4817ff38762d238836e0b2c9b4a765099a09b810",
+          "record_id": "EV-564b7a1d7544a829",
+          "record_sequence": 375,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_security_coverage.json",
+          "official_receipt": "first-test_security_coverage-record-0.json",
+          "declared_input": {
+            "testGlobs": [
+              "backend",
+              "packages",
+              "apps",
+              "senatran-mock",
+              "tools",
+              "tests"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "test_files": 794,
+            "security_tests": 156,
+            "security_pct": 19.65,
+            "threshold_pass": 5,
+            "threshold_review": 2
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T7",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_performance_coverage",
+          "reading_id": "SR-ce1341c0ee7e1e53",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/test_performance_coverage/SR-ce1341c0ee7e1e53.json",
+          "canonical_sha256": "cfa78401b681f9f75d46d4a10cc02abaf3e6adeafc5c98e5c65ce3a2bbec381e",
+          "record_id": "EV-7919bed2b6bdcbfa",
+          "record_sequence": 376,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_performance_coverage.json",
+          "official_receipt": "first-test_performance_coverage-record-0.json",
+          "declared_input": {
+            "testGlobs": [
+              "backend",
+              "packages",
+              "apps",
+              "senatran-mock",
+              "tools",
+              "tests"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "test_files": 794,
+            "perf_tests": 55,
+            "perf_pct": 6.93
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T8",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_robustness_coverage",
+          "reading_id": "SR-b24ed002c4c0b7b9",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/test_robustness_coverage/SR-b24ed002c4c0b7b9.json",
+          "canonical_sha256": "143f4a4d7d4391cc94ece515aeefb3adfc9bb7db1413262589f3f03697fac73b",
+          "record_id": "EV-9c381bcc5803d91c",
+          "record_sequence": 377,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_robustness_coverage.json",
+          "official_receipt": "first-test_robustness_coverage-record-0.json",
+          "declared_input": {
+            "testGlobs": [
+              "backend",
+              "packages",
+              "apps",
+              "senatran-mock",
+              "tools",
+              "tests"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "test_files": 794,
+            "robust_tests": 420,
+            "robust_pct": 52.9,
+            "threshold_pass": 10,
+            "threshold_review": 5
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "blocked"
+      }
+    },
+    {
+      "cell": "F3:T9",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "test_weakening_review",
+          "reading_id": "SR-04bd371a575db6f7",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/test_weakening_review/SR-04bd371a575db6f7.json",
+          "canonical_sha256": "8ba907c257c30e9b7224a0ee060490bf9cec7db527f8ad169fd47d58cee1ec02",
+          "record_id": "EV-699057b7c4cf1328",
+          "record_sequence": 346,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-test_weakening_review.json",
+          "official_receipt": "first-test_weakening_review-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "files_checked": 0,
+            "drift_count": 0
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T1",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_api",
+          "reading_id": "SR-645ac7353c91f066",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_api/SR-645ac7353c91f066.json",
+          "canonical_sha256": "60658b967da3d78453cec33052e2c9480825a29c4471d0715f973ad0255cfbf0",
+          "record_id": "EV-99e3fd0b1d56610b",
+          "record_sequence": 350,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_api.json",
+          "official_receipt": "first-inventory_api-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "endpoint_count": 1139,
+            "controller_file_count": 257,
+            "endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9"
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_coverage",
+          "reading_id": "SR-e3e1e2f4a4b01b88",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/inventory_coverage/SR-e3e1e2f4a4b01b88.json",
+          "canonical_sha256": "cfae2693dc1037f2d382652401793a17699982ab1a18e85ccdf3010aa9cb6e9a",
+          "record_id": "EV-2be1ba2c485a98b0",
+          "record_sequence": 356,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_coverage.json",
+          "official_receipt": "first-inventory_coverage-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "route_count": 0,
+            "endpoint_count": 0,
+            "use_case_count": 110,
+            "link_count": 0,
+            "unmapped_route_count": 0,
+            "unmapped_endpoint_count": 0,
+            "inferred_path_match_count": 0,
+            "coverage_hash": "321d19a9365d422c1357bceb71ad18a5522413987c13ea310755b79d803c816e"
+          },
+          "finding_codes": [
+            "COVERAGE_REQUIRES_API_MAP",
+            "COVERAGE_REQUIRES_ROUTES"
+          ]
+        },
+        {
+          "kind": "inventory_data_handling",
+          "reading_id": "SR-a55da39c929444e7",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/inventory_data_handling/SR-a55da39c929444e7.json",
+          "canonical_sha256": "643a4d868e8d71f8fda3d1bdfb599482036e48698899062ea81f0ce9c461c525",
+          "record_id": "EV-280d6380b94687a3",
+          "record_sequence": 354,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_data_handling.json",
+          "official_receipt": "first-inventory_data_handling-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "table_count": 0,
+            "pii_column_count": 0,
+            "unlabeled_pii_column_count": 0,
+            "data_handling_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "finding_codes": [
+            "DATA_HANDLING_REQUIRES_DATA_MODEL"
+          ]
+        },
+        {
+          "kind": "inventory_data_model",
+          "reading_id": "SR-a31c40dab11c0c14",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_data_model/SR-a31c40dab11c0c14.json",
+          "canonical_sha256": "f0b975b012f96aa2b6b3fa40263883eeab86b68d77c3de185812229c4ef5e664",
+          "record_id": "EV-edc731fab82d56e9",
+          "record_sequence": 352,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_data_model.json",
+          "official_receipt": "first-inventory_data_model-record-0.json",
+          "declared_input": {
+            "migrationDirs": [
+              "backend/database/ddl",
+              "senatran-mock/database/ddl"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "table_count": 363,
+            "column_count": 4122,
+            "foreign_key_count": 323,
+            "migration_file_count": 83,
+            "tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+            "dialect": "postgres"
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_dep_graph",
+          "reading_id": "SR-d39859d51e383806",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_dep_graph/SR-d39859d51e383806.json",
+          "canonical_sha256": "c6084849b30fa59e51b19444e12d7c5c00274210b8ae7b14b67c081776791783",
+          "record_id": "EV-50513b7a9ac76f17",
+          "record_sequence": 355,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_dep_graph.json",
+          "official_receipt": "first-inventory_dep_graph-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "node_count": 3462,
+            "edge_count": 16435
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_rbac",
+          "reading_id": "SR-66eb56a342d80554",
+          "reading_status": "unknown",
+          "canonical_path": ".devai/state/sensor-readings/inventory_rbac/SR-66eb56a342d80554.json",
+          "canonical_sha256": "c49bfd0d7d6dea7377e61ca7f55994c0b992ca84418dae315e78382b14774c9d",
+          "record_id": "EV-6633d3082e9dcf2b",
+          "record_sequence": 353,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_rbac.json",
+          "official_receipt": "first-inventory_rbac-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "role_table_count": 0,
+            "permission_table_count": 0,
+            "join_table_count": 0,
+            "endpoint_binding_count": 0,
+            "endpoints_without_role_count": 0,
+            "synthetic_guard_permission_count": 0,
+            "synthetic_role_permission_count": 0,
+            "rbac_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "finding_codes": [
+            "RBAC_REQUIRES_DATA_MODEL"
+          ]
+        },
+        {
+          "kind": "inventory_routes",
+          "reading_id": "SR-30eadbfdac9e572d",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_routes/SR-30eadbfdac9e572d.json",
+          "canonical_sha256": "fbd7142bfa661570bfb56c5c3632c5e4b49a4a190e9250acd2c3df0c8e1a1517",
+          "record_id": "EV-a26c0f58e63271e5",
+          "record_sequence": 351,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_routes.json",
+          "official_receipt": "first-inventory_routes-record-0.json",
+          "declared_input": {
+            "framework": "angular",
+            "scanDirs": [
+              "apps/rait/web/src",
+              "apps/portal/web/src",
+              "apps/dashboard/web/src",
+              "apps/teat/web/src",
+              "apps/teat/mobile/src",
+              "apps/boat/mobile/src"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "route_count": 92,
+            "route_file_count": 22,
+            "routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4"
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Composite inventory completeness depends on missing RBAC/data-model consumer bodies and API/routes coverage inputs; partial source inventories do not discharge whole cell.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T2",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_api",
+          "reading_id": "SR-645ac7353c91f066",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_api/SR-645ac7353c91f066.json",
+          "canonical_sha256": "60658b967da3d78453cec33052e2c9480825a29c4471d0715f973ad0255cfbf0",
+          "record_id": "EV-99e3fd0b1d56610b",
+          "record_sequence": 350,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_api.json",
+          "official_receipt": "first-inventory_api-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "endpoint_count": 1139,
+            "controller_file_count": 257,
+            "endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9"
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_coverage",
+          "reading_id": "SR-e3e1e2f4a4b01b88",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/inventory_coverage/SR-e3e1e2f4a4b01b88.json",
+          "canonical_sha256": "cfae2693dc1037f2d382652401793a17699982ab1a18e85ccdf3010aa9cb6e9a",
+          "record_id": "EV-2be1ba2c485a98b0",
+          "record_sequence": 356,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_coverage.json",
+          "official_receipt": "first-inventory_coverage-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "route_count": 0,
+            "endpoint_count": 0,
+            "use_case_count": 110,
+            "link_count": 0,
+            "unmapped_route_count": 0,
+            "unmapped_endpoint_count": 0,
+            "inferred_path_match_count": 0,
+            "coverage_hash": "321d19a9365d422c1357bceb71ad18a5522413987c13ea310755b79d803c816e"
+          },
+          "finding_codes": [
+            "COVERAGE_REQUIRES_API_MAP",
+            "COVERAGE_REQUIRES_ROUTES"
+          ]
+        },
+        {
+          "kind": "inventory_data_model",
+          "reading_id": "SR-a31c40dab11c0c14",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_data_model/SR-a31c40dab11c0c14.json",
+          "canonical_sha256": "f0b975b012f96aa2b6b3fa40263883eeab86b68d77c3de185812229c4ef5e664",
+          "record_id": "EV-edc731fab82d56e9",
+          "record_sequence": 352,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_data_model.json",
+          "official_receipt": "first-inventory_data_model-record-0.json",
+          "declared_input": {
+            "migrationDirs": [
+              "backend/database/ddl",
+              "senatran-mock/database/ddl"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "table_count": 363,
+            "column_count": 4122,
+            "foreign_key_count": 323,
+            "migration_file_count": 83,
+            "tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+            "dialect": "postgres"
+          },
+          "finding_codes": []
+        },
+        {
+          "kind": "inventory_routes",
+          "reading_id": "SR-30eadbfdac9e572d",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_routes/SR-30eadbfdac9e572d.json",
+          "canonical_sha256": "fbd7142bfa661570bfb56c5c3632c5e4b49a4a190e9250acd2c3df0c8e1a1517",
+          "record_id": "EV-a26c0f58e63271e5",
+          "record_sequence": 351,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_routes.json",
+          "official_receipt": "first-inventory_routes-record-0.json",
+          "declared_input": {
+            "framework": "angular",
+            "scanDirs": [
+              "apps/rait/web/src",
+              "apps/portal/web/src",
+              "apps/dashboard/web/src",
+              "apps/teat/web/src",
+              "apps/teat/mobile/src",
+              "apps/boat/mobile/src"
+            ]
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "route_count": 92,
+            "route_file_count": 22,
+            "routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4"
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Composite inventory depth has missing API/routes body-dependent coverage inputs; zero routes/endpoints are not measured depth.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T3",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_dep_graph",
+          "reading_id": "SR-d39859d51e383806",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_dep_graph/SR-d39859d51e383806.json",
+          "canonical_sha256": "c6084849b30fa59e51b19444e12d7c5c00274210b8ae7b14b67c081776791783",
+          "record_id": "EV-50513b7a9ac76f17",
+          "record_sequence": 355,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_dep_graph.json",
+          "official_receipt": "first-inventory_dep_graph-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "node_count": 3462,
+            "edge_count": 16435
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T4",
+      "native_verdict": "UNKNOWN",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_adherence",
+          "reading_id": "SR-5bb61bf4d7fe0e82",
+          "reading_status": "unknown",
+          "canonical_path": ".devai/state/sensor-readings/inventory_adherence/SR-5bb61bf4d7fe0e82.json",
+          "canonical_sha256": "c7b3674e38741c5c4111e640bcb2b20b3e9a900ad8cee91b87b824f5c64ff885",
+          "record_id": "EV-8a74223d78e91020",
+          "record_sequence": 363,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_adherence.json",
+          "official_receipt": "first-inventory_adherence-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {},
+          "finding_codes": [
+            "INVENTORY_ADHERENCE_INPUT_MISSING"
+          ]
+        }
+      ],
+      "limitations": "INVENTORY_ADHERENCE_INPUT_MISSING; native UNKNOWN retained.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T5",
+      "native_verdict": "N/A",
+      "evaluation_disposition": "not-applicable",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [],
+      "limitations": "Original configured N/A retained.",
+      "baseline_0e26c795": {
+        "native_verdict": "N/A",
+        "evaluation_disposition": "not-applicable"
+      }
+    },
+    {
+      "cell": "F4:T6",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_data_handling",
+          "reading_id": "SR-a55da39c929444e7",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/inventory_data_handling/SR-a55da39c929444e7.json",
+          "canonical_sha256": "643a4d868e8d71f8fda3d1bdfb599482036e48698899062ea81f0ce9c461c525",
+          "record_id": "EV-280d6380b94687a3",
+          "record_sequence": 354,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_data_handling.json",
+          "official_receipt": "first-inventory_data_handling-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "table_count": 0,
+            "pii_column_count": 0,
+            "unlabeled_pii_column_count": 0,
+            "data_handling_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "finding_codes": [
+            "DATA_HANDLING_REQUIRES_DATA_MODEL"
+          ]
+        },
+        {
+          "kind": "inventory_rbac",
+          "reading_id": "SR-66eb56a342d80554",
+          "reading_status": "unknown",
+          "canonical_path": ".devai/state/sensor-readings/inventory_rbac/SR-66eb56a342d80554.json",
+          "canonical_sha256": "c49bfd0d7d6dea7377e61ca7f55994c0b992ca84418dae315e78382b14774c9d",
+          "record_id": "EV-6633d3082e9dcf2b",
+          "record_sequence": 353,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_rbac.json",
+          "official_receipt": "first-inventory_rbac-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "role_table_count": 0,
+            "permission_table_count": 0,
+            "join_table_count": 0,
+            "endpoint_binding_count": 0,
+            "endpoints_without_role_count": 0,
+            "synthetic_guard_permission_count": 0,
+            "synthetic_role_permission_count": 0,
+            "rbac_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "finding_codes": [
+            "RBAC_REQUIRES_DATA_MODEL"
+          ]
+        }
+      ],
+      "limitations": "RBAC/data-handling consumers lack required data-model body; native UNKNOWN/REVIEW are input gaps, not authorization/PII findings.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T7",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_performance",
+          "reading_id": "SR-c4477a1153a2743b",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/inventory_performance/SR-c4477a1153a2743b.json",
+          "canonical_sha256": "5f7f00c830f9e116f3fc493e0d5884aee094708b7bb75951eb4aa22b774b4a03",
+          "record_id": "EV-75114e19d76b2e55",
+          "record_sequence": 392,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "second-inventory_performance.json",
+          "official_receipt": "second-inventory_performance-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "kinds_observed": 7,
+            "total_observations": 31,
+            "overall_p95_ms": 2917,
+            "overall_mean_ms": 498,
+            "threshold_pass": 2000,
+            "threshold_review": 5000,
+            "inventory_api_count": 4,
+            "inventory_api_p95_ms": 778,
+            "inventory_api_mean_ms": 459,
+            "inventory_coverage_count": 5,
+            "inventory_coverage_p95_ms": 154,
+            "inventory_coverage_mean_ms": 63,
+            "inventory_data_handling_count": 5,
+            "inventory_data_handling_p95_ms": 72,
+            "inventory_data_handling_mean_ms": 20,
+            "inventory_data_model_count": 4,
+            "inventory_data_model_p95_ms": 98,
+            "inventory_data_model_mean_ms": 51,
+            "inventory_dep_graph_count": 4,
+            "inventory_dep_graph_p95_ms": 2917,
+            "inventory_dep_graph_mean_ms": 1974,
+            "inventory_rbac_count": 5,
+            "inventory_rbac_p95_ms": 141,
+            "inventory_rbac_mean_ms": 36,
+            "inventory_routes_count": 4,
+            "inventory_routes_p95_ms": 2989,
+            "inventory_routes_mean_ms": 1225
+          },
+          "finding_codes": [
+            "INVENTORY_PERFORMANCE_SLOW"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T8",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_determinism",
+          "reading_id": "SR-631b586156271bf4",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/inventory_determinism/SR-631b586156271bf4.json",
+          "canonical_sha256": "ee779b6bff3174cc8d5c3c8ab681a08b9e8cfd484a008ce2c055f13d740b0323",
+          "record_id": "EV-128e86f5e05b03e0",
+          "record_sequence": 364,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-inventory_determinism.json",
+          "official_receipt": "first-inventory_determinism-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "hash_a": "ae59675d6a9907fc87c276a50e8a30b92b848df948e0dca7c861efb581a3a616",
+            "hash_b": "ae59675d6a9907fc87c276a50e8a30b92b848df948e0dca7c861efb581a3a616",
+            "bytes_a": 997197,
+            "bytes_b": 997197,
+            "equal": 1
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F4:T9",
+      "native_verdict": "UNKNOWN",
+      "evaluation_disposition": "observation-gap",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "inventory_regeneration",
+          "reading_id": "SR-fe934a2bdd6e5452",
+          "reading_status": "unknown",
+          "canonical_path": ".devai/state/sensor-readings/inventory_regeneration/SR-fe934a2bdd6e5452.json",
+          "canonical_sha256": "7742432a19f8fa1c22e318b3930a03b937d3128c401541b250cb510e10f19a1e",
+          "record_id": "EV-a0612eb82b6959de",
+          "record_sequence": 343,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "separate-inventory_regeneration.json",
+          "official_receipt": "separate-inventory_regeneration-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "kinds_touched": 0,
+            "kinds_rebuilt": 0,
+            "kinds_up_to_date": 0,
+            "error_count": 0
+          },
+          "finding_codes": [
+            "INVENTORY_REGENERATION_SOURCE_DIRTY"
+          ]
+        }
+      ],
+      "limitations": "INVENTORY_REGENERATION_SOURCE_DIRTY; clean-source guard refused following authentic proof appends; native UNKNOWN retained.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T1",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_coverage",
+          "reading_id": "SR-a96c3d2100accbc9",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/harness_coverage/SR-a96c3d2100accbc9.json",
+          "canonical_sha256": "067d5c882ceab4b71fb2d9052f0fc9909baea9ae76954525ab7f8b53fa42519e",
+          "record_id": "EV-8f1425c57c5b191c",
+          "record_sequence": 378,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_coverage.json",
+          "official_receipt": "first-harness_coverage-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "workflow_count": 2,
+            "covered_by_unfiltered_workflow": 1,
+            "coverage_pct": 100
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T2",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_depth",
+          "reading_id": "SR-6539719314cf8a0c",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/harness_depth/SR-6539719314cf8a0c.json",
+          "canonical_sha256": "3b5027bef1d6dd2545c1301a3aa039ca4436d24ac32a3ec6a0622c760c43a5f2",
+          "record_id": "EV-8d627f1b34077a37",
+          "record_sequence": 379,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_depth.json",
+          "official_receipt": "first-harness_depth-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "workflow_count": 2,
+            "jobs_count": 9,
+            "steps_p95": 17,
+            "steps_median": 8,
+            "total_matrix_combinations": 0,
+            "threshold_pass": 3
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T3",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "docs_drift",
+          "reading_id": "SR-42eb89a9c7df8e06",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/docs_drift/SR-42eb89a9c7df8e06.json",
+          "canonical_sha256": "6aa8c023786b1b9b9387d48cce141fdd7797d9ae82b7da8da70bcb7ff5079ec0",
+          "record_id": "EV-b1a2a8d6fb5e62aa",
+          "record_sequence": 388,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-docs_drift.json",
+          "official_receipt": "first-docs_drift-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "schema_file_count": 121,
+            "claims_checked": 2,
+            "drift_count": 0
+          },
+          "finding_codes": [
+            "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+            "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+            "DOCS_DRIFT_NO_DECISION_RANGE_CLAIM",
+            "DOCS_DRIFT_CAP_CHECK_DISABLED"
+          ]
+        },
+        {
+          "kind": "harness_coherence",
+          "reading_id": "SR-14cbe739ddfbcd7f",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/harness_coherence/SR-14cbe739ddfbcd7f.json",
+          "canonical_sha256": "d122631fe3aecc473435deea369473d3afc13a718beb753eba8e48b77cd0f2aa",
+          "record_id": "EV-1bea5e71edd7e44d",
+          "record_sequence": 380,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_coherence.json",
+          "official_receipt": "first-harness_coherence-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "workflow_count": 2,
+            "action_version_drift_count": 0,
+            "permissions_mixed": 0,
+            "concurrency_mixed": 0,
+            "concurrency_semantic_issues": 1,
+            "incoherence_score": 1,
+            "max_review_incoherence": 3
+          },
+          "finding_codes": [
+            "HARNESS_COHERENCE_CONCURRENCY_POLICY"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T4",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_invariant_alignment",
+          "reading_id": "SR-56f1b5a435b38829",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/harness_invariant_alignment/SR-56f1b5a435b38829.json",
+          "canonical_sha256": "54345bea33b5a2a52e23ef148f0f747a816a8073e6db837181f33356a381b047",
+          "record_id": "EV-6f10b048eae53e7b",
+          "record_sequence": 391,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "second-harness_invariant_alignment.json",
+          "official_receipt": "second-harness_invariant_alignment-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "gate_invariants": 7,
+            "misaligned": 7,
+            "workflow_count": 2,
+            "executable_run_steps": 55,
+            "evidence_records": 269,
+            "candidate_head_resolved": true
+          },
+          "finding_codes": [
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+            "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T5",
+      "native_verdict": "REVIEW",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_idiomaticity",
+          "reading_id": "SR-8458c4667dbd821d",
+          "reading_status": "review",
+          "canonical_path": ".devai/state/sensor-readings/harness_idiomaticity/SR-8458c4667dbd821d.json",
+          "canonical_sha256": "9625883a7815ea0d39d96e378f202587b4b91c02d4d3773f097016b3b3bfd3a4",
+          "record_id": "EV-6ff1924395ddf940",
+          "record_sequence": 381,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_idiomaticity.json",
+          "official_receipt": "first-harness_idiomaticity-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "workflow_count": 2,
+            "composite_action_uses": 0,
+            "reusable_workflow_uses": 0,
+            "cache_present": 1,
+            "idiomaticity_score": 1
+          },
+          "finding_codes": [
+            "HARNESS_IDIOMATICITY_NO_COMPOSITE_ACTIONS",
+            "HARNESS_IDIOMATICITY_NO_REUSABLE_WORKFLOWS"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "REVIEW",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T6",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_security",
+          "reading_id": "SR-252c29ec85b15870",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/harness_security/SR-252c29ec85b15870.json",
+          "canonical_sha256": "5d1394d33016c4af1e88bd9899aa22efc26d7f68bb0437e8627b0cf5c99e4766",
+          "record_id": "EV-3857d0b990c6e658",
+          "record_sequence": 365,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_security.json",
+          "official_receipt": "first-harness_security-record-0.json",
+          "declared_input": {},
+          "capture_terminated": false,
+          "metrics": {
+            "workflow_count": 2,
+            "unpinned_action_count": 0,
+            "missing_permissions_block_count": 0,
+            "pwn_request_count": 0
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T7",
+      "native_verdict": "FAIL",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_performance",
+          "reading_id": "SR-f9f6246a0b71a3f0",
+          "reading_status": "fail",
+          "canonical_path": ".devai/state/sensor-readings/harness_performance/SR-f9f6246a0b71a3f0.json",
+          "canonical_sha256": "1dd56f11ef43e80762628f9961fd1769dae61594f72e67c881e3d63df72f84c2",
+          "record_id": "EV-c392ac8eb7f45c1b",
+          "record_sequence": 382,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_performance.json",
+          "official_receipt": "first-harness_performance-record-0.json",
+          "declared_input": {
+            "workflow": "ci.yml",
+            "event": "push",
+            "headBranch": "main",
+            "attempts": "last",
+            "includeCancelled": false,
+            "lookbackDays": 30,
+            "minimumSample": 10,
+            "excludedJobs": []
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "run_count": 85,
+            "success_count": 83,
+            "sample_size": 83,
+            "median_ms": 1739000,
+            "p95_ms": 2276000,
+            "pass_median_ms": 900000,
+            "pass_p95_ms": 1800000,
+            "minimum_sample": 10,
+            "population_workflow": "ci.yml",
+            "population_event": "push",
+            "population_head_branch": "main",
+            "population_base_branch": "main",
+            "population_attempts": "last",
+            "population_include_cancelled": false,
+            "population_lookback_days": 30,
+            "population_base_branch_verified": true,
+            "population_excluded_jobs_unverified": 0,
+            "population_unverified": ""
+          },
+          "finding_codes": [
+            "HARNESS_PERFORMANCE_TOO_SLOW"
+          ]
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "FAIL",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T8",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_robustness",
+          "reading_id": "SR-8e0241b2e6567fa5",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/harness_robustness/SR-8e0241b2e6567fa5.json",
+          "canonical_sha256": "5cc8339ec2a6b52f66d4b58cc3c06a0e31a73c2c9ec282d450d0185b2c904000",
+          "record_id": "EV-058431da914505fa",
+          "record_sequence": 383,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_robustness.json",
+          "official_receipt": "first-harness_robustness-record-0.json",
+          "declared_input": {
+            "workflow": "ci.yml",
+            "event": "push",
+            "headBranch": "main",
+            "attempts": "last",
+            "includeCancelled": false,
+            "lookbackDays": 30,
+            "minimumSample": 10,
+            "excludedJobs": []
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "run_count": 85,
+            "flaky_runs": 0,
+            "flakiness_pct": 0,
+            "threshold_pass": 5,
+            "threshold_review": 15,
+            "sample_size": 85,
+            "minimum_sample": 10,
+            "population_workflow": "ci.yml",
+            "population_event": "push",
+            "population_head_branch": "main",
+            "population_base_branch": "main",
+            "population_attempts": "last",
+            "population_include_cancelled": false,
+            "population_lookback_days": 30,
+            "population_base_branch_verified": true,
+            "population_excluded_jobs_unverified": 0,
+            "population_unverified": ""
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    },
+    {
+      "cell": "F5:T9",
+      "native_verdict": "PASS",
+      "evaluation_disposition": "measured",
+      "criteria": "Installed published DEVAI 2.7.0 native predicate; original configured/default thresholds/populations, no altered reference.",
+      "source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+      "evidence": [
+        {
+          "kind": "harness_green_main",
+          "reading_id": "SR-120a473ba2bbff38",
+          "reading_status": "pass",
+          "canonical_path": ".devai/state/sensor-readings/harness_green_main/SR-120a473ba2bbff38.json",
+          "canonical_sha256": "66cd47e13f5868dab84c9a97246c12ee861f1e213e39d923e9827620ec53c64b",
+          "record_id": "EV-a2b7b8afb90438de",
+          "record_sequence": 366,
+          "record_source_sha": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+          "capture": "first-harness_green_main.json",
+          "official_receipt": "first-harness_green_main-record-0.json",
+          "declared_input": {
+            "workflow": "ci.yml",
+            "event": "push",
+            "headBranch": "main",
+            "attempts": "last",
+            "includeCancelled": false,
+            "lookbackDays": 30,
+            "minimumSample": 10,
+            "excludedJobs": []
+          },
+          "capture_terminated": false,
+          "metrics": {
+            "run_count": 85,
+            "success_count": 83,
+            "success_pct": 97.65,
+            "threshold_pass": 95,
+            "threshold_review": 80,
+            "sample_size": 85,
+            "minimum_sample": 10,
+            "population_workflow": "ci.yml",
+            "population_event": "push",
+            "population_head_branch": "main",
+            "population_base_branch": "main",
+            "population_attempts": "last",
+            "population_include_cancelled": false,
+            "population_lookback_days": 30,
+            "population_base_branch_verified": true,
+            "population_excluded_jobs_unverified": 0,
+            "population_unverified": ""
+          },
+          "finding_codes": []
+        }
+      ],
+      "limitations": "Supported installed predicate over declared population; native PASS/REVIEW/FAIL is not readiness.",
+      "baseline_0e26c795": {
+        "native_verdict": "PASS",
+        "evaluation_disposition": "measured"
+      }
+    }
+  ],
+  "non_cell_diagnostics": [
+    {
+      "kind": "decision_record_integrity",
+      "reading_id": "SR-7124b1006016000a",
+      "status": "fail",
+      "finding_codes": [
+        "DECISION_FRONTMATTER_INVALID"
+      ],
+      "classification": "supported diagnostic; separate remediation, no extra cell"
+    },
+    {
+      "kind": "decision_citation_resolution",
+      "reading_id": "SR-bf697f040add7259",
+      "status": "fail",
+      "finding_codes": [
+        "DECISION_CITATION_UNRESOLVED",
+        "DECISION_CITATION_UNRESOLVED",
+        "DECISION_CITATION_UNRESOLVED"
+      ],
+      "classification": "supported diagnostic; separate remediation, no extra cell"
+    },
+    {
+      "kind": "archive_immutability",
+      "reading_id": "SR-545901afcc139586",
+      "status": "pass",
+      "finding_codes": [],
+      "classification": "supported diagnostic; separate remediation, no extra cell"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-12adf8d2d6cfc55f",
+      "status": "fail",
+      "finding_codes": [
+        "ROUND_RECORD_MISSING",
+        "ROUND_ARCHIVE_MUTATED",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING",
+        "ROUND_RECORD_MISSING"
+      ],
+      "classification": "supported diagnostic; separate remediation, no extra cell"
+    },
+    {
+      "kind": "site_drift",
+      "reading_id": "SR-3fff3ff1568d3dd0",
+      "status": "unknown",
+      "finding_codes": [
+        "SITE_DRIFT_SOURCE_UNREACHABLE"
+      ],
+      "classification": "observation gap"
+    },
+    {
+      "kind": "action_effect_inference",
+      "reading_id": "SR-cb0f83c43f49bb1c",
+      "status": "unknown",
+      "finding_codes": [
+        "ACTION_EFFECT_INFERENCE_INPUT_MISSING"
+      ],
+      "classification": "observation gap"
+    }
+  ]
+}

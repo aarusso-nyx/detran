@@ -1,0 +1,47 @@
+{
+  "verdict": "PASS_FOR_DRAFT_PR_CI_ONLY",
+  "findings": [
+    {
+      "id": "F1",
+      "status": "resolved",
+      "note": "ADR-0062 now requires a merge commit and rules out squash and rebase. It says both original commits must stay reachable and that the existing historical gate already requires a full-history checkout."
+    },
+    {
+      "id": "F2",
+      "status": "resolved",
+      "note": "ADR-0062 lists all 8 newly bound paths outside the reference and says any edit to them, including C6 activation, needs a new versioned map."
+    },
+    {
+      "id": "F3",
+      "status": "resolved",
+      "note": "The 14 manifest cases are labeled as digest-boundary refusals, with a comment saying there is no injectable seam. They no longer claim to cover the inner guards."
+    },
+    {
+      "id": "F4",
+      "status": "resolved",
+      "note": "A new test runs both mixed old/new states through verifyHistoricalCompatibility and expects GOVERNED_UPGRADE_REFUSED: current bytes."
+    },
+    {
+      "id": "F5",
+      "status": "resolved",
+      "note": "Both missing-file tests now assert /ENOENT|GOVERNED_UPGRADE_REFUSED/."
+    }
+  ],
+  "scope": {
+    "files_read": [
+      "docs/meta/adr/ADR-0062-source-bound-governed-upgrade-compatibility.md",
+      "tools/security/tests/governed-upgrade-compatibility.test.mjs",
+      "package.json security:history:check",
+      "review1.json"
+    ],
+    "checks": "read-only: git diff --stat; the historical-compatibility.test.mjs diff adds lines only and removes none; security:history:check runs the new suite alongside both old suites",
+    "not_performed": "tests, builds, sensors, doctor, evidence verify, edits; I did not compare runtime, helper or manifest bytes against review1 and took the unchanged claim on trust"
+  },
+  "remaining_gates": [
+    "run the focused historical and governed-upgrade tests locally",
+    "full native unit suite",
+    "required CI green",
+    "merge-commit integration",
+    "cross-family review receipt"
+  ]
+}

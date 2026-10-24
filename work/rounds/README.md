@@ -8,7 +8,7 @@
 
 **Authority:** Architect (Constitution Article 6).
 
-Governed rounds of this repository (DEVAI 2.6.3). One round per front of the implementation
+Governed rounds of this repository (DEVAI 2.7.0). One round per front of the implementation
 backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022) or of a campaign. Evidence lives in
 `record/proofs/chain.json` (machine-only); this folder holds the human-readable working papers.
 `pnpm verify:state-index` checks this table against `record/proofs/compliance/closures/PC-*.json`:
@@ -80,7 +80,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0039 | `C3/C4` — normalização suplementar integrada; lacunas preservadas                                                           | fechada           | [#209](https://github.com/aarusso-nyx/detran/pull/209) | PC-0025 | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
 | R-0042 | Seven scorecard measurement gaps (BL-0024); collector fidelity and separate provider repair; C6 held                        | aberta            | —                                                      | —       | Codex                                               |
-| R-0043 | E2E fixture isolation                                                                                                       | aberta            | —                                                      | —       | Codex                                               |
+| R-0043 | E2E fixture isolation — reparo #218 verificado; escopo limitado, BL-0025 aberto                                             | fechada           | [#218](https://github.com/aarusso-nyx/detran/pull/218) | PC-0026 | Codex                                               |
 | R-0044 | Current dependency vulnerabilities                                                                                          | aberta            | —                                                      | —       | Codex                                               |
 | R-0045 | Existing full-workspace lint                                                                                                | aberta            | —                                                      | —       | Codex                                               |
 

@@ -1,0 +1,108 @@
+{
+  "verdict": "ACCEPT_FOR_DRAFT_CI_WITH_FINDINGS",
+  "native_pass_issued": false,
+  "tests_executed": false,
+  "integration_or_measurement_pass": false,
+  "summary": "The transition is finite and source-bound, and it fails closed. The supplemental manifest is pinned in code by its SHA-256 and bound to the exact baseline 92be0db4, before cac88d51 and adoption 74b9eec8 commits. The verifier checks that adoption's parent is before. Every manifest entry is checked against its Git blob id and SHA-256. Only the two paths GOVERNED_UPGRADE_PATHS = [.devai/config/project.json, .devai/pin/constitution.md] can route to the new verifier, and only when their current bytes no longer match. Every other path among the 1,073 keeps strict SEALED_BYTES_CHANGED. The baseline hash check (PRESERVATION_BASELINE_MISMATCH) still runs for all 1,073 entries, including these two. The upgrade verifier also checks reference[path] and the baseline blob bytes for both paths. All 6 generated files must match the adoption blobs byte-for-byte. Receipt targets, the registered init-upgrade command and its receipt, ADR-0061 and Owner D-2 are bound to immutable adoption Git objects with no current-byte comparison, so later prose can be added legitimately. The current dependency check covers only the DEVAI identity: the package.json devDependency must be exactly 2.7.0, and the lock check compares only the root importer entry and the packages resolution entry. Snapshots and unrelated packages can change freely. The v1 manifest is digest-checked and unchanged. The C6 files (invariant-producers, adopter-policy) are byte-pinned to the before commit and their bindings must be empty. The result returns native_verdict_replaced=false and the historical limitation text is kept. I confirmed with a read-only check of the worktree that only project.json and pin/constitution.md differ from the 1,073-entry reference, besides chain.json and the two already-authorized append streams. The historical-compatibility.test.mjs diff only adds 16 fixture-setup lines; no assertions changed.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "category": "operational-correctness",
+      "file": "tools/security/governed-upgrade-compatibility.mjs",
+      "line": 15,
+      "summary": "Commits BEFORE (cac88d51) and ADOPTION (74b9eec8) are hard-coded but are not ancestors of origin/main (80505ac0), so the gate only works if PR #224 merges with a merge commit.",
+      "failure_scenario": "If PR #224 is squash- or rebase-merged, 74b9eec8 and cac88d51 are no longer reachable from main. A fresh fetch-depth:0 CI clone (ci.yml:51/205) then fails on git show/rev-parse ADOPTION^ and the historical gate refuses permanently on main. Shallow (fetch-depth:1) jobs fail the same way if they ever run this check.",
+      "recommendation": "Require merge-commit integration for this PR (the repo's history uses merge commits) and state that requirement in ADR-0062 or the PR body. Do not rebase or squash."
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "scope-disclosure",
+      "file": "docs/meta/adr/ADR-0062-source-bound-governed-upgrade-compatibility.md",
+      "line": 38,
+      "summary": "Once the upgrade path is active, which is permanent from now on, the gate also freezes 8 paths outside the 1,073-entry reference: 4 generated files (adopter-policy-binding, authority-policy, .devai/constitution.md, upgrade-receipt) and 4 preserved sources (adopter-policy, invariant-producers, sensor-inputs, thresholds). The ADR names the six generated files and thresholds, but not the sensor-inputs and policy freeze or what it means for later work.",
+      "failure_scenario": "A later legitimate, non-upgrade edit to sensor-inputs.json, authority-policy.json or any generated config gets GOVERNED_UPGRADE_REFUSED from the historical gate. That includes a future C6 activation, which is intended only after a new reviewed map.",
+      "recommendation": "List all 8 newly frozen non-reference paths in ADR-0062 and state that any edit to them needs a new versioned map. Otherwise it reads as accidental scope creep."
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "category": "test-coverage",
+      "file": "tools/security/tests/governed-upgrade-compatibility.test.mjs",
+      "line": 169,
+      "summary": "All 14 manifest-tampering cases fail at the 'manifest digest' check. None of them reach the guards behind it: transition identity, population, receipt identity, command/receipt agreement, ADR-0061/D-2 markers, the C6 bindings check, or the dependency transition checks.",
+      "failure_scenario": "A later refactor could weaken or delete those guards (for example during a code-pin change for a v3 map) with no test failing, since the digest check covers everything up to the moment the pin changes. Calling these 'forged authority/receipt' tests overstates what they reach.",
+      "recommendation": "This is acceptable for draft CI. Label the tests accurately, or add an internal test seam (for example an injectable manifest digest used only in tests) so the guards behind the digest are exercised."
+    },
+    {
+      "id": "F4",
+      "severity": "low",
+      "category": "test-coverage",
+      "file": "tools/security/tests/governed-upgrade-compatibility.test.mjs",
+      "line": 299,
+      "summary": "No test covers a mixed state where one sealed path is upgraded and the other is back at its baseline bytes, or where both are routed through verifyHistoricalCompatibility in a mixed state.",
+      "failure_scenario": "The code refuses this today: source(after, ADOPTION, true) checks both paths. Without a test, a future change that only verifies the path that mismatched would silently accept half an upgrade.",
+      "recommendation": "Add two historical-fixture cases, (project.json=after, constitution=before) and the reverse, each expecting a GOVERNED_UPGRADE_REFUSED 'current bytes' rejection."
+    },
+    {
+      "id": "F5",
+      "severity": "info",
+      "category": "error-taxonomy",
+      "file": "tools/security/governed-upgrade-compatibility.mjs",
+      "line": 22,
+      "summary": "Raw execFileSync and fs errors (for example a missing object or ENOENT) come out of the new verifier as-is, not normalized to GIT_SOURCE_UNAVAILABLE as in verify-historical-compatibility.mjs. The 'missing generated file' and 'missing manifest' tests use assert.throws with no pattern.",
+      "failure_scenario": "The verifier still fails closed, but a refusal for an unrelated reason would satisfy those pattern-less tests.",
+      "recommendation": "Optional: wrap git calls in GOVERNED_UPGRADE_REFUSED and assert /ENOENT|GOVERNED_UPGRADE_REFUSED/."
+    }
+  ],
+  "confirmed_properties": [
+    "original v1 manifest, the 1,073-entry reference and the baseline objects are untouched; the v1 manifest SHA-256 is enforced",
+    "only the 2 exact paths can be admitted as mismatches; every other sealed path stays strict (tested with .devai/state/evidence-chain.json)",
+    "all 6 generated files are byte-bound to adoption blobs; receipt target hashes and the 2.6.3→2.7.0 and 1.0.2→1.1.0 transitions are checked",
+    "authority is bound to immutable adoption objects; current prose can change",
+    "the current dependency check covers only DEVAI identity: package.json is exactly 2.7.0; the lock compares only the root importer and packages resolution, and the importer version has no peer suffix, so unrelated dependency updates are safe",
+    "unregistered future upgrades refuse (2.8.0 in package.json, lock or project.json)",
+    "C6 bindings are pinned and empty; nothing activates them",
+    "native_verdict_replaced=false; no native PASS; limitation text kept",
+    "symlinks, path escapes and non-realpath roots are refused",
+    "pre-upgrade bytes still verify without the forward map"
+  ],
+  "scope": {
+    "head": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+    "branch": "codex/m1-history-upgrade-transition-20261023",
+    "files_read": [
+      "docs/meta/adr/ADR-0062-source-bound-governed-upgrade-compatibility.md",
+      "docs/meta/adr/ADR-0061-devai-270-measurement-adoption.md (frontmatter)",
+      "tools/security/governed-upgrade-compatibility.mjs",
+      "tools/security/verify-historical-compatibility.mjs (diff plus helpers L95-125, L320-340, L600-650)",
+      "docs/meta/security/governed-upgrade-compatibility-v2.json",
+      "tools/security/tests/governed-upgrade-compatibility.test.mjs",
+      "tools/security/tests/historical-compatibility.test.mjs (diff, L1-140, L460-530)",
+      "pnpm-lock.yaml (DEVAI blocks only)",
+      ".github/workflows (fetch-depth grep)",
+      "git diff for DESIGN-DECISIONS.md and docs/meta/adr/README.md"
+    ],
+    "read_only_checks": [
+      "git diff --stat",
+      "which reference paths intersect the manifest paths, and which reference paths differ from current worktree bytes (node, read-only)",
+      "git diff --name-only cac88d51..74b9eec8",
+      "git merge-base --is-ancestor 74b9eec8 origin/main (result: not an ancestor)"
+    ],
+    "not_performed": [
+      "tests",
+      "builds",
+      "sensors",
+      "doctor",
+      "evidence verify",
+      "any edits outside the plan file"
+    ],
+    "remaining_delivery_gates": [
+      "actually run the focused historical and upgrade tests",
+      "the complete native unit suite during the STYNX quiet window",
+      "required CI green",
+      "merge-commit integration (F1)"
+    ],
+    "epoch_isolation": "this patch was not introduced into the 74b9eec8 measurement epoch and no source was changed during the review"
+  }
+}

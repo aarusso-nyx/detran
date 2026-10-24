@@ -1,0 +1,53 @@
+{
+  "verdict": "REVIEW",
+  "summary": "Nothing blocking for safety or authority: the adoption boundary is intact. Two documentation fixes should land before the source candidate is frozen. The report says both first refusals were kept, but only the law-corpus one is on disk. There are also a few missing spaces. Every other requested property checked out.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "low",
+      "category": "provenance-accuracy",
+      "file": "work/rounds/R-0042/reports/m1-adoption-20261023/README.md",
+      "line": 24,
+      "summary": "The README says 'Both failed checks were preserved before correction', and validation.md says 'Original first state-index/schema-copy refusals remain observations'. Only law-corpus-first-refusal.log exists in the report directory. No state-index first-refusal artifact is in the directory, and grep finds 'state-index' only in README.md and validation.md.",
+      "failure_scenario": "An Inspector or auditor relying on the frozen candidate cannot reproduce or verify the claimed state-index refusal that came before the version-label edit in work/rounds/README.md. The custody claim cannot be checked.",
+      "recommendation": "Add the authentic first state-index refusal output, naming where it came from. If it was not captured, change README and validation.md to say only the law-corpus refusal was kept and the state-index refusal is described, not retained."
+    },
+    {
+      "id": "F2",
+      "severity": "low",
+      "category": "documentation-spacing",
+      "file": "docs/meta/adr/ADR-0061-devai-270-measurement-adoption.md",
+      "line": 86,
+      "summary": "Words run together: 'to2.7.0' in ADR-0061's schema-copy supplement, 'all16checks' and 'The56law-corpus' in validation.md, and 'active42decision' in the additional_source_changes string in pre-freeze-preservation.json. Prettier does not catch these. This repo has fixed the same kind of finding before (commit d6d9b9cc).",
+      "failure_scenario": "The accepted ADR and the validation record get frozen into the published candidate with garbled text. A later spacing-only cleanup would then rewrite bytes of a frozen evidence report.",
+      "recommendation": "Fix the spacing in ADR-0061 and validation.md before freezing. In pre-freeze-preservation.json, fix it only if that file is not treated as an authentic machine output."
+    }
+  ],
+  "verified": [
+    "package.json and pnpm-lock.yaml change only the @aarusso-nyx/devai identity: 2.6.3 to 2.7.0, integrity sha512-nRLnRa… matching ADR-0061. No other lock nodes changed, and package.json and the lockfile are unchanged between the stated baseline 80505ac0 and HEAD cac88d51.",
+    "There are exactly six generated effects. The sha256 values recorded in upgrade-receipt.json match the actual bytes of project.json, adopter-policy-binding.json, authority-policy.json, pin/constitution.md and constitution.md. The authority-policy delta is limited to constitution digest/version, framework/policy version and materialization identity/timestamp. The adopter-policy-binding delta is only the project.json digest.",
+    "The pinned constitution diff matches the ADR-0061 review: version metadata plus Articles 6, 7 and 10, which add the focused-regression verb and the independent-assurance exclusion. Pin sha 8353c3b8… equals the project.json pin and doctor's constitution-binding.",
+    "law/schemas/task.schema.json and campaign.schema.json are byte-identical (cmp) to the installed 2.7.0 dist/runtime/index/schemas. All law schemas present in the package are byte-identical to it. The manifest keeps the same 121-entry roster as HEAD and all 121 digests match the files on disk. The only change is optional boolean independent_assurance, default false, with nothing required and nothing relaxed.",
+    "No hand edits to control state. The .devai/state, record/proofs, thresholds, sensor inputs, law/policy, tests, tools, backend, apps, packages and the closed-round directories are unchanged against HEAD. The only working-tree changes are the 15 listed files plus the untracked ADR and report directory. No binding journal is present in .devai/config.",
+    "No gate, test, assertion or threshold is weakened, nothing activates C6 (bindings are empty), and no history is rewritten. Only the current version label in work/rounds/README.md changed. R-0042 decisions.md is append-only (D-2), and the DESIGN-DECISIONS and ADR index rows were only added.",
+    "The upgrade-write.json verdict is pass. doctor-after.log shows ok:true on all 16 checks, with the candidate marked clean:false, and the report correctly calls this diagnostic only. No runtime, sensor, scorecard, clean-head or main-integration result is claimed. PR #211 stays unmerged and C6 stays blocked.",
+    "prettier --check passes on every touched or untracked file."
+  ],
+  "scope": {
+    "role": "Architect (read-only delivery review)",
+    "base": "cac88d518bdf430f58575e74309bbcd1658ab6c2",
+    "reviewed": [
+      "git diff of all 15 modified tracked files",
+      "docs/meta/adr/ADR-0061-devai-270-measurement-adoption.md",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/* (README, validation, preservation JSONs, upgrade-write.json, doctor-after.log, law-corpus-first-refusal.log)",
+      "installed node_modules @aarusso-nyx/devai@2.7.0 schemas"
+    ],
+    "not_done": [
+      "Made no edits, and ran no RC, tests or law/state checks; the only check run was the read-only prettier --check",
+      "Did not re-review the migration-review1/2 contents or the full package and constitution diff beyond the pinned constitution, because the earlier external reviews covered them",
+      "Did not read the archived R-0036 reports or check PR #223 CI",
+      "The report directory changed during the review (law-corpus log, pre-freeze JSON and validation.md were added at 19:51), so these findings reflect that later state"
+    ],
+    "fitness": "Fit to freeze and publish a clean source candidate for the Inspector once F1 and F2 are fixed. Neither finding affects the generated effects, the schemas or the protected state. Integration into main remains gated on PR #223."
+  }
+}

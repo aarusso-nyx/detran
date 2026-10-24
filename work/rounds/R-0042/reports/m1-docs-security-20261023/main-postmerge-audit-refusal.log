@@ -1,0 +1,15 @@
+Exact CI-tool log excerpt; main d8def62fefb0df0fa0480909a9082b8812cd3721, run40038970985 job120705730925. Premerge223allrequiredchecksPASSpreserved separately.
+2026-10-23T23:44:27.6996715Z > node scripts/check-image-size-patch.mjs && node scripts/check-braces-patch.mjs && node scripts/check-audit.mjs
+2026-10-23T23:44:27.6997323Z 
+2026-10-23T23:44:27.7269797Z PASS vendored image-size contains the reviewed ICNS/JXL/HEIF fixes
+2026-10-23T23:44:27.7758337Z PASS installed braces patch integrity, glob compatibility and bounded nesting
+2026-10-23T23:45:00.9024311Z BLOCKED  moderate GHSA-w74x-v6f9-j3xg fast-uri >=3.0.0 <3.1.9 via fast-uri@3.0.0 - 3.1.8: fast-uri vulnerable to URI scheme spoofing via percent-encoded scheme decoding
+2026-10-23T23:45:00.9026146Z BLOCKED  moderate GHSA-wjr9-j795-jxcr fast-uri >=3.1.3 <3.1.9 via fast-uri@3.0.0 - 3.1.8: fast-uri vulnerable to host confusion via unchecked WHATWG host canonicalization
+2026-10-23T23:45:00.9027271Z npm audit: 19 flagged entries, 2 distinct advisories at or above moderate, 0 allowed by exception
+2026-10-23T23:45:00.9136629Z  ELIFECYCLE  Command failed with exit code 1.
+2026-10-23T23:45:00.9336557Z ##[error]Process completed with exit code 1.
+2026-10-23T23:45:00.9419279Z Post job cleanup.
+2026-10-23T23:45:01.0634750Z Pruning is unnecessary.
+2026-10-23T23:45:01.0761951Z Post job cleanup.
+2026-10-23T23:45:01.1463234Z [command]/usr/bin/git version
+

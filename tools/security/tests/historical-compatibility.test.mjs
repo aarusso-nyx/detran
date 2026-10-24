@@ -69,6 +69,22 @@ function fixture(run, { closures = false, all = false, retain = false } = {}) {
         { recursive: true },
       );
       copy('docs/meta/security/historical-compatibility.json');
+      // The additive upgrade verifier requires authentic current generated inputs.
+      // Historical assertions and all 1,073 original reference hashes stay intact.
+      const upgradeManifest =
+        'docs/meta/security/governed-upgrade-compatibility-v2.json';
+      if (fs.existsSync(path.join(repository, upgradeManifest))) {
+        copy(upgradeManifest);
+        const upgrade = JSON.parse(
+          fs.readFileSync(path.join(repository, upgradeManifest)),
+        );
+        for (const file of new Set([
+          ...upgrade.generated_files.map((item) => item.path),
+          ...upgrade.preserved_sources.map((item) => item.path),
+          ...upgrade.dependencies.map((item) => item.after.path),
+        ]))
+          copy(file);
+      }
       for (const entry of manifest.diagnostic_captures) copy(entry.path);
       put(root, AUTHORIZED_APPEND.path, authenticAppend);
       put(root, AUTHORIZED_MAIN_APPEND.path, authenticMainAppend);

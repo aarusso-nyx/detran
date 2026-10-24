@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "task:scorecard-integration",
+    "kind": "integration_test"
+  },
+  "timestamp": "2026-10-24T00:56:16.651Z",
+  "status": "pass",
+  "deterministic": false,
+  "command": "node tools/devai/scorecard-local-task.mjs integration",
+  "command_hash": "37d467e6d6b8a204141400e648a4f7f419f8b840e11c0468361c04061031c85a",
+  "exit_code": 0,
+  "duration_ms": 763353,
+  "out_head": "SCORECARD_TASK_LOGS=/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/.devai/local/rounds/R-0036/tasks/integration-1792802608078-27171\n pg_advisory_xact_lock \n-----------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n-------------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n create_rls_policy \n-------------------\n \n(1 linha)\n\n install_tenant_triggers \n--------",
+  "err_head": "psql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/12-audit-functions.sql:109: NOTICE:  trigger \"audit_events_prevent_mutation\" for relation \"audit.events\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-agency.sql:5: NOTICE:  schema \"ops\" already exists, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-agency.sql:58: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_unit\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-agency.sql:60: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_jurisdiction\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-agency.sql:62: NOTICE:  policy \"tenant_isolation\" for relation \"ops.agency_competence\" does not exist, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-field-operations.sql:5: NOTICE:  schema \"ops\" already exists, skipping\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-field-operations.sql:22: NOTICE:  identifier \"ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_number\" will be truncated to \"ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_n\"\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-field-operations.sql:73: NOTICE:  identifier \"ux_ops_homologation_tenant_id_traffic_agency_id_homologation_number\" will be truncated to \"ux_ops_homologation_tenant_id_traffic_agency_id_homologation_nu\"\npsql:/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/database/ddl/13-ops-field-operations.sql:209: NOTICE:  identifier \"ux_ops_measurement_instrument_tenant_id_instrument_type_serial_number\" wi",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "output_digests": "{\"stderr\":\"2bb1f005f88fa9da7e619579af287659777c179865849ce48e576cf0f2b9285a\",\"stdout\":\"1068a75d2833649f3b9be450487f269d784e86b3f6754a6693e1a4881362ca47\"}",
+    "task_id": "scorecard-integration",
+    "population": "detran-workspace-integration",
+    "runner": "node",
+    "task_key": "9aa5369b666ea3011b2b6f83ddc6b1ca8752300bfe40279f88b3ee5346451dc8",
+    "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+    "stdout_sha256": "1068a75d2833649f3b9be450487f269d784e86b3f6754a6693e1a4881362ca47",
+    "stderr_sha256": "2bb1f005f88fa9da7e619579af287659777c179865849ce48e576cf0f2b9285a",
+    "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+    "task_policy_digest": "931db923e7b3ae5cfb1b0326f5c8f592d7cf9591e2a412e513a431a2f580a847",
+    "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+    "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+    "prerequisite_digests": "{}",
+    "tests_passed": 1518,
+    "tests_failed": 0
+  },
+  "id": "SR-6cdfb450218fec93"
+}

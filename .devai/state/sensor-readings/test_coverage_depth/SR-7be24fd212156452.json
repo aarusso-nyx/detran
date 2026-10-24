@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "test-coverage-depth",
+    "kind": "test_coverage_depth"
+  },
+  "timestamp": "2026-10-24T03:10:30.139Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense-test-coverage-depth",
+  "command_hash": "d7b2f1c9b6051a6c97d386b14e31285260fa137788e6d75d81d1caaa100be471",
+  "tier": "L2",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "TEST_COVERAGE_PARTIAL",
+      "message": "Lines coverage 56.5% over the local population is between review (50%) and pass (80%) thresholds."
+    }
+  ],
+  "metrics": {
+    "population": "local",
+    "lines_total": 47135,
+    "lines_covered": 26646,
+    "lines_pct": 56.53,
+    "threshold_pass": 80,
+    "threshold_review": 50
+  },
+  "id": "SR-7be24fd212156452"
+}

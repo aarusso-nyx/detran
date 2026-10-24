@@ -473,3 +473,72 @@ identities. Completing measurement does not certify product behavior.
 Report separately: implemented, integrated, verified on the exact candidate, awaiting
 integration, blocked by evidence/authority, stale bookkeeping, and external Q/O. No
 calendar finish date is inferred from checkbox totals, branch commits or old budgets.
+
+### M1 execution update — 2026-10-24 UTC
+
+This dated observation supplements the starting snapshot above; original acceptance
+boundaries in §§3, 4 and 9 remain unchanged. The approved roadmap PR #223 merged
+with all five required checks green at `d8def62fefb0df0fa0480909a9082b8812cd3721`.
+The original source `80505ac00690a3210913f09904004898b78860c3` now has a genuine
+signed local RC and independent exact-commit verification (run 40034673414).
+That attestation belongs to its own tree and does not attest later adoption work.
+
+PR #224 carries governed DEVAI 2.7.0 / constitution 1.1.0 adoption, the finite
+history-compatibility transition under ADR-0062, preserved baseline attestation
+and both reassessment attempts. Published candidate
+`21427c25fe2e1c7977ca0311156d4c59d8cfea35` passed all five required checks
+(CI 40052489971); its verified-local-rc used the supported remote backend fallback.
+The report publication commit still requires final-head review and CI before
+protected integration. The latest direct Owner instruction authorizes that
+integration once its required checks are green.
+
+The earlier complete 55-kind capture at `74b9eec8` remains a partial measurement:
+36 measured cells and seven observation gaps; native overall FAIL, 24 PASS,
+11 REVIEW, 6 FAIL, 2 UNKNOWN and the original two N/A. Its failures, 57 official
+reading records, preceding 335-record chain prefix and all 211 previously tracked
+canonical readings remain in `work/rounds/R-0042/reports/evaluation-74b9eec8/`.
+No later result is substituted for that source's observations.
+
+The corrected capture completed at the exact published clean source
+`21427c25fe2e1c7977ca0311156d4c59d8cfea35`, tree
+`8a3329a7189b960a915e560daf0971ec0ea68e97`, on 2026-10-24 at 03:12:34 UTC.
+Supported inventory regeneration ran first, before proof append; all eight
+genuine bodies passed installed strict schemas and their public hash/source/tree
+bindings. All 55 original kinds were then genuinely emitted, validated and
+immediately recorded at that fixed source. Historical inventory-performance
+inputs retain their original native population and method.
+
+Independent Auditor reconciliation confirms **43/43 applicable cells measured,
+zero cell observation gaps**, plus the two unchanged N/A cells. The native quality
+result remains **26 PASS, 12 REVIEW, 5 FAIL; overall FAIL**. All seven original
+BL-0024 gaps now have supported dispositions: F3:T1/T6/T7/T8 PASS and F3:T2/T3/T5
+REVIEW. Complete measurement does not accept those remaining findings.
+Unit 13,641, integration 1,518 and complete E2E 2,260 tests passed under the original
+descriptors; no same-source E2E retry was needed. Genuine whole-source coverage
+executed all 592 declared files and measured 56.53% line coverage, retaining REVIEW.
+
+The complete report, 43-row register, source comparison, separate remediation
+dispositions, independent audit and lossless raw evidence are retained in
+`work/rounds/R-0042/reports/evaluation-21427c25/`. All 55 new canonical artifacts
+match their records in both directions; the chain is an exact 393-to-448 append,
+and all 268 baseline canonical reading files are unchanged. Thirteen pre-existing
+historical artifact-availability limitations remain disclosed separately from
+native verification of 128 proof anchors and 53 acknowledged proof gaps.
+There is no global historical-availability PASS. The two non-cell UNKNOWN
+diagnostics and all six nonblocking runner-review limitations remain explicit.
+
+R-0043/BL-0016 closeout is limited to the mock fixture repair actually integrated
+in #218 and verified afterward. Registered verbs emitted PC-0026, declared the
+closed R-0043 record, sealed it and resolved BL-0016 on 2026-10-24 UTC; protected
+integration of this reconciliation remains pending. BL-0025 stays open: the fresh
+source's E2E PASS does not diagnose the earlier socket failure.
+R-0042/BL-0024 are eligible for later official bounded closeout after #224's actual
+protected integration and post-integration gates. No future merge identity or PC
+is asserted. R-0020/0041/0044/0045 and genuine residual quality/legal findings keep
+their own obligations. A final clean closeout candidate still requires a fresh
+signed RC and independent exact-commit verification. Heavy reassessment and cleanup
+have exited; the final RC must respect the next available shared-workstation slot.
+
+#211 remains unmerged, S3 runtime held and all nine C6 producers blocked with
+empty effective bindings. This update does not accept product quality, resolve
+other rounds or findings, or authorize Q/O activity.

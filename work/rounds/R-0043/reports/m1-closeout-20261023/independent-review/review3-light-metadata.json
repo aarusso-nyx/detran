@@ -1,0 +1,61 @@
+{
+  "overall_verdict": "PASS",
+  "light_metadata_allowed": true,
+  "c1_clarification": "The first sentence of review1 C1, saying nothing executes until shared-window release, was worded too broadly. It does not describe the actual constraint. The actual shared workstation constraint from STYNX holds only NEW HEAVY validation or retry: build, test, install, services, sensors and RC. The second sentence of C1, all heavy work waits, is the binding scope. The bounded R-0043 closeout verbs are lightweight native metadata actions: generic evidence record, round close, round plan declare, rounds index render, round seal and backlog resolve, followed by law, rounds-index, state-index, proof-anchor and evidence verify checks. They start no build, test, service, producer, sensor or RC. They do not depend on the heavy window. They may proceed now under the existing Owner M1 authority projected in R-0043 AUTHORIZATION.md, which is status active and GRANTED. No new human approval is added and none is relaxed.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "detail": "The adopted D-3 text in work/rounds/R-0043/decisions.md copies the overbroad wording. It says registered closeout actions wait for the shared-window release. If the light verbs run now, that sentence contradicts the act it records. D-3 is still uncommitted source. Narrow it before any verb runs: heavy validation waits for the window; the lightweight closeout verbs proceed under existing authority. This is narrowing an unadopted draft, not rewriting history. COMPLETION-PLAN.md already scopes this correctly, saying heavy execution awaits explicit release."
+    },
+    {
+      "id": "F2",
+      "severity": "info",
+      "detail": "The law register now has a top-level D-3 heading at line 174, after D-1 at line 5 and D-2 at line 9. It is generic, additive and does not repurpose D-2. It says it closes no round and does not widen Owner authority. The R-0043 annex lists D-1, D-2 and D-3, limited to #218 merge 67a3b3da, with verification at descendant 067320f3. It disclaims PC and seal execution. The review1 F7 hidden prerequisite is satisfied in source."
+    },
+    {
+      "id": "F3",
+      "severity": "info",
+      "detail": "closure.json still has all nine gates from the proposal. The six original gates are unchanged, and independent-review, exact-scope and historical-bytes-preserved were added. The five validation criteria are byte-equivalent. Evidence binds the authentic test epoch record/proofs/work/test/R-0043.jsonl. Its terminal a87c98330a129938f8d577843fa262fd5239051cf767a4abfb3732d3fd834215 equals the single line_hash on disk. No PC, id, closed_at or #224 identity appears. merged_as is the actual #218 merge. Nothing is weaker than the proposal."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "detail": "The independent-review gate cites review1.json SHA-256 cb1cb99de24506d9044fd8b9f01120319b97b67cd72d730acb3870729c17d212. I recomputed that value on disk and it matches retention-manifest.json. The bridge 8175ebe2335ab8a9adf239cbf9c8a5482fa596e925a176abb897b49e4622b323 also matches the manifest."
+    },
+    {
+      "id": "F5",
+      "severity": "low",
+      "detail": "The generic postintegration append to generic/R-0043.jsonl, currently 3 lines, has to run while AUTHORIZATION is active, so before seal. It must bind the actual review1 and bridge hashes and the #218/067320f3 supplement and CI evidence. The PC may keep the test epoch terminal, as the PC-0025 precedent allows either epoch. This follow-up review and the preserved failed attempt log should also be retained and hashed before the append, if they will be cited."
+    },
+    {
+      "id": "F6",
+      "severity": "info",
+      "detail": "The R-0043 decisions.md diff is additive only, with 0 removed lines. D-1 and D-2 bytes are unchanged."
+    }
+  ],
+  "conditions": [
+    "L1: Before any verb, narrow the D-3 wait sentence in R-0043 decisions.md so that only heavy validation waits for the shared window. Keep every other D-3 limit.",
+    "L2: Run only, in this order: generic evidence record, round close, round plan declare with closed_by D-3, the runtime-allocated PC and merged_as 67a3b3da, the established rounds index render, round seal, then backlog resolve BL-0016 referencing #218. Run seal only after the PC exists, record.md is closed and the terminal index row is present.",
+    "L3: Allowed checks are only the lightweight law corpus, rounds-index, state-index, proof-anchor, schema and evidence verify scripts. No pnpm check aggregate, no install, no build, no test runner, no service, no sensor or producer, no RC and no CI retry.",
+    "L4: Fill in only runtime-emitted identities and retained hashes. All gates and all five criteria stay at least as strict. Never hand-write a PC, record, close-state or backlog state. If a verb fails, preserve its output and fix only the genuine source prerequisite. A wrong PC gets a superseding PC.",
+    "L5: The review1 conditions C3 to C7 and C10 to C11 stay in force. BL-0025 and R-0042/BL-0024 stay open. #211 stays unmerged, S3 stays held and C6 stays blocked. Commit every output before any X freeze.",
+    "L6: The review1 condition C8, D-4 capture at X, along with every new measurement, stays held until explicit shared-window release."
+  ],
+  "evidence": [
+    "review1.json sha cb1cb99d matches retention-manifest; bridge 8175ebe2 matches",
+    "law/register/DECISIONS.md headings D-1 line 5, D-2 line 9, D-3 line 174; R-0043 annex present",
+    "record/proofs/work/test/R-0043.jsonl single line, line_hash a87c9833 equals closure.json terminal_sha256",
+    "record/proofs/work/generic/R-0043.jsonl has 3 lines",
+    "closure.json versus proposed-closure.json: 6 gates retained, 3 added, 5 criteria identical, notes updated",
+    "R-0043 AUTHORIZATION.md status active GRANTED, no close-state file",
+    "COMPLETION-PLAN.md dated update scopes the hold to heavy execution and does not predict #224 merge"
+  ],
+  "limitations": [
+    "Static read-only inspection only. No verb, check, test or service was run.",
+    "I did not re-trace the native verb internals beyond review1 F7 to F10. Whether each verb starts subprocesses was inferred from review1 and was not re-verified.",
+    "The preserved review2-light-metadata.log was not found in the retained independent-review folder and was not inspected.",
+    "Live GitHub state and branch protection were not queried because the GitHub MCP server failed to connect.",
+    "No verdict on any future PC, seal, merge, X capture or result."
+  ]
+}

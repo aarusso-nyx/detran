@@ -1,0 +1,5 @@
+# R-0043 bounded post-integration closeout evidence
+
+The original fixture repair shipped through #218 at `67a3b3da0afcd7d3298090c8ec0ab38412648d2e`. Its original RED/repeated GREEN and official test emission remain in the existing round reports/proofs. Descendant `067320f3b6aab61da11d718792b48a7d6336fc7c` retained all three corrected fixture files byte-identically and passed the complete mock population:119unit/14integration/113E2E. The five required checks passed there; exact CI metadata is retained in the R-0042 delivery-verification report. Earlier cancelled/failed exact-merge checks are preserved.
+
+The copied Auditor reports recommend bounded formal closure only through the official verbs and source-bound independent review. They do not execute it. The new backend-app socket failure in the separate source74 native E2E attempt is a different finding and does not erase this repaired mock402 scope or imply whole-E2E readiness. R-0042 retains its own integration and measurement criteria.

@@ -1,0 +1,92 @@
+{
+  "overall_verdict": "PASS",
+  "verdict_qualification": "Conditional PASS. The runner logic, read statically against installed DEVAI 2.7.0, meets every listed requirement as written in code. PASS does not stand in for the explicit shared-workstation release or for fresh runtime outcomes. F1 to F6 are recommended hardening. None blocks under the stated authority. Applying any of them requires a new revision hash and a re-review.",
+  "reviewed_hashes": {
+    "start_and_end_identical": true,
+    "execute.mjs": "7773a5c763f8ae9ff7206fd961cd787adcd5ff6f56dda1b76fdf82d2ae301271",
+    "REVIEW-PLAN.md": "109c6a19d95bfd2756d6246f8b137d7e2cde7bf0a91f50352195f10edf70148e",
+    "plan.json": "5245195164d3ad2aae8ebe5a8c0269da76861e3cc20ea4dee83a4a9fd89758db",
+    "original-test-tasks.json": "752c6105900f752bae1b276f8b0282f501f139777615e5704ba733595ed5fbad",
+    "original-sensor-inputs.json": "e5363a05f4626f236f03c41eb1b3308bfdd621cd60e135eac4e58c978c459a81",
+    "candidate-21427c25-static-identity.json": "4c6c7eee943b57ce49f0c3e3ca7c4c610d6d33d9648faf14657f730ac1f77440",
+    "repo_head": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+    "repo_tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+    "status_clean": true,
+    "installed_provider": "2.7.0"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "priority": "medium",
+      "lines": "124-132,251",
+      "problem": "invariants() lists untracked files with exclude-standard, so ignored paths are never compared. The baseline ignored inventory and the governance hashes for ignored .devai files (lines 117-119) are captured but never compared again, at any boundary or at finalization. A new or changed ignored file outside the expected official outputs would go unnoticed. Examples: .devai/state/obligations.json, counters.json, scorecards, check-cache.",
+      "correction": "At each sensor boundary, or at least at finalization, take the ignored inventory again and diff it against the baseline. Permit only these declared classes: new store files under .devai/state/sensor-readings, the eight body paths, coverage/, .devai/local/rounds/R-0036/, and dist/build/.turbo/.vite caches. Require unchanged hashes for any other ignored .devai file. Record every delta. Stop at a boundary on any delta outside the allowlist. No cleanup."
+    },
+    {
+      "id": "F2",
+      "priority": "medium",
+      "lines": "191,251",
+      "problem": "Custody is checked in one direction only: every new chain artifact must exist. The reverse is not checked. A new store file without an X-bound record would only be listed, not refused. One way this happens: native persistRegenerationReading writes the reading to the store before stdout is printed. If regeneration is killed or its output cannot be parsed after persistence, readings is empty, nothing is recorded, and the runner stops leaving that file unrecorded.",
+      "correction": "In final custody, and in the regeneration zero-reading path, compare the new store files against the IDs seen before the run. Validate each new file with the installed schema. Record each through public sense record, which handles an existing file natively as already-recorded and adds the missing chain entry. Only then stop. At finalization, require that every new store file has a sense.readings.record entry bound to X with a matching hash, or is listed as a gap."
+    },
+    {
+      "id": "F3",
+      "priority": "low",
+      "lines": "133-147",
+      "problem": "inventoryPool rows carry path, id and sha256, but no lstat size or mtime. Rows excluded as malformed carry no hash or byte count. The requirement asks for every admitted and excluded input with its provenance and stat. The admission logic and the quantile and mean statistics match native measureInventoryPerformance exactly. Store durations are integers, so summation order cannot change the result.",
+      "correction": "Add lstat size, mtime and symlink flag to every row, and add sha256 and byte count to excluded rows. Leave the admission rule unchanged."
+    },
+    {
+      "id": "F4",
+      "priority": "low",
+      "lines": "219-223",
+      "problem": "Coverage freshness is validated right after the whole-source run, but not again just before test_coverage_depth. Statically, the intermediate unit task runs with coverage disabled and perf uses a separate config, so overwriting is unlikely, but nothing proves it.",
+      "correction": "Immediately before test_coverage_depth, hash the four coverage artifacts again and compare them with the validated manifest. On any mismatch, record a gap and stop dependent depth claims."
+    },
+    {
+      "id": "F5",
+      "priority": "low",
+      "lines": "251-253",
+      "problem": "final-canonical-custody.json and execution-complete.json do not refer to the 13 pre-existing historical artifact limitations, or to the separate chain anchor and proof gap dimension of 128 anchors and 53 proof gaps. The hardcoded field original_prefix_identical true is enforced by invariants(), but it could be read as full historical custody.",
+      "correction": "Embed the path and hash of the retained baseline limitation record, for example the R-0042 ec2-baseline-historical-artifact-gaps.json, as disclosed and not restored. Keep the anchor and proof gap dimension separate. Do not waive either."
+    },
+    {
+      "id": "F6",
+      "priority": "low",
+      "lines": "plan.json 2-4",
+      "problem": "plan.json still says PREPARATION_ONLY_NO_CANDIDATE_AUTHORIZED with candidate null. The runner and REVIEW-PLAN freeze X. The runner reads only the first and second arrays from plan.json, so execution is unaffected, but the provenance metadata is inconsistent.",
+      "correction": "Leave the reviewed bytes unchanged. Disclose the inconsistency in the launch packet, or fix it in the next revision along with any other change."
+    }
+  ],
+  "verified_behaviors": [
+    "inventory_regeneration is the first native devai action. Before it, the runner only runs git, pnpm version, reads, and writes outside the root. No proof is appended before it.",
+    "Public sense run returns only the reading (adapter at line 229491 returns .reading). Publication is authenticated with the public metrics status, error_count, required_kinds 7, missing_required_kinds 0, kinds_touched 7, and integration_head and integration_tree equal to X. kinds_touched is exactly 7 because SENSOR_KINDS equals REGENERATED_KINDS, so the walk skips all of them.",
+    "All eight ignored body paths are checked as regular in-root files with no symlink. Their hashes are matched to inventory_body_sha256 and to each kind's input_sha256. The installed schemas have no external refs. The review-only empty-collection allowance mirrors native validateBody. The inventory body integration_head must equal X. No private helper is invoked and no report is fabricated.",
+    "A publication gap is saved, each genuine reading is recorded, and the run then stops with no producer retry. Re-running on the same dirty head is refused by the clean-status check, a fresh output directory is required, and the candidate is hardcoded.",
+    "Old ignored body, inventory and proof-sensor bytes are copied outside the root before the first action (currently none exist). Baseline store hashes, the original chain prefix and the legacy chain are checked at every boundary.",
+    "sense record handles a reading that native code already persisted: identical bytes return already-recorded, and repairChainEntry adds the X binding. An ID conflict fails, and the runner then stops before any later emission. Every record is checked for a canonical hash bound to X.",
+    "Coverage uses the original config and population. The sidecar is removed on init. The runner requires exit 0, no signal, no timeout, fresh mtimes on all four artifacts, and a full-suite selector bound to X whose report and V8 hashes match and whose declared and executed test files are equal. On failure it retains the bytes and stops.",
+    "The seven test-task descriptors and the sensor inputs are compared byte-for-byte. The installed registry and presets must produce exactly 55 required kinds, with first and second matching the plan. Native budgets are untouched. The outer cap is 2400000 ms and the record cap is 60000 ms.",
+    "One whole original E2E retry runs only after the first attempt on this X was recorded with status fail. Both attempts are retained. The two store readers run after the retry.",
+    "The scorecard is checked for exit 0, integration_head X, exactly 45 unique F1-F5 by T1-T9 cells, and N/A cells F1T1 and F4T5 only. Every selected ID needs a fresh emission whose canonical bytes are identical and bound by a sense.readings.record entry at X. Composition is not claimed as a quality PASS.",
+    "Cooperative pause happens only after the disposition, with no active child, and runs no capture timer. SIGSTOP is not used."
+  ],
+  "execution_conditions": [
+    "Explicit shared-workstation release, passed as the release flag. No approval is inferred from elapsed time.",
+    "HEAD is 21427c25 with a completely clean tracked and untracked status. Node v24.20.0, pnpm 9.15.0 and DEVAI 2.7.0 are installed with dependencies already materialized. Nothing is installed.",
+    "No concurrent chain writer, git operation or worktree activity on this root during the epoch. The runner cannot enforce this itself.",
+    "The shell environment does not set DETRAN_TEST_TIER or SENATRAN_TEST_TIER to anything other than unit. Docker fixtures are available as the original tasks require.",
+    "A new output directory outside the root. C6 bindings stay empty and #211 stays unmerged."
+  ],
+  "evidence": [
+    "The installed release-host.js was read at lines 227976-228874 (regeneration, walk, persistence, validateBody, requiredKinds), 194160-194300 (inventory_performance), 229491 and 229655 (public adapters), 247866-247941 (recordSensorReading and repairChainEntry), 174667 (appendVerbEvidence writes only to chain.json) and 248205-248272 (sense run output).",
+    "The 74b9eec8 epoch commit changed only chain.json among tracked files. The earlier 0e26c795 regeneration reading SR-7c9eca6c32c4b696 shows a successful 7-kind publication and record. The prior scorecard shape matches the runner's cells, sensor_readings and integration_head parsing.",
+    "Gitignore check: sensor-readings, sensors, inventory, coverage and R-0036 are ignored. record/proofs/work is not ignored. 268 readings are tracked through force-add. The eight body paths do not exist now."
+  ],
+  "limitations": [
+    "Static source review only. No runner, sensor, test, build, install or native command was run. Runtime outcomes, verdicts, timings and Docker or E2E behavior are unknown.",
+    "No measurement, closure, merge, attestation or future PASS is implied.",
+    "Global CLI option registration for the as-role, write and format flags was inferred from the prior successful epoch, not traced in full.",
+    "The equivalence of native validator options with the runner's ajv 8.20 validation was assessed only for schema validity outcomes."
+  ]
+}

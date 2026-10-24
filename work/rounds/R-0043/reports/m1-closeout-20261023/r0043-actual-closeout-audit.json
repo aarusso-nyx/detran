@@ -1,0 +1,102 @@
+{
+  "role": "Auditor read-only actual-state audit; no verbs/tests/sensors run",
+  "baseline_source": "a9eaef48fc3dbd814c40e6f352b1efbf7022a0bc",
+  "baseline_custody_files": 1821,
+  "baseline_changed_paths": [
+    ".devai/state/backlog/BL-0016.json",
+    "record/proofs/chain.json",
+    "record/proofs/work/generic/R-0043.jsonl"
+  ],
+  "only_expected_protected_changes": true,
+  "actual_PC": "PC-0026",
+  "canonical_R0043_PC_files": [
+    "record/proofs/compliance/closures/PC-0026.json"
+  ],
+  "PC_equals_authentic_source_draft_plus_allocated_fields": true,
+  "declared_record_closed_D3_PC26_real_merge": true,
+  "seal_matches_PC": true,
+  "PC_all_gates_pass": true,
+  "PC_no_failed_criteria": true,
+  "authentic_test_epoch_tail_matches_PC": true,
+  "independent_review1_sha256": "cb1cb99de24506d9044fd8b9f01120319b97b67cd72d730acb3870729c17d212",
+  "independent_review1_hash_matches_PC_detail": true,
+  "review3_light_metadata_verdict": "PASS",
+  "backlog16_changed_fields": [
+    "status",
+    "resolution",
+    "resolved_at"
+  ],
+  "backlog16_body_origin_round_created_preserved": true,
+  "backlog16_status": "resolved",
+  "backlog25_status": "open",
+  "backlog24_status": "open",
+  "R0042_still_active": true,
+  "old335prefix_preserved": true,
+  "baseline392prefix_preserved": true,
+  "current_chain_records": 393,
+  "new_record": {
+    "id": "EV-7f309c62526a5824",
+    "sequence": 393,
+    "action": "evidence.record.generic"
+  },
+  "new_generic_prefix_preserved": true,
+  "new_generic_lines": 1,
+  "new_record_artifact_hash_errors": [],
+  "record_derived_index_row_present": true,
+  "current_rounds_README_row": "| R-0043 | E2E fixture isolation \u2014 reparo #218 verificado; escopo limitado, BL-0025 aberto                                             | fechada           | [#218](https://github.com/aarusso-nyx/detran/pull/218) | PC-0026 | Codex                                               |",
+  "captured_verification_receipts": {
+    "verify-law-corpus2": {
+      "argv": [
+        "pnpm",
+        "verify:law-corpus"
+      ],
+      "exit": 0,
+      "ended_at": "2026-10-24T01:59:01.361437+00:00"
+    },
+    "verify-rounds-index": {
+      "argv": [
+        "pnpm",
+        "verify:rounds-index"
+      ],
+      "exit": 0,
+      "ended_at": "2026-10-24T01:58:31.018633+00:00"
+    },
+    "verify-state-index2": {
+      "argv": [
+        "pnpm",
+        "verify:state-index"
+      ],
+      "exit": 0,
+      "ended_at": "2026-10-24T01:58:59.310692+00:00"
+    },
+    "verify-proof-anchors": {
+      "argv": [
+        "pnpm",
+        "verify:proof-anchors"
+      ],
+      "exit": 0,
+      "ended_at": "2026-10-24T01:59:00.943114+00:00"
+    },
+    "post-evidence-verify": {
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exit": 0,
+      "ended_at": "2026-10-24T01:59:02.249460+00:00"
+    }
+  },
+  "first_close_refusal_exit": 2,
+  "successful_close_exit": 0,
+  "limitations": "Working-tree official metadata closeout verified; #224 final-head review/checks/integration and new full epoch remain future gates. Native proof-gap count53 is separate from historical13sensorartifact gaps. No readiness, C6 activation, #211 merge or R0042closure follows."
+}

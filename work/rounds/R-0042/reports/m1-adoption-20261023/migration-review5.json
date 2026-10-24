@@ -1,0 +1,61 @@
+{
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "id": "F1",
+      "status": "resolved",
+      "severity": "low",
+      "category": "provenance-accuracy",
+      "file": "work/rounds/R-0042/reports/m1-adoption-20261023/README.md",
+      "line": 31,
+      "summary": "Fixed. README lines 31-33 now say the authentic law-corpus refusal is kept in the capsule, and that the state-index refusal is described from observed command output with no separate raw capture kept. validation.md lines 9-11 say the same thing. law-corpus-first-refusal.log is present and holds the SCHEMA_BYTES_DIVERGENT/MANIFEST_HASH_DIVERGENT refusal for campaign/task, which matches the claim. The old 'Both failed checks were preserved' wording is gone."
+    },
+    {
+      "id": "F2",
+      "status": "resolved",
+      "severity": "low",
+      "category": "documentation-spacing",
+      "file": "docs/meta/adr/ADR-0061-devai-270-measurement-adoption.md",
+      "line": 101,
+      "summary": "Fixed. A grep for 'to2', 'all16', 'The56' and 'active42' across ADR-0061, README.md, validation.md and pre-freeze-preservation.json finds nothing. ADR line 101 now reads 'to 2.7.0', validation.md has 'all 16 checks' and 'The 56 law-corpus tests', and the preservation JSON has 'active R-0042 decision'."
+    },
+    {
+      "id": "F3",
+      "status": "new",
+      "severity": "low",
+      "category": "format-gate",
+      "file": "work/rounds/R-0042/reports/m1-adoption-20261023/README.md",
+      "line": 25,
+      "summary": "The 19:53 rewrite of README.md left two blank lines in a row (lines 25-26, confirmed with cat -vet). Prettier's markdown formatter collapses repeated blank lines to one. Nothing in .prettierignore covers this report directory, so the root 'format:check' (prettier --check .), the first step of pnpm check, would flag this file. Review3 said prettier --check passed, but README.md was changed after that. This conclusion comes from Prettier's formatting rules; prettier was not run, as this review was told not to run checks.",
+      "failure_scenario": "The source candidate is frozen with README.md as it is. The required format step fails on the frozen evidence capsule, and fixing it then means rewriting bytes in a frozen report.",
+      "recommendation": "Delete one of the two blank lines at README.md lines 25-26 before freezing, then run prettier --check on the report directory."
+    }
+  ],
+  "scope": {
+    "role": "Architect (read-only supplemental delivery review)",
+    "base": "cac88d518bdf430f58575e74309bbcd1658ab6c2",
+    "worktree": "/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran",
+    "reviewed": [
+      "/Volumes/Development/.codex/artifacts/detran/m1-adoption-review-20261023/review3.json",
+      "docs/meta/adr/ADR-0061-devai-270-measurement-adoption.md",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/README.md",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/validation.md",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/pre-freeze-preservation.json",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/law-corpus-first-refusal.log (to confirm the refusal claim)",
+      "work/rounds/R-0042/reports/m1-adoption-20261023/migration-review3.json and migration-review3.bridge.json (copies)"
+    ],
+    "verified": [
+      "migration-review3.json is byte-identical to the artifact review3.json (cmp). Its sha256 is 6fa55798…5d55a6, which equals the output_sha256 recorded in the bridge.",
+      "migration-review3.bridge.json is byte-identical to the artifact review3.bridge.json.",
+      "The only report files dated after review3 are README.md, validation.md, pre-freeze-preservation.json and the review3 and bridge copies.",
+      "git status shows the same 15 modified tracked files plus the untracked ADR and report directory as review3; HEAD is unchanged at cac88d51.",
+      "pre-freeze-preservation.json still records protected_diff [], journal_absent true and C6_bindings []."
+    ],
+    "not_done": [
+      "Made no edits and ran no tests, sensors, prettier or other checks; all inspection was read-only (cat, grep, cmp, shasum, git status).",
+      "Did not re-diff runtime, config or schema files; relied on the stated invariant together with the unchanged git status and HEAD.",
+      "No background operations started."
+    ],
+    "fitness": "F1 and F2 are fixed. One new low-severity formatting defect (F3, a repeated blank line in README.md) should be removed before freezing so the required format step passes. Nothing affects the generated effects, the schemas, the protected state or C6."
+  }
+}

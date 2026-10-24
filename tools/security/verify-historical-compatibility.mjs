@@ -4,6 +4,10 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import {
+  GOVERNED_UPGRADE_PATHS,
+  verifyGovernedUpgradeCompatibility,
+} from './governed-upgrade-compatibility.mjs';
 
 // This reviewed v1 scope is intentionally finite. A new exception requires a new
 // reviewed mapping/version, never a caller-provided waiver or a native PASS.
@@ -616,6 +620,7 @@ export function verifyHistoricalCompatibility(repoRoot, manifest = undefined) {
     'APPEND_TRANSITIONS_SWAPPED',
     'closure and main transition slots are distinct',
   );
+  let acceptedUpgrade;
   for (const [file, expected] of Object.entries(reference)) {
     ensure(
       sha256(baselineFiles.get(file)) === expected,
@@ -626,12 +631,16 @@ export function verifyHistoricalCompatibility(repoRoot, manifest = undefined) {
       file !== 'record/proofs/chain.json' &&
       file !== AUTHORIZED_APPEND.path &&
       file !== AUTHORIZED_MAIN_APPEND.path
-    )
-      ensure(
-        sha256(read(root, file)) === expected,
-        'SEALED_BYTES_CHANGED',
-        file,
-      );
+    ) {
+      const matches = sha256(read(root, file)) === expected;
+      if (!matches && GOVERNED_UPGRADE_PATHS.includes(file))
+        acceptedUpgrade ??= verifyGovernedUpgradeCompatibility(
+          root,
+          reference,
+          baselineFiles,
+        );
+      else ensure(matches, 'SEALED_BYTES_CHANGED', file);
+    }
   }
   const originalChain = JSON.parse(
     git(root, ['show', `${BASELINE}:record/proofs/chain.json`]),
@@ -759,6 +768,7 @@ export function verifyHistoricalCompatibility(repoRoot, manifest = undefined) {
       R0036: 'closed:PC-0022',
       authorized_append_transition: acceptedAppend,
       integrated_main_append_transition: acceptedMainAppend,
+      ...(acceptedUpgrade && { governed_upgrade_transition: acceptedUpgrade }),
     },
     limitation:
       'Locates source records only. Does not repair the native terminal-index predicate, approve missing records or historical mutation, or validate a newly appended evidence-chain tail. Official native verification remains required.',

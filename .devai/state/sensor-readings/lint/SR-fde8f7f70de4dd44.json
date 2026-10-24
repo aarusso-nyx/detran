@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-fde8f7f70de4dd44",
+  "sensor": {
+    "name": "lint",
+    "kind": "lint"
+  },
+  "timestamp": "2026-10-24T01:06:20.658Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "npx eslint --format=json .",
+  "command_hash": "8d9b0650453acd8fb0ff85a50669099fd0cdae99e8e4739d2717eb93a244efb6",
+  "exit_code": 1,
+  "duration_ms": 28479,
+  "out_head": "[{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/eslint.config.js\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/index.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/lib/a11y.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/lib/boat-extension.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/lib/boat-r0015.spec.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/lib/forms/boat-forms-r0015.spec.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/src/lib/forms/gates.ts\",\"messages\":[],\"suppressedMessages\":[],\"errorCount\":0,\"fatalErrorCount\":0,\"warningCount\":0,\"fixableErrorCount\":0,\"fixableWarningCount\":0,\"usedDeprecatedRules\":[]},{\"filePath\":\"/Volumes/Development/.cod",
+  "err_head": "npm notice run detran@0.0.1 npx\nnpm notice run 'eslint' --format=json .\n",
+  "killed": false,
+  "findings": [
+    {
+      "severity": "error",
+      "code": "@typescript-eslint/no-unused-vars",
+      "message": "'PORTAL_DELEGATION_TARGETS' is defined but never used.",
+      "file": "/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts",
+      "line": 30
+    },
+    {
+      "severity": "error",
+      "code": "@typescript-eslint/no-unused-vars",
+      "message": "'Body' is defined but never used.",
+      "file": "/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts",
+      "line": 116
+    }
+  ],
+  "metrics": {
+    "error_count": 2,
+    "warning_count": 0,
+    "timeout_ms": 120000
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "security-scan",
+    "kind": "security_scan"
+  },
+  "timestamp": "2026-10-24T03:09:04.097Z",
+  "status": "fail",
+  "deterministic": false,
+  "command": "pnpm audit --json",
+  "command_hash": "f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247",
+  "tier": "L0",
+  "exit_code": 1,
+  "findings": [
+    {
+      "severity": "error",
+      "code": "SECURITY_SCAN_HIGH_OVER_THRESHOLD",
+      "message": "6 high-severity vulnerabilities exceed REVIEW threshold 5."
+    }
+  ],
+  "metrics": {
+    "tool": "pnpm",
+    "total_vulnerabilities": 24,
+    "critical": 0,
+    "high": 6,
+    "moderate": 15,
+    "low": 3,
+    "info": 0,
+    "pass_max_high": 0,
+    "review_max_high": 5
+  },
+  "id": "SR-8fc7c18023cdbcf2"
+}
