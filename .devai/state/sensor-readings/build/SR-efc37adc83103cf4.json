@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-efc37adc83103cf4",
+  "sensor": {
+    "name": "build",
+    "kind": "build"
+  },
+  "timestamp": "2026-10-23T23:11:39.138Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.20.0/lib/node_modules/corepack/dist/pnpm.js -r build",
+  "command_hash": "dbf41d61b5e7ff8bcbca5d9bb4a40512f8b5570dabc08a5536a625c33acffd9d",
+  "exit_code": 1,
+  "duration_ms": 2764,
+  "out_head": "Scope: 63 of 64 workspace projects\nbackend/domains/shared build$ tsc -p tsconfig.build.json\npackages/sefaz-adapter build$ tsc -p tsconfig.build.json\nbackend/domains/inf/deadlines build$ tsc -p tsconfig.build.json\npackages/senatran-adapter build$ tsc -p tsconfig.build.json\npackages/sefaz-adapter build: Done\npackages/ui build$ ng-packagr -p ng-package.json\npackages/ui build: sh: ng-packagr: command not found\n/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/packages/ui:\n ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/ui@0.1.0 build: `ng-packagr -p ng-package.json`\nspawn ENOENT\n WARN   Local package.json exists, but node_modules missing, did you mean to install?\nsenatran-mock build$ pnpm clean && tsc -p tsconfig.build.json\n",
+  "err_head": "",
+  "killed": false
+}

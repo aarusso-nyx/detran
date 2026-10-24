@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "task:scorecard-unit",
+    "kind": "unit_test"
+  },
+  "timestamp": "2026-10-23T23:12:00.053Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "node tools/devai/scorecard-local-task.mjs unit",
+  "command_hash": "b669297cdd48d87e8fb962fc3c14a1bbb64c72d1a03ccf8b5bdce1e6af9c274a",
+  "exit_code": 1,
+  "duration_ms": 3176,
+  "out_head": "SCORECARD_TASK_LOGS=/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/.devai/local/rounds/R-0036/tasks/unit-1792797115142-58147\n",
+  "err_head": " WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\nfailed to load config from /Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/tests/config/local.coverage.config.ts\n\n⎯⎯⎯⎯⎯⎯⎯ Startup Error ⎯⎯⎯⎯⎯⎯⎯⎯\nError [ERR_MODULE_NOT_FOUND]: Cannot find package '@angular/compiler-cli' imported from /Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/apps/boat/mobile/vitest.config.ts\n    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)\n    at packageResolve (node:internal/modules/esm/resolve:784:25)\n    at moduleResolve (node:internal/modules/esm/resolve:873:18)\n    at defaultResolve (node:internal/modules/esm/resolve:1006:11)\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)\n    at #resolve (node:internal/modules/esm/loader:687:17)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)\n    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33) {\n  code: 'ERR_MODULE_NOT_FOUND'\n}\n\n\n\n",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "output_digests": "{\"stderr\":\"6ced015ce6902e5396babf31c0dd7f05a4f8b80b8bb10d98a58b394eab5bb029\",\"stdout\":\"ba00f304e9e8aab872607b523912dcf390e3813c367a2e194c28d4abdcf6b5fc\"}",
+    "task_id": "scorecard-unit",
+    "population": "detran-workspace-unit",
+    "runner": "node",
+    "task_key": "5f28f428012855fa31afb4676bfcfac5a5a4ba3ac6e7958fc3905801b055ea52",
+    "input_digest": "b35ffc71cd987b4bb8158d2267ab06fbcd36b4d5b4fafbaec7a3008fe2ef336b",
+    "stdout_sha256": "ba00f304e9e8aab872607b523912dcf390e3813c367a2e194c28d4abdcf6b5fc",
+    "stderr_sha256": "6ced015ce6902e5396babf31c0dd7f05a4f8b80b8bb10d98a58b394eab5bb029",
+    "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+    "task_policy_digest": "c308663ec86efb9936f37157a0318f97f10d049d74077efe0517750052a12141",
+    "candidate_commit": "74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5",
+    "candidate_tree": "377c2ec7d6feb8a354e3ea09aa40536d9cfdf19f",
+    "prerequisite_digests": "{}"
+  },
+  "id": "SR-74c2b1fa99e954ef"
+}

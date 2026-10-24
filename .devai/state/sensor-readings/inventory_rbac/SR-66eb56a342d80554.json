@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-66eb56a342d80554",
+  "sensor": {
+    "name": "inventory:rbac",
+    "kind": "inventory_rbac",
+    "version": "1.0.0"
+  },
+  "timestamp": "2026-10-24T01:08:05.473Z",
+  "status": "unknown",
+  "deterministic": true,
+  "command": "devai sense rbac --repo-root /Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran",
+  "command_hash": "6b49bc9d88f0eb087b5a300e1d8ef79b709e01937b9854b48f1d2ebad70a188f",
+  "tier": "L0",
+  "duration_ms": 0,
+  "findings": [
+    {
+      "severity": "info",
+      "code": "RBAC_REQUIRES_DATA_MODEL",
+      "message": "Data-model body not found at /Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/.devai/state/sensors/inventory_data_model/data-model.json or /Volumes/Development/.codex/worktrees/milestone1-devai-adoption/detran/record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_regeneration' to regenerate the inventory bodies; nothing measured."
+    }
+  ],
+  "metrics": {
+    "role_table_count": 0,
+    "permission_table_count": 0,
+    "join_table_count": 0,
+    "endpoint_binding_count": 0,
+    "endpoints_without_role_count": 0,
+    "synthetic_guard_permission_count": 0,
+    "synthetic_role_permission_count": 0,
+    "rbac_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  }
+}
