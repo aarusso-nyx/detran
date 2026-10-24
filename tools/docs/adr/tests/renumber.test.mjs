@@ -332,3 +332,92 @@ test('C-01-35 dado duas entradas em que a 2ª é inválida quando --write roda e
     },
   );
 });
+
+for (const [label, mutation, singleOrigin] of [
+  ['valid multi-origin', 'valid', false],
+  ['body-only note', 'body', false],
+  ['forged source suffix', 'suffix', false],
+  ['missing origin', 'missing', false],
+  ['wrong source', 'wrong', false],
+  ['no separator', 'separator', true],
+  ['ordinary prose note', 'prose', false],
+  ['note after prose boundary', 'boundary', false],
+  ['wrong first provenance line', 'first', false],
+]) {
+  test(`ADR0035 repeated provenance helper: ${label}`, async () => {
+    const final = 'docs/meta/adr/ADR-0040-ops-field-fixture.md';
+    const origins = singleOrigin ? [FROM_PATH] : [TO_PATH, FROM_PATH];
+    const original = expectedToContent();
+    let primary = `> **Proveniência.** Renumerada de \`${origins[0]}\` pela política.`;
+    let secondary = singleOrigin
+      ? ''
+      : `\n> **Proveniência.** Renumerada de \`${FROM_PATH}\` em etapa anterior.`;
+    let body = original;
+    if (mutation === 'body') {
+      body += `\n> **Proveniência.** Renumerada de \`${FROM_PATH}\` apenas no corpo.\n`;
+      secondary = '';
+    }
+    if (mutation === 'suffix')
+      secondary = `\n> **Proveniência.** Renumerada de \`${FROM_PATH}.forged\` em etapa anterior.`;
+    if (mutation === 'missing') secondary = '';
+    if (mutation === 'wrong')
+      secondary =
+        '\n> **Proveniência.** Renumerada de `docs/meta/adr/ADR-0099-unrelated.md`.';
+    if (mutation === 'prose')
+      secondary = `\nProveniência. Renumerada de \`${FROM_PATH}\` em prosa comum.`;
+    if (mutation === 'boundary')
+      secondary = `\nTexto não citado interrompe o bloco.\n> **Proveniência.** Renumerada de \`${FROM_PATH}\`.`;
+    if (mutation === 'first')
+      primary = 'Proveniência em prosa, sem cabeçalho citado.';
+    const header = `# ADR-0040: Ops Field Fixture\n\n${primary}${secondary}\n\n${mutation === 'separator' ? '' : '---\n\n'}`;
+    await withRoot(
+      (root) => {
+        buildBaseTree(root, {
+          config: baseRenumberConfig({
+            livePaths: [],
+            entries: origins.map((from) => ({
+              from,
+              to: final,
+              reason: 'Repeated renumbering fixture.',
+            })),
+          }),
+        });
+        writeFile(root, final, header + body);
+        for (const origin of origins) {
+          const id = origin.match(/ADR-\d{4}/)[0];
+          writeFile(
+            root,
+            origin,
+            `# ${id}: Ops Field Fixture\n\n## Status\n\nRenumerada para [ADR-0040](ADR-0040-ops-field-fixture.md).\n\nRedirecionamento sem conteúdo normativo.\n`,
+          );
+        }
+      },
+      async (root) => {
+        const before = snapshotTree(root);
+        const result = await runRenumber(
+          root,
+          mutation === 'valid' ? [] : ['--write'],
+        );
+        assert.equal(
+          result.status,
+          mutation === 'valid' ? 0 : 2,
+          result.stdout + result.stderr,
+        );
+        assert.deepEqual(
+          snapshotTree(root),
+          before,
+          'Validation and dry-run must preserve every byte',
+        );
+        if (mutation === 'valid') {
+          assert.equal((result.stdout.match(/^SKIP /gm) ?? []).length, 2);
+          assert.match(lastLine(result.stdout), /0 pending/);
+          assert.equal(
+            readFile(root, final).slice(header.length),
+            original,
+            'Original accepted body remains byte-identical',
+          );
+        }
+      },
+    );
+  });
+}

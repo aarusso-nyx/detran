@@ -1987,3 +1987,74 @@ test('C-01-36 dado a mesma linha com `a|b` cru (sem escape) quando o gate roda e
     },
   );
 });
+
+for (const [label, mutation, singleOrigin] of [
+  ['valid multi-origin', 'valid', false],
+  ['body-only note', 'body', false],
+  ['forged source suffix', 'suffix', false],
+  ['missing origin', 'missing', false],
+  ['wrong source', 'wrong', false],
+  ['no separator', 'separator', true],
+  ['ordinary prose note', 'prose', false],
+  ['note after prose boundary', 'boundary', false],
+  ['wrong first provenance line', 'first', false],
+]) {
+  test(`ADR0035 repeated provenance gate: ${label}`, async () => {
+    const older = 'docs/meta/adr/ADR-0009-older.md';
+    const recent = 'docs/meta/adr/ADR-0010-recent.md';
+    const target = 'docs/meta/adr/ADR-0011-final.md';
+    const origins = singleOrigin ? [older] : [recent, older];
+    const original =
+      '# ADR-0009: Original\n\n## Status\n\nAccepted on 2026-02-01.\n';
+    let primary = `> **Proveniência.** Renumerada de \`${origins[0]}\` pela política.`;
+    let secondary = singleOrigin
+      ? ''
+      : `\n> **Proveniência.** Renumerada de \`${older}\` em etapa anterior.`;
+    let body = original;
+    if (mutation === 'body') {
+      body += `\n> **Proveniência.** Renumerada de \`${older}\` apenas no corpo.\n`;
+      secondary = '';
+    }
+    if (mutation === 'suffix')
+      secondary = `\n> **Proveniência.** Renumerada de \`${older}.forged\` em etapa anterior.`;
+    if (mutation === 'missing') secondary = '';
+    if (mutation === 'wrong')
+      secondary =
+        '\n> **Proveniência.** Renumerada de `docs/meta/adr/ADR-0008-unrelated.md`.';
+    if (mutation === 'prose')
+      secondary = `\nProveniência. Renumerada de \`${older}\` em prosa comum.`;
+    if (mutation === 'boundary')
+      secondary = `\nTexto não citado interrompe o bloco.\n> **Proveniência.** Renumerada de \`${older}\`.`;
+    if (mutation === 'first')
+      primary = 'Proveniência em prosa, sem cabeçalho citado.';
+    const header = `# ADR-0011: Final\n\n${primary}${secondary}\n\n${mutation === 'separator' ? '' : '---\n\n'}`;
+    await withRoot(
+      (root) => {
+        buildBaseTree(root);
+        writeFile(root, target, header + body);
+        for (const origin of origins) {
+          const id = origin.match(/ADR-\d{4}/)[0];
+          writeFile(
+            root,
+            origin,
+            `# ${id}: Original\n\n## Status\n\nRenumerada para [ADR-0011](ADR-0011-final.md).\n\nRedirecionamento sem conteúdo normativo.\n`,
+          );
+        }
+      },
+      async (root) => {
+        const result = await runGate(root);
+        const findings = findingIds(combined(result));
+        assert.equal(
+          findings.has('C-01-04'),
+          mutation !== 'valid',
+          combined(result),
+        );
+        assert.equal(
+          findings.has('C-01-02'),
+          false,
+          'Both aliases must remain direct and structurally valid',
+        );
+      },
+    );
+  });
+}
