@@ -1,0 +1,43 @@
+{
+  "standing": "Direct human bounded approval; not D1-L/recovery/211merge/S3approval",
+  "question": "Approve the exact four-file provenance patch in #228, commit 9e60f2e7? It changes tools/docs/adr/renumber.mjs, tools/docs/state-index/check.mjs, tools/docs/adr/tests/renumber.test.mjs and tools/docs/state-index/tests/gate.test.mjs. The original S2 packet states, \u201cA required extra path stops for explicit bounded approval before editing.\u201d The patch is reviewed and preserves existing assertions and histories; this approval would not authorize adoption/recovery, #211 merge or S3 runtime.",
+  "exact_owner_reply": "Approve the exact four-file patch",
+  "approved_packet_commit": "9e60f2e71a8f975a15ca405c1394993ef37dffb1",
+  "base_main": "1c17bd37ceeb8f13eeae671987d2f0439aadafca",
+  "archive": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+  "paths": [
+    {
+      "path": "tools/docs/adr/renumber.mjs",
+      "sha256": "d64ff794fa2f8961153126f06e2281fffd8cc482284eaa8a20c40bd276163030",
+      "archive_sha256": "5838a1a3072f312395cee2ee1eed07de3dacb0f2dc8fc28acbff880d675ee0cf"
+    },
+    {
+      "path": "tools/docs/adr/tests/renumber.test.mjs",
+      "sha256": "4e551a7431858b9f46cf791d33ad1495008372a5ac089bf440e86dac90d53e46",
+      "archive_sha256": "85c32f98b38fd452719aca67b510053071edca882e7432d153406aaf2cf92697"
+    },
+    {
+      "path": "tools/docs/state-index/check.mjs",
+      "sha256": "fa3c2ad65af73edaa20b3e178e06cc69c5c3c9dcb6c85727b8d52e0ed8b40d00",
+      "archive_sha256": "9c17cfd4e162de867f5e5e8a4c1514d7170a1686ae76f1c69ca3294dd262f174"
+    },
+    {
+      "path": "tools/docs/state-index/tests/gate.test.mjs",
+      "sha256": "b18813382b0176f654c384b0713808503964061729b987cc91117b5b2f73acde",
+      "archive_sha256": "5417ad93d75a629879d1b8298b342f852c95614a25177dc3a9b65bc74dbad61e"
+    }
+  ],
+  "implementation_sequence": [
+    "Inspector unchanged18cases and actualRED",
+    "Engineer exact2helpers",
+    "Inspector focusedGREEN/fullaffectedgates",
+    "Crossfamilyreview/CI/PR-onlyintegration"
+  ],
+  "holds": [
+    "STYNXownsheavywindow",
+    "211unmerged",
+    "C6blocked",
+    "S3runtimeheld",
+    "Noinstall/recovery/nativecatalogue/proofmutation"
+  ]
+}

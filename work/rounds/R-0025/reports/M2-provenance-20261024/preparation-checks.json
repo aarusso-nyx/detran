@@ -1,0 +1,26 @@
+{
+  "source": "46234ef9bc405cdc13ca3aaacda816faf4e2f22f",
+  "report_uncommitted_during_checks": true,
+  "checks": [
+    {
+      "command": "node tools/docs/kb/check.mjs",
+      "exit": 0,
+      "result": "773 artifacts,446 canonical tokens"
+    },
+    {
+      "command": "node tools/devai/render-rounds-index.mjs --check",
+      "exit": 0
+    },
+    {
+      "command": "pnpm devai:doctor",
+      "exit": 0,
+      "ok": true,
+      "standing": "diagnostic-only; DEVAI2.7.0/constitution1.1.0; dirty report candidate, not future native acceptance"
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  ],
+  "warning": "pnpm emitted existing NODE_AUTH_TOKEN interpolation warnings; no registry access needed."
+}

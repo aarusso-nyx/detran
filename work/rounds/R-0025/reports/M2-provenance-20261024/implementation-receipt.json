@@ -1,0 +1,76 @@
+{
+  "role": "Engineer",
+  "status": "EXACT_TWO_HELPERS_PORTED_SYNTAX_PASS_AWAITING_INSPECTOR_GREEN",
+  "base_inspector_commit": "c0964728341936f4cac30484eefc20ee6f75a047",
+  "branch": "codex/m2-provenance-compatibility-20261024",
+  "approved_archive": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+  "sources": [
+    {
+      "path": "tools/docs/adr/renumber.mjs",
+      "before_sha256": "d64ff794fa2f8961153126f06e2281fffd8cc482284eaa8a20c40bd276163030",
+      "after_sha256": "5838a1a3072f312395cee2ee1eed07de3dacb0f2dc8fc28acbff880d675ee0cf",
+      "archive_git_blob": "74a17227ad1679bdb0d2b6597e0a87ccca0cad0e",
+      "working_git_blob": "74a17227ad1679bdb0d2b6597e0a87ccca0cad0e",
+      "byte_equal_archive": true
+    },
+    {
+      "path": "tools/docs/state-index/check.mjs",
+      "before_sha256": "fa3c2ad65af73edaa20b3e178e06cc69c5c3c9dcb6c85727b8d52e0ed8b40d00",
+      "after_sha256": "9c17cfd4e162de867f5e5e8a4c1514d7170a1686ae76f1c69ca3294dd262f174",
+      "archive_git_blob": "ff740f43cbcf32184939cab67749df406aac1b71",
+      "working_git_blob": "ff740f43cbcf32184939cab67749df406aac1b71",
+      "byte_equal_archive": true
+    }
+  ],
+  "inspector_tests_preserved": [
+    {
+      "path": "tools/docs/adr/tests/renumber.test.mjs",
+      "sha256": "85c32f98b38fd452719aca67b510053071edca882e7432d153406aaf2cf92697",
+      "equals_inspector_commit": true
+    },
+    {
+      "path": "tools/docs/state-index/tests/gate.test.mjs",
+      "sha256": "5417ad93d75a629879d1b8298b342f852c95614a25177dc3a9b65bc74dbad61e",
+      "equals_inspector_commit": true
+    }
+  ],
+  "diff": {
+    "sha256": "2b3c3afc13adcd0534e91785eefac291edf829df67d6219fb5b7d139caf12bcf",
+    "bytes": 2407,
+    "exact_equal_approved_review_source_subset": true
+  },
+  "scope_status": " M tools/docs/adr/renumber.mjs\n M tools/docs/state-index/check.mjs\n",
+  "excluded_effects": "No stage/commit/push, test edits/execution, ADR/index/materialization/native/proof/config/package/registry change, service/install/build/index refresh.",
+  "checks": [
+    {
+      "argv": [
+        "node",
+        "--check",
+        "tools/docs/adr/renumber.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--check",
+        "tools/docs/state-index/check.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
