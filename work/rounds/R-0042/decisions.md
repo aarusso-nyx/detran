@@ -128,3 +128,29 @@ This corrects invocation ordering through existing supported actions. It changes
 no calibration, role grant, product behavior or native guard. Heavy execution stays
 held until the shared verification window releases. #211 remains unmerged, C6
 blocked with empty bindings, S3 runtime held and both proof histories intact.
+
+## D-5 — Historical custody remains explicit
+
+The freeze audit separates complete custody of new records from availability of
+every historical artifact. All 57 newly appended source-74 readings match their
+official records, all 211 previously tracked reading files are unchanged, and the
+original 335-record prefix is intact. Thirteen historical canonical bindings were
+already unavailable in that baseline. Twelve paths remain missing; one formerly
+absent coverage path now contains a genuine newly emitted source-74 reading, whose
+new binding matches while the old hash remains a historical gap. No existing
+canonical file was overwritten. Four original historical byte streams remain
+available in their existing report archives and are identified without substitution.
+
+The exact baseline/current comparison is retained in the evaluation report. No
+missing old reading may be reconstructed, re-registered under a new source, replaced
+by a same-named archive with a different digest or silently claimed recovered. The
+native chain's valid anchored-proof result and its acknowledged-gap count do not
+certify all historical sensor artifacts; report the two checks separately.
+
+For the D-4 freeze and review condition EC2, demonstrate complete new-record custody,
+preservation of all available historical bytes and an exact no-new-loss comparison,
+while explicitly retaining those 13 pre-existing limitations. Do not claim the
+stronger global all-artifacts-present condition. This reporting clarification changes
+no native verification, selection, instance, threshold or historical-compatibility
+rule and supplies no authority exception. The new epoch still requires genuine
+current-candidate emissions, matching artifacts/receipts and intact same-root lineage.

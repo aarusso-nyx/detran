@@ -473,3 +473,50 @@ identities. Completing measurement does not certify product behavior.
 Report separately: implemented, integrated, verified on the exact candidate, awaiting
 integration, blocked by evidence/authority, stale bookkeeping, and external Q/O. No
 calendar finish date is inferred from checkbox totals, branch commits or old budgets.
+
+### M1 execution update — 2026-10-24 UTC
+
+This dated observation supplements the starting snapshot above; original acceptance
+boundaries in §§3, 4 and 9 remain unchanged. The approved roadmap PR #223 merged
+with all five required checks green at `d8def62fefb0df0fa0480909a9082b8812cd3721`.
+The original source `80505ac00690a3210913f09904004898b78860c3` now has a genuine
+signed local RC and independent exact-commit verification (run 40034673414).
+That attestation belongs to its own tree and does not attest later adoption work.
+
+PR #224 carries governed DEVAI 2.7.0 / constitution 1.1.0 adoption, the finite
+history-compatibility transition under ADR-0062, preserved baseline attestation
+and native reassessment attempts. Its published `067320f3` candidate passed all
+five required checks; its verified-local-rc used the supported remote backend
+fallback. Later local custody/closeout changes still require publication and
+final-head review and CI before protected integration.
+
+The first complete 55-kind capture at `74b9eec8` emitted a native overall FAIL:
+24 PASS, 11 REVIEW, 6 FAIL and 2 UNKNOWN applicable cells, with the original two
+N/A cells unchanged. Completeness assessment distinguishes 36 measured cells
+from seven observation gaps. These counts are not a completed M1 measurement.
+Original failures, 57 new official reading records, the preceding 335-record
+chain prefix and all 211 previously tracked canonical readings are retained in
+`work/rounds/R-0042/reports/evaluation-74b9eec8/`. Thirteen pre-existing historical
+artifact-availability limitations are disclosed separately from native proof
+anchor verification; there is no global historical-availability PASS.
+
+The corrected capture sequence in R-0042 D-4/D-5 freezes a new published clean
+candidate, runs supported inventory regeneration first before any proof append,
+then measures all 55 kinds and whole-source test/coverage populations serially
+in that same root and at that fixed commit. Existing inventory-performance
+history remains part of the native input population. No old-source cell result
+can fill a new-source gap. Heavy execution awaits explicit release of the shared
+verification window; the unexecuted same-source companion proposal is retained.
+
+R-0043/BL-0016 closeout is limited to the mock fixture repair actually integrated
+in #218 and verified afterward. Registered verbs emitted PC-0026, declared the
+closed R-0043 record, sealed it and resolved BL-0016 on 2026-10-24 UTC; final
+source publication and protected integration remain pending. The distinct
+backend-app socket failure and skipped package population
+are retained as open BL-0025. R-0042/BL-0024 closure requires its own complete
+source-bound reassessment and actual integration. A final clean closeout candidate
+will require a fresh signed RC and independent exact-commit verification.
+
+#211 remains unmerged, S3 runtime held and all nine C6 producers blocked with
+empty effective bindings. This update does not accept product quality, resolve
+other rounds or findings, or authorize Q/O activity.

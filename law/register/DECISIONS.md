@@ -170,3 +170,17 @@ confirmado por `round status`; recibos preservados em
 
 - **D-1 — Owner:** autorização existente de C3/C4 dentro da campanha C2–C8, conforme `work/rounds/R-0039/AUTHORIZATION.md`; nenhuma nova resposta humana é atribuída.
 - **D-2 — Architect:** juízo delegado adotado em `2026-10-20T01:30:06.080944+00:00` para encerramento limitado da normalização suplementar integrada no PR #209 / `f3dfc6ee47a94249631bf14e3242aeb309e36001`. CI original 39342934423 e CI pós-PR210 39350105523 concluíram success; a base atual é 207642f2. O resultado original permanece REVIEW/exit1/1.094 endpoints sem papel, distinto das sete leituras reconstruídas com PASS/REBUILT_FROM_BODY e métricas omitidas. Não há medição nova, aprovação legal, permissão ou prontidão. Os 211 propósitos/bases legais, 53 classificações e 73 retenções ausentes continuam pendentes; declarações preservadas não são ratificadas. BL-0020 e todos os backlogs permanecem inalterados. Evidências e recibos: `work/rounds/R-0039/reports/post-integration/`; PC e selo serão emitidos somente pelo runtime.
+
+### D-3
+
+**Fechamento posterior da rodada — Architect.** Quando D-2 já registra outro ato na rodada, D-3 pode registrar o julgamento posterior de fechamento, após seus próprios gates. A autorização e o escopo continuam limitados ao `AUTHORIZATION.md`, às decisões e ao anexo da própria rodada. Esta entrada não fecha nenhuma rodada nem amplia a autoridade do Owner.
+
+## Anexo de R-0043
+
+- **D-1 — Owner:** autorização original de reparo separado de fixtures E2E em `work/rounds/R-0043/decisions.md` e continuidade autorizada em `work/rounds/R-0043/AUTHORIZATION.md`.
+- **D-2 — Architect:** preservação da emissão oficial de teste e compatibilidade explícita dos proof anchors, sob ADR-0059; decisão original mantida.
+- **D-3 — Architect:** julgamento limitado ao reparo de fixtures integrado no PR #218, merge `67a3b3da0afcd7d3298090c8ec0ab38412648d2e`, com verificação posterior no descendente `067320f3b6aab61da11d718792b48a7d6336fc7c`. O PC e o selo só existem após emissão pelos verbos oficiais; esta entrada não afirma sua execução. Evidências e revisão independente em `work/rounds/R-0043/reports/m1-closeout-20261023/`. BL-0025 e R-0042/BL-0024 permanecem abertos; #211 não integrado, S3 retido e C6 bloqueado.
+
+### Observação de execução de R-0043 — 2026-10-24 UTC
+
+Após o anexo acima, os verbos oficiais emitiram `PC-0026`, materializaram `work/rounds/R-0043/record.md` fechado e `close-state.jsonl`, e resolveram BL-0016 sem alterar seu corpo, origem ou vínculo histórico R-0036. O índice terminal aponta para PC-0026; as saídas originais e a recusa inicial por declaração de autoridade ausente são retidas no relatório de closeout. A publicação desta atualização e a integração protegida continuam pendentes. BL-0025 e R-0042/BL-0024 permanecem abertos.

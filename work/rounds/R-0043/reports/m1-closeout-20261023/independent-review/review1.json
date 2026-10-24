@@ -1,0 +1,141 @@
+{
+  "overall_verdict": "PASS",
+  "fresh_epoch_verdict": "PASS — conditional. The D-5 bounded clarification of EC2 and the unchanged D-4 sequencing are both supported for a NEW clean full epoch at a not-yet-frozen X. The D-4 order fits the installed DEVAI 2.7.0 native reader, resolver and scorecard behaviour with no guard exception. The literal global EC2 claim ('every sense.readings.record artifact present/hash-matching') remains FALSE and is not waived. Thirteen pre-existing historical limitations persist.",
+  "r0043_execution_verdict": "PASS — conditional. The proposed R-0043/BL-0016 bounded closeout sequence can be executed through the registered verbs before the X freeze, once the hidden source prerequisite below exists: a `### D-3` heading in law/register/DECISIONS.md is required by `round seal`. Only actual emitted IDs and hashes may be filled in. Criteria and gates may not be weakened.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Independent recomputation of EC2 historical custody",
+      "detail": "I recomputed this from Git objects only. The baseline 74b9eec8 chain has 335 records and 158 sense.readings.record artifacts, 13 of which were already unavailable. At HEAD a9eaef48 there are 392 records; the first 335 are byte-equal to the baseline (prefix equality True). There are 215 artifacts: 13 issues, of which 12 are absent and 1 is a mismatch at seq 325 EV-c9c54fe012ef845d (test_coverage_depth/SR-01d9bca900c51904). There are 0 issues among the 57 new records. Tracked canonical readings went from 211 to 268, with 0 removed, and all 211 previously tracked files are byte-identical. The seq-325 path also carries the new binding seq 361 EV-87dcfcc2b27bbaaf, sha 264d6e66… at head 74b9eec8, and the on-disk file matches it. These figures match ec2-baseline-historical-artifact-gaps.json and the interpretation exactly."
+    },
+    {
+      "id": "F2",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Native semantics do not require global historical artifact presence",
+      "detail": "In installed DEVAI 2.7.0, resolveSensorReadingInstance (release-host.js:214661-214692) iterates only files physically present in the store directory. It throws SENSE_INSTANCE_CHAIN_DIGEST_MISMATCH only when no chain binding for that path matches the file's digest (`bindings.some`). The scorecard custody loader (203606-203612), readingReceipts (196674-196684) and the record path (chainedBindings, 247866) use the same any-binding semantics. Absent historical files are never iterated. The seq-325 path passes because the seq-361 binding matches. D-5 therefore needs no native guard exception, rebuild or re-registration. The fresh epoch's lineage depends only on X-bound bindings, since candidates are filtered to binding.head === HEAD."
+    },
+    {
+      "id": "F3",
+      "severity": "info",
+      "result": "supported",
+      "subject": "D-5 matches the original EC2 intent",
+      "detail": "review1.json EC2 text reads 'Committing old74 must include every reading file the chain refers to … Do not rewrite or reorder the chain'. Its purpose was to ensure the old74 commit has complete custody for what it appends. The literal 'every … in the committed chain' wording could not have been met even at the baseline, which already had 13 gaps. D-5 proves complete custody of the new records, preservation of every available historical byte, and no new loss, and it discloses the exact 13 limitations. That is the strongest truthful form of EC2. It neither restores nor substitutes anything. The prior PASS must still not be quoted as a global historical-custody PASS."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Archived historical byte streams",
+      "detail": "The four files in R-0042/reports/seven-measurement-gaps-20261022/canonical-readings match the old seq 322-325 bindings exactly (d0e763a2…, 67662bb0…, 62f07ab4…, fc4b0dcb…). They are correctly identified as archives and not installed into the canonical store. A same-named R-0036 security archive with a different digest is correctly not substituted."
+    },
+    {
+      "id": "F5",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Chain verify count is distinct from sensor-artifact census",
+      "detail": "The native chain verify result (127 anchored proof lines / 53 acknowledged historical gaps) measures proof-anchor compatibility. The 215/13 figures are a sensor-artifact availability census. D-5 and the interpretation keep the two separate, which is correct. Any report that merges them would be wrong."
+    },
+    {
+      "id": "F6",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Prior review conditions F5-F8 now closed in source",
+      "detail": "D-4 now states the HEAD freeze (F5), the failed-inventory path that requires a new candidate (F6) and historical store provenance for inventory_performance (F7). F8/EC9: prompt1.txt is retained in independent-review/ with sha256 525c7454…, matching retention-manifest.json. I recomputed review1.json a64d58fd…, review1.bridge.json 0d367dbc… and prompt2 40d00877…, and all match the bridge and manifest. At review time `git status --ignored --untracked-files=all` showed no untracked or ignored files under .devai/state/sensor-readings or .devai/state/inventory. This must be rechecked at freeze."
+    },
+    {
+      "id": "F7",
+      "severity": "high",
+      "result": "hidden_prerequisite",
+      "subject": "round seal resolves D-3 globally in law/register",
+      "detail": "assertClosePreconditions (release-host.js ~181363) calls decisionExists for both declared_by and closed_by. decisionExists accepts only law/adr/D-3.md, law/register/D-3.md, or a line matching /^###\\s+D-3\\b/m in law/register/DECISIONS.md. That register currently has only `### D-1` and `### D-2` top-level headings, plus 'Anexo de R-…' headings that do not match. Without an accurate additive top-level `### D-3` heading (and an R-0043 annex), seal fails with ROUND_ARCHIVE_DECISION_MISSING:D-3. The proposal already names this step. It is a real source prerequisite, not optional. The wording must be generic and accurate (a later closing judgment where D-2 was already used), must not repurpose D-2, and must not grant authority beyond each round's own AUTHORIZATION/annex. `round close` does not check this; only seal does."
+    },
+    {
+      "id": "F8",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "round close preconditions are satisfiable with actual identities",
+      "detail": "closePhase (173567) rejects a caller-supplied id, validates against phase-closure.schema (additionalProperties:false), and requires batches.commit and merged_as to exist as local commits. It requires D-1 < D-3 in the same namespace and no prior PC for R-0043; release_disposition is present. 67a3b3da is the actual '#218' merge commit (parents 224dbc41, d8ca7677). It is an ancestor of main d8def62f, of 067320f3 and of HEAD. requireActiveTaskRound needs the committed AUTHORIZATION.md to match status:active and GRANTED with no close-state.jsonl; it currently does. Its batch roles do not include Machine, so no extra commit requirement applies. proposed-closure.json uses only schema-permitted keys."
+    },
+    {
+      "id": "F9",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "Seal sequencing and green-gate requirements",
+      "detail": "Seal requires: record.md status closed with closed_by, phase_closure and merged_as equal to the PC's values; the PC file present and schema-valid; a terminal closure row in record/derived/indexes/rounds.md; every record.md gate (assertions-preserved, thresholds-preserved, C6-held, evidence-chain) at status pass in the PC; no failed validation criterion; and plan.md plus prompts/00-orchestrator.md present (both exist). Seal writes close-state.jsonl, which makes authorizationIsActive false. The R-0043 generic evidence record, round close and round plan --declare must therefore all run BEFORE seal. backlog resolve is not round-gated."
+    },
+    {
+      "id": "F10",
+      "severity": "medium",
+      "result": "condition",
+      "subject": "Closure evidence binds exactly one epoch and is not runtime-verified",
+      "detail": "The schema evidence object is {proof_epoch, terminal_sha256} and holds a single epoch. No installed runtime or tools/devai consumer cross-checks the PC terminal against the jsonl file. If the final draft switches from test/R-0043.jsonl (terminal a87c9833…, verified as the single line's line_hash) to the generic epoch after a new append, the terminal must be copied from the actually emitted last line_hash, and evidence verify must pass. The original test terminal must remain cited in criteria/notes. The PC-0025 precedent binds a generic epoch, so either choice is supported. Choosing the epoch is not a weakening."
+    },
+    {
+      "id": "F11",
+      "severity": "low",
+      "result": "condition",
+      "subject": "Review receipt has no dedicated schema field",
+      "detail": "The actual receipt and hash for this review can only be carried in gate detail, validation-criteria evidence or notes. Gate keys are free-form, so adding an 'independent-review' gate strengthens the closure and is supported. Removing or downgrading any declared gate is not."
+    },
+    {
+      "id": "F12",
+      "severity": "low",
+      "result": "observation",
+      "subject": "CI identity nuance",
+      "detail": "The mock evidence job 120718209718 is 'senatran-mock-tests' in run 40042884314. It is a different check-run from the 'senatran-mock' check 120718209928; both succeeded at 067320f3. 'stack-smoke' was skipped. verified-local-rc 120725469574 succeeded via 'Remote backend fallback' ('No eligible exact-tree attestation was selected'). This review cannot verify statically that branch protection's required set is exactly the five checks claimed. mock-postintegration-067320f3.json sha 344bc511… matches the supplement's ci_evidence_sha256."
+    },
+    {
+      "id": "F13",
+      "severity": "info",
+      "result": "supported",
+      "subject": "Fixture equivalence and backlog semantics",
+      "detail": "All three corrected fixture files are byte-identical at 67a3b3da, 067320f3 and HEAD (32f484e0…, 73c307c5…, cfbb3b31…). resolveBacklogItem spreads the existing item and adds only status, resolution and resolved_at, so BL-0016's body, origin and round_id R-0036 are preserved. BL-0025 was created through the official `backlog add` (receipt retained) and is open with no cause, flakiness or quarantine claim. It is currently untracked."
+    },
+    {
+      "id": "F14",
+      "severity": "low",
+      "result": "observation",
+      "subject": "Stale provider-version text in R-0043 record/plan",
+      "detail": "record.md goal and plan.md still say 'installed DEVAI2.6.3'; 2.7.0 is installed. round plan --declare must preserve the original fields, not rewrite history. The closure thresholds detail already explains that the later governed adoption is separate. This is not a blocker."
+    }
+  ],
+  "execution_conditions": [
+    "C1: Nothing executes until shared-window release. All heavy work waits for explicit release of the shared verification window. No STYNX build/RC contention.",
+    "C2 (R-0043 order): (a) Architect adopts D-3 in work/rounds/R-0043/decisions.md, additive, leaving D-1/D-2 bytes unchanged. Add an accurate top-level `### D-3` plus an R-0043 annex to law/register/DECISIONS.md, matching /^###\\s+D-3\\b/m. (b) Record native generic evidence on R-0043 while AUTHORIZATION is still active, binding the actual post-integration artifacts and this review's actual retained output/bridge hash. (c) Final closure.json from proposed-closure.json, filling in only real values: the emitted terminal (or keep a87c9833…), the review receipt/hash, and merged_as=67a3b3da0afcd7d3298090c8ec0ab38412648d2e. No id, PC, closed_at or #224 identity. (d) `round close`, retaining its output. (e) `round plan --declare` with closed_by D-3, the actual PC and merged_as 67a3b3da. (f) Render rounds.md with the repo's established renderer and confirm the terminal row exists. (g) `round seal`. (h) `backlog resolve BL-0016`, referencing #218/67a3b3da. Run the law-corpus, rounds-index, state-index, proof-anchor and evidence-verify checks afterwards.",
+    "C3: Fill in only IDs and hashes emitted by the runtime or retained review: the PC number, the generic line_hash terminal, and the review output/bridge sha. All existing gates (assertions-preserved, thresholds-preserved, C6-held, evidence-chain, red-repeated-green, post-integration-verification) and all five criteria stay at least as strict. Additions are allowed; removals and downgrades are not. Replace the PROPOSED note only with the actual adopted judgment.",
+    "C4: If any verb fails (for example ROUND_ARCHIVE_DECISION_MISSING, GATE_NOT_GREEN or PHASE_LEDGER_MISSING), preserve its output and fix only the missing genuine source prerequisite. Never hand-write a PC, record, close-state or backlog state. A wrong PC gets a superseding PC, never an edit.",
+    "C5: Every R-0043 closeout output (PC, record.md, close-state.jsonl, rounds.md, README projection, backlog JSONs including BL-0025, generic proof/chain appends, D-5, the EC2 reports and this review capsule) must be committed before X is frozen. X requires an empty `git status --porcelain=v1 --untracked-files=all` (EC1).",
+    "C6 (pre-freeze census): Recompute the D-5 census at X and require: the 335-record prefix intact; all previously tracked readings byte-identical; every record after the baseline with a byte-matching artifact; exactly the same 13 historical gaps, with none added; and archives unchanged. Report chain verify (anchored/acknowledged-gap counts) separately. Never call either one a global historical-custody PASS.",
+    "C7: Do not use repair or re-record modes (for example repairChainEntry) on any historical binding. Do not install archives into the canonical store, re-register old measurements under a new source, rewrite hashes or splice chains.",
+    "C8 (D-4 at X): one root. Run inventory_regeneration FIRST, before any proof append. Require complete publication of all 8 bodies, validated against the X reading's metrics and integration_head/tree=X, then record immediately. If it fails or is partial, record the gap and retry only on another new clean candidate. Then run the 55 original kinds plus whole-source coverage serially at fixed HEAD=X with byte-identical descriptors, assertions, fixtures, budgets, thresholds, population roots and N/As. Record every run immediately. A same-root E2E retry is allowed only after the first attempt is recorded. Run both store readers last, then the scorecard. Every selected reading must be bound to head X, with no old74 cell or count.",
+    "C9: For each inventory_performance invocation, list every admitted and excluded file (path, ID, sha, kind, head binding, timestamp, duration_ms) and its provenance. The historical gaps include inventory_* readings; their absence is a disclosed property of the historical dataset, not a filter. Keep raw diagnostics outside .devai/state/sensor-readings, and never purge store files.",
+    "C10: R-0043 closure closes only the #218 mock fixture/ADR-0059 scope. BL-0025, R-0042/BL-0024, R-0020/41/44/45 and other findings stay open. There is no F3:T1, whole-grid, product, legal or operational readiness claim. #224 still needs final-head review, required-green CI and a protected merge. Its merge identity is never predicted. The final closeout candidate needs a fresh signed RC and independent verification.",
+    "C11: #211 stays OPEN and unmerged, S3 runtime stays held, all nine C6 producers stay inactive with empty effective bindings, and the withheld C6 protocol is untouched. No upstream writes or releases."
+  ],
+  "evidence": [
+    "HEAD a9eaef48fc3dbd814c40e6f352b1efbf7022a0bc; dirty: R-0042/decisions.md (+26 lines, D-5 only) plus the untracked files listed in gitStatus",
+    "Git-object census: baseline 74b9eec8 335 records/158 artifacts/13 bad; HEAD 392/215/13 bad; new-record bad 0; tracked 211→268, 0 removed, old identical True; seq-325 bindings fc4b0dcb (cd0c1b09) and 264d6e66 (74b9eec8, seq 361)",
+    "Archive sha256 values match seq 322-325 bindings: d0e763a2, 67662bb0, 62f07ab4, fc4b0dcb",
+    "EC2 report hashes f62944b7… and 846b5ddf… match historical-custody-retention.json",
+    "independent-review hashes: prompt1 525c7454, prompt2 40d00877, review1 a64d58fd, bridge 0d367dbc; all match retention-manifest/bridge",
+    "DEVAI 2.7.0 node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js: resolveSensorReadingInstance 214661; scorecard custody 203606; readingReceipts 196674; closePhase 173567; parseDecisionId 173535; decisionExists/assertClosePreconditions ~181355-181395; closeGovernedRound 181412; authorizationIsActive/requireActiveTaskRound; resolveBacklogItem 203330; round seal 247472; round close 247332",
+    "phase-closure.schema.json: additionalProperties false; evidence {proof_epoch, terminal_sha256} single epoch; gates free-keyed",
+    "law/register/DECISIONS.md top-level headings: only `### D-1` and `### D-2`",
+    "record/proofs/work/test/R-0043.jsonl single line, line_hash a87c98330a129938f8d577843fa262fd5239051cf767a4abfb3732d3fd834215 (TR-01M5KFHQBRGDDFRR91R4Z8Z9F8, commit 912e0748); generic/R-0043.jsonl has 3 lines",
+    "67a3b3da is the '#218' merge; ancestor of d8def62f, 067320f3 and HEAD; three fixture files byte-identical at 67a3, 067 and HEAD",
+    "ci-checks.json at 067320f3: verified-local-rc success (remote backend fallback), foundation/backend-kernel/invariant-producers/senatran-mock/evidence-gate/boat-documents-real/senatran-mock-tests success, stack-smoke skipped; mock-postintegration sha 344bc511 matches supplement",
+    "Store cleanliness at review time: 0 untracked/ignored entries under .devai/state/sensor-readings and .devai/state/inventory",
+    "Precedent: PC-0025 binds generic/R-0039.jsonl; R-0036…R-0039 closed via round close → plan --declare → seal"
+  ],
+  "limitations": [
+    "Static read-only review. Nothing was executed: no tests, sensors, producers, verbs or CI. No verdict on future X results, inventory publication, scorecard, CI, RC or merge.",
+    "Branch-protection required-check membership and live GitHub state (#218/#224/#211) were not queried; I relied on the retained ci-checks.json. The GitHub MCP server failed to connect this session.",
+    "Scorecard selection rule and the render-rounds-index output format were not fully traced; C2(f) and C8 require checking the actual output.",
+    "The archive search for the 12 still-missing artifacts was not repeated beyond the Auditor's bounded same-basename search.",
+    "The withheld C6 protocol, service custody, product, domain and legal content were deliberately not reviewed.",
+    "The interpretation that the original EC2 intended new-append custody is this reviewer's scope-aware disposition. It does not rewrite review1.json, which stays as authored."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0025",
+  "request_id": "m1-rait-e2e-socket-74b9eec8-20261023",
+  "kind": "finding",
+  "class": "tests",
+  "title": "P2: investigate RAIT E2E socket failure and skipped package population",
+  "body": "Native E2E on frozen source 74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5 emitted SR-70e89a872c5f8c59: 2248 passed and 1 failed. The backend app portion had 42 files (41 passed, 1 failed), 2104 passed tests, 1 failed and 3 todo. The parties child/revoked-parent detail/list/closed-field case in tests/e2e/rait-p402-scope.e2e.spec.ts failed with socket hang up before an HTTP response; the exact failing request and root cause are not established. Original command short-circuit skipped later backend package E2E populations, although wrapper upgrade/adapter/mock stages completed. Preserve this actual negative and incomplete-population gap; a later candidate or retry cannot erase it. This is distinct from BL-0016 fixed SENATRAN mock HTTP402 fixtures. Inspector/Engineer should diagnose transport/fixture lifecycle and obtain genuine complete unchanged-suite evidence without weakening assertions, fixture isolation or budgets. No flaky-test quarantine or product fix is authorized by this finding. Evidence: work/rounds/R-0042/reports/evaluation-74b9eec8/old74-final-partial-assessment.md, complete-canonical-custody-manifest.json and native/task archives; canonical .devai/state/sensor-readings/e2e_test/SR-70e89a872c5f8c59.json. Keep #211 unmerged, C6 blocked and histories preserved.",
+  "origin": {
+    "session": "DIRECT-CLI-21b862a3cd15c3ceb71d5f7f0c43ce22",
+    "role": "architect",
+    "commit": "a9eaef48fc3dbd814c40e6f352b1efbf7022a0bc"
+  },
+  "round_id": "R-0042",
+  "status": "open",
+  "created_at": "2026-10-24T01:36:47.016Z",
+  "resolved_at": null
+}
