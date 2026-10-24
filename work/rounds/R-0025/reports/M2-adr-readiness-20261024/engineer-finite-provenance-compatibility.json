@@ -1,0 +1,107 @@
+{
+  "paths": [
+    {
+      "path": "tools/docs/adr/renumber.mjs",
+      "kind": "Engineer runtime tool source",
+      "sources": {
+        "main": {
+          "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+          "git_blob": "ff5456c198731471178d36dfc9fd60ed898efbf0",
+          "sha256": "d64ff794fa2f8961153126f06e2281fffd8cc482284eaa8a20c40bd276163030",
+          "size": 15291
+        },
+        "s2": {
+          "commit": "9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99",
+          "git_blob": "ff5456c198731471178d36dfc9fd60ed898efbf0",
+          "sha256": "d64ff794fa2f8961153126f06e2281fffd8cc482284eaa8a20c40bd276163030",
+          "size": 15291
+        },
+        "archive": {
+          "commit": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+          "git_blob": "74a17227ad1679bdb0d2b6597e0a87ccca0cad0e",
+          "sha256": "5838a1a3072f312395cee2ee1eed07de3dacb0f2dc8fc28acbff880d675ee0cf",
+          "size": 15753
+        }
+      }
+    },
+    {
+      "path": "tools/docs/adr/tests/renumber.test.mjs",
+      "kind": "Inspector test source",
+      "sources": {
+        "main": {
+          "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+          "git_blob": "71bbf8ddd6fc9376a7d399afa4a14f1765aa505c",
+          "sha256": "4e551a7431858b9f46cf791d33ad1495008372a5ac089bf440e86dac90d53e46",
+          "size": 10742
+        },
+        "s2": {
+          "commit": "9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99",
+          "git_blob": "71bbf8ddd6fc9376a7d399afa4a14f1765aa505c",
+          "sha256": "4e551a7431858b9f46cf791d33ad1495008372a5ac089bf440e86dac90d53e46",
+          "size": 10742
+        },
+        "archive": {
+          "commit": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+          "git_blob": "ed3e80150bb170f038ac02db4f37f19402c549f5",
+          "sha256": "85c32f98b38fd452719aca67b510053071edca882e7432d153406aaf2cf92697",
+          "size": 14191
+        }
+      }
+    },
+    {
+      "path": "tools/docs/state-index/check.mjs",
+      "kind": "Engineer runtime tool source",
+      "sources": {
+        "main": {
+          "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+          "git_blob": "0069a71533ad985038f3eb351df9ea263d8306f6",
+          "sha256": "fa3c2ad65af73edaa20b3e178e06cc69c5c3c9dcb6c85727b8d52e0ed8b40d00",
+          "size": 38040
+        },
+        "s2": {
+          "commit": "9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99",
+          "git_blob": "0069a71533ad985038f3eb351df9ea263d8306f6",
+          "sha256": "fa3c2ad65af73edaa20b3e178e06cc69c5c3c9dcb6c85727b8d52e0ed8b40d00",
+          "size": 38040
+        },
+        "archive": {
+          "commit": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+          "git_blob": "ff740f43cbcf32184939cab67749df406aac1b71",
+          "sha256": "9c17cfd4e162de867f5e5e8a4c1514d7170a1686ae76f1c69ca3294dd262f174",
+          "size": 38508
+        }
+      }
+    },
+    {
+      "path": "tools/docs/state-index/tests/gate.test.mjs",
+      "kind": "Inspector test source",
+      "sources": {
+        "main": {
+          "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+          "git_blob": "a972aeff7c28714ada2a9585b905a06287fbdfbd",
+          "sha256": "b18813382b0176f654c384b0713808503964061729b987cc91117b5b2f73acde",
+          "size": 67472
+        },
+        "s2": {
+          "commit": "9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99",
+          "git_blob": "a972aeff7c28714ada2a9585b905a06287fbdfbd",
+          "sha256": "b18813382b0176f654c384b0713808503964061729b987cc91117b5b2f73acde",
+          "size": 67472
+        },
+        "archive": {
+          "commit": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+          "git_blob": "22c1fb2183360500cc52b2020793132a70efd978",
+          "sha256": "5417ad93d75a629879d1b8298b342f852c95614a25177dc3a9b65bc74dbad61e",
+          "size": 70323
+        }
+      }
+    }
+  ],
+  "reviewed_semantics": {
+    "current_gate": "checkStateIndex validates each direct stub target is non-Renumbered, then requires exact source prefix on line3; alias table exactly1row/stub, source/target ids and filenames match.",
+    "current_renumber": "analyzeEntry requires already-applied stub target source prefix on line3; cannot accept two distinct historical origins each on line3.",
+    "archive_runtime_delta": "Both files add hasLeadingProvenance: line3 must start quoted provenance, locate first --- separator, all prior block lines blank or > quoted, exact backtick-terminated origin prefix must appear in this initial block. Original body is not searched.",
+    "archive_test_delta": "Two existing testfiles add9cases each: valid multi-origin, body-only note, forged source suffix, missing origin, wrong source, no separator, ordinary prose, note after prose boundary, wrong first provenance line. Renumber tests additionally assert byte preservation and dry-run0pending. No tests executed now.",
+    "scope": "Archived preservation is not integration authority; use a fresh finite4path Architect/Engineer/Inspector reconciliation packet before adapting code/tests. No generic arbitrary prefix/body waiver, chain following, alias-table weakening or historical body rewrite."
+  }
+}
