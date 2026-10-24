@@ -15,10 +15,10 @@ import { createRequire } from 'node:module';
 import net from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { aliases } from '../../security/invariants/workspace.config.mjs';
+import { runGitFileBacked } from '../git-output.mjs';
 
 const root = realpathSync(fileURLToPath(new URL('../../../', import.meta.url)));
 const requireRoot = createRequire(path.join(root, 'package.json'));
@@ -52,7 +52,7 @@ mkdirSync(capture, { recursive: true });
 const output = realpathSync(capture);
 assert.ok(path.relative(root, output).startsWith(`..${path.sep}`));
 function runGit(argv) {
-  const result = spawnSync('git', argv, { cwd: root });
+  const result = runGitFileBacked(argv, { cwd: root });
   assert.equal(result.status, 0, result.stderr?.toString());
   return result.stdout;
 }
