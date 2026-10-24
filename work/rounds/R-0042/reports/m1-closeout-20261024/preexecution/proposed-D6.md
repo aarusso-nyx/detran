@@ -1,0 +1,3 @@
+## D-6 — Bounded measurement closing judgment
+
+PROPOSED; not adopted until actual postintegration gates and independent closeout review pass. Accept only R-0042/BL-0024 measurement completion at source 21427c25fe2e1c7977ca0311156d4c59d8cfea35, integrated by #224 at f50b9ce7dd32dff66646fd01e99b0556e4d76bdb. All43applicablecells measured, zero observation gaps; native26PASS12REVIEW5FAIL+2NA/overallFAIL retained. Preserve D-1…D-5 including withheld D-3, all attempts/histories and limitations. Registered verbs alone allocate PC/materialize/seal/resolve. Keep #211/S3/C6 and unrelated rounds/findings held or open. Final closeout PR integration requires its own clean-candidate signedRC and independent verification.

@@ -542,3 +542,53 @@ have exited; the final RC must respect the next available shared-workstation slo
 #211 remains unmerged, S3 runtime held and all nine C6 producers blocked with
 empty effective bindings. This update does not accept product quality, resolve
 other rounds or findings, or authorize Q/O activity.
+
+### Measurement closeout recorded — 2026-10-24 UTC
+
+PR #224 integrated at `f50b9ce7dd32dff66646fd01e99b0556e4d76bdb` after
+all five required checks and independent review passed on delivery head
+`522e61d39d4a5fb063d29b9d5c58d6543e2a197c`. The actual merge tree equals
+the reviewed delivery tree. Post-integration DETRAN CI 40060467337 passed its
+backend, foundation, mock, evidence, invariant and BOAT jobs; the original
+optional stack-smoke stayed skipped. Its verified-local-rc fallback check
+120777117653 is a remote backend result. Separate trusted-RC run 40060467323,
+job 120772645725 and check 120772707099 remain failed for the missing exact-tree
+attestation tag and secondary missing-summary output. Those failures are retained;
+this intermediate merge is not described as signed or attested.
+
+The R-0043/BL-0016 reconciliation and PC-0026 are now integrated through #224.
+After the actual post-integration gates and conditional independent closeout
+review, Architect D-6 accepted only the original R-0042 measurement scope.
+Registered verbs appended genuine acceptance evidence, emitted **PC-0027**,
+declared and sealed R-0042, and resolved **BL-0024**, preserving its original
+body and origin. The human and machine indexes reflect those actual outcomes.
+Original D-1…D-5, including the withheld D-3 proposal, remain intact.
+
+The chain is now an exact 448-to-449 acceptance append; all 323 existing canonical
+reading files and 1,846 protected source hashes remained unchanged through the
+transitions. Current native verification reports 129 proof anchors, 53 acknowledged
+historical proof gaps and zero undeclared or invalid references. The separate
+13 historical sensor-artifact availability limitations remain explicit.
+Acceptance, refusal/failure history, reviews, source equivalence, exclusive
+execution receipts and postchecks are retained in
+`work/rounds/R-0042/reports/m1-closeout-20261024/`.
+
+The assessment remains bound to `21427c25`: **43 measured applicable cells,
+zero cell observation gaps, native 26 PASS / 12 REVIEW / 5 FAIL + two N/A,
+overall FAIL**. No later closure or integration commit is relabeled as that
+measurement source. BL-0025 remains open; its earlier socket failure is not
+diagnosed by the later passing E2E. R-0020/0041/0044/0045, BL-0020 and all genuine
+quality/legal/operational residuals retain their own obligations.
+
+This observation precedes certification of the final clean closeout candidate.
+That candidate must be published, independently reviewed, receive a fresh signed
+RC and independent exact-commit verification, and pass all five required checks
+before its own protected merge; main must then verify by exact tree. The actual
+signature and verification outcomes belong to the immutable evidence tag, native
+receipts and PR checks/body, so recording them does not alter the attested source.
+No future RC outcome or integration identity is asserted here.
+
+#211 remains unmerged, S3 runtime held and all nine C6 producers inactive with
+empty effective bindings. Closed rounds, original acceptance, local/recovery work
+and both proof histories remain preserved. This bounded measurement closeout
+does not declare product or whole-campaign completion.

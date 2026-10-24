@@ -1,0 +1,57 @@
+{
+  "overall_verdict": "PASS",
+  "reviewed_commit": "522e61d39d4a5fb063d29b9d5c58d6543e2a197c",
+  "reviewed_tree": "ded3a38dbc5050acbae48758ff761d88b9700e1c",
+  "base_main": "d8def62fefb0df0fa0480909a9082b8812cd3721",
+  "measurement_source": {
+    "commit": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+    "tree": "8a3329a7189b960a915e560daf0971ec0ea68e97",
+    "distinct_from_delivery_head": true
+  },
+  "findings": {
+    "actionable_blockers": [],
+    "nonblocking_observations": [
+      {
+        "id": "N1",
+        "topic": "Historical record 324 path reuse",
+        "detail": "Historical chain record 324 (source cd0c1b09) binds .devai/state/sensor-readings/test_coverage_depth/SR-01d9bca900c51904.json with sha fc4b0dcb. That path was absent on main. The old-74 run (record 360) created it with sha 264d6e66. At HEAD the old binding therefore does not match, which is one of the 13 historical limitations. This is disclosed in evaluation-74b9eec8/ec2-historical-custody-interpretation.md and X21427-custody-and-provenance-audit.json. The original old bytes are kept in the R-0036 replay canonical-readings archive. No pre-existing canonical file was overwritten. No action needed beyond keeping this disclosure."
+      },
+      {
+        "id": "N2",
+        "topic": "Scorecard thresholds label",
+        "detail": "scorecard-native-value.json reports thresholds_used source=defaults. The R-0036 e9e45a4a and old-74 scorecards carry the same native label, so the method is unchanged and nothing was recalibrated. Not a defect."
+      },
+      {
+        "id": "N3",
+        "topic": "Upgrade verifier scope",
+        "detail": "verifyGovernedUpgradeCompatibility runs only when a governed path differs from its 1073-reference hash. It then requires the exact ADOPTION bytes for both sealed paths and for all six generated files, the receipt, the authority sources, the DEVAI lock identity and empty C6 bindings. Any later DEVAI upgrade will therefore be refused by design and will need a new reviewed manifest version. This is the intended finite scope under ADR-0062 and is recorded here for future upgraders."
+      }
+    ]
+  },
+  "evidence": {
+    "git_scope": "HEAD descends from main d8def62f. There are 11 commits in delivery scope, including merge commits bf0e77fb (parents 83a25dd4 and d8def62f) and a9eaef48 (parents e70a20f9 and 4a7c987f), which preserve the source Git objects. Totals: 357 files, 330 added and 27 modified. Measurement source 21427c25 and its tree 8a3329a7 resolve exactly. #211 head 9b2a190a exists only on origin/codex/r0025-s2-risk-claim and is not an ancestor of the delivery.",
+    "chain": "record/proofs/chain.json has 335 records at main, 392 at 4a7c987f and a9eaef48, 393 at 21427c25 and 448 at HEAD. Every step is an exact prefix-preserving append. The 55 new records are all sense.readings.record with head_sha 21427c25 and contiguous sequences 394-448. All 55 artifacts exist and their sha256 matches the HEAD bytes. exact-new-canonical-paths.txt equals the bound path set.",
+    "census": "Sensor store grows from 211 files at main to 323 at HEAD. Main to HEAD shows 112 additions only (57 old-74 plus 55 new). 21427c25 to HEAD shows 55 additions only, with no modification or deletion of any old canonical file. Verdicts of the 55 new readings: 34 PASS, 11 REVIEW, 8 FAIL, 2 UNKNOWN (site_drift and action_effect_inference). The scorecard cells are 26 PASS, 12 REVIEW, 5 FAIL and 2 N/A, overall FAIL. All 49 scorecard-selected SR IDs belong to the new 55-record set.",
+    "historical_limitations": "Recomputing all 520 chain artifact bindings at HEAD gives 12 missing and 1 mismatch (record 324, see N1). Each of these was already missing at main, so there is no new historical loss. This matches the disclosed 13.",
+    "archive": "native-artifacts.tar.gz is 18449225 bytes with sha256 eb2b72ce70e428cf0667158c5df69d88ba50d9931254a4e484af90fef39e8a45. It has 490 regular members totalling 165133930 bytes. Each member hash matches native-artifacts-retention.json (0 missing, 0 mismatched). The 55 canonical copies in the archive are byte-identical to the HEAD store files.",
+    "adr0061_upgrade": "package.json and pnpm-lock change only the @aarusso-nyx/devai importer, package and snapshot entries (2.6.3 to 2.7.0). vitest 4.1.11, @vitest/coverage-v8 4.1.11 and vite 7.3.6 are unchanged. The upgrade receipt records 2.6.3 to 2.7.0, Constitution 1.0.2 to 1.1.0, no retired keys, 5 changed files and 3 postchecks with ok=true. The governed manifest lists exactly 6 generated files: the 5 changed files plus the receipt. law/schemas/manifest.json lists 121 schemas, and every one is byte-identical to the installed node_modules/@aarusso-nyx/devai 2.7.0 dist schemas with matching hashes. The only schema content changes are optional independent_assurance booleans: two in campaign.schema.json and one in task.schema.json. Thresholds, sensor-inputs, scorecard-na, invariant-producers and adopter-policy are unchanged from main.",
+    "adr0062_compatibility": "docs/meta/security/historical-compatibility.json (v1) and the R-0041 1073-source preservation reference are unchanged. The v2 manifest sha256 equals the pinned 62fc9d19. 74b9eec8^ equals the BEFORE commit cac88d51, which is an ancestor of main. Original v1 assertions are unchanged. The historical test diff only adds fixture copying of the v2 inputs, so no assertion was weakened.",
+    "docs_security": "docs/site lock changes only the node_modules/fast-uri node (3.1.8 to 3.1.9 with new integrity), plus the matching override in package.json. body-parser stays at 1.20.9.",
+    "plan_and_backlog": "COMPLETION-PLAN sections 1-10, including sections 3, 4 and 9, are byte-identical to main. Only section 11 gains the dated M1 update. BL-0016 is resolved, citing #218 merge 67a3b3da (an ancestor of main) and PC-0026. BL-0025 is open under R-0042. BL-0024 is open. The R-0043 index row shows it closed with PC-0026. No future #224 merge identity is asserted.",
+    "protected_paths": "Unchanged from main to HEAD: .devai/state/evidence-chain.json (legacy chain), work/rounds/R-0036 through R-0039, docs/meta/decisions, invariant-producers.json (bindings []), adopter-policy.json, thresholds.json, sensor-inputs.json and scorecard-na.json."
+  },
+  "limitations": [
+    "Read-only Git review. No tests, producers, native verbs, CI or GitHub API calls were run. The 58 local/CI test PASS results, CI 40052489971, the five required checks, the verified-local-rc remote fallback, signed RC 80505ac/run 40034673414, and the live state of #211 and PR224 were not re-observed.",
+    "Chain record-hash linkage was not recomputed with the DEVAI algorithm. This review relies on prefix identity, sequence contiguity, artifact hashes, and the recorded doctor_exit 0 and chain_verification_exit 0.",
+    "External artifact sources under /Volumes/Development/.codex/artifacts were not compared. Only the committed copies and their manifests were verified.",
+    "Test-population figures (13641, 1518, 2260 and 592 files at 56.53%) and inventory-performance statistics (59 pool files, 38 durations, 31 baseline, p95 2917, mean 469) were taken from the committed reports and readings. They were not re-executed.",
+    "The 1101258-byte custody audit JSON and the 43-row register were sampled, not exhaustively re-derived."
+  ],
+  "integration_conditions": [
+    "Integrate only the exact reviewed HEAD 522e61d39d4a5fb063d29b9d5c58d6543e2a197c, and only after all five required checks are green on that head. Never waive or bypass a gate.",
+    "Use a merge commit, not squash or rebase, so the source Git objects 74b9eec8, cac88d51, 21427c25 and the merged parent histories stay reachable for the ADR-0062 verifier.",
+    "Do not treat this PASS as closing R-0042 or BL-0024. That requires actual #224 integration, post-integration gates, independent review and a later official closeout PR whose final clean candidate gets a fresh signed RC and independent exact-commit verification.",
+    "Keep BL-0025 open. Keep #211 unmerged with S3 held and all nine C6 producers inactive with empty bindings. Do not retry or rephrase withheld protocol. Do not rewrite closed R-0036 to R-0039 or the legacy chain. Do not claim readiness, qualification or a global historical-availability PASS.",
+    "R-0020, R-0041, R-0044, R-0045, BL-0020 legal work and the remaining residual findings keep their own scope. The 5 native FAIL cells and 2 UNKNOWN diagnostics stay open findings, not accepted outcomes."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "audit": "R0042 final report storage packaging",
+  "role": "Auditor",
+  "verdict": "PASS",
+  "archive_sha256": "6f3d7b17a51ad67179c117d29b4c8ab82f617cbb4fdb9deacef6485223f0f07a",
+  "archive_bytes": 292527,
+  "original_member_count": 140,
+  "all_member_names_unique_and_hash_sizes_match": true,
+  "unchanged_flat_files": 135,
+  "gzip_relocations": 5,
+  "each_gzip_decompresses_to_original_archive_member": true,
+  "original_manifests_verified": {
+    "acceptance-artifacts-manifest.json": 57,
+    "actual-execution-retention.json": 78
+  },
+  "all135_manifest_capture_origins_external_unchanged": true,
+  "acceptance_manifest_sha256": "4317a2e123772c299b3707743cafb650c8de0bb5ba65da5df6fcdfae67a0f8fe",
+  "native_tail_manifest_binding_and_PC0027_terminal_unchanged": true,
+  "all_prior_canonical_source_hashes_unchanged": true,
+  "protected_hashes_still_unchanged": 1846,
+  "guard_weakening_or_semantic_loss_detected": false,
+  "limits": "Storage-only audit; final clean candidate RC/signing/protected integration still future. Logical paths in immutable manifests resolve through storage map/archive for five relocated stdout files.",
+  "method": "Read/hash/decompress archive in memory only. No extraction to repository, native commands, tests or source writes.",
+  "custody": "Read custody RELEASED."
+}

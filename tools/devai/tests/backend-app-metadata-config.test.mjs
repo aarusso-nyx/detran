@@ -21,6 +21,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { runGitFileBacked } from '../git-output.mjs';
 
 const root = realpathSync(fileURLToPath(new URL('../../../', import.meta.url)));
 const app = path.join(root, 'backend/app');
@@ -120,7 +121,7 @@ const expectedAliases = {
 };
 
 function runGit(argv) {
-  const result = spawnSync('git', argv, { cwd: root });
+  const result = runGitFileBacked(argv, { cwd: root });
   assert.equal(result.status, 0, result.stderr?.toString());
   return result.stdout;
 }

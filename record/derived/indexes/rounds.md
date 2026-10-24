@@ -27,4 +27,5 @@
 | PC-0023 | R-0037 | - | 92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c | yes |
 | PC-0024 | R-0038 | - | 11eea2d7309a958d14d536ea7ced46124dfeed2e | yes |
 | PC-0025 | R-0039 | - | f3dfc6ee47a94249631bf14e3242aeb309e36001 | yes |
+| PC-0027 | R-0042 | - | f50b9ce7dd32dff66646fd01e99b0556e4d76bdb | yes |
 | PC-0026 | R-0043 | - | 67a3b3da0afcd7d3298090c8ec0ab38412648d2e | yes |
