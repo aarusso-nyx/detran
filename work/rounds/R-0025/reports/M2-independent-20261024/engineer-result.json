@@ -1,0 +1,91 @@
+{
+  "role": "Engineer",
+  "operation": "READ_ONLY static source/blob/metadata preparation; no actual merge asserted",
+  "refs": {
+    "main": "b796e2e07bbb08c2f3fec25a4efe31e136bfd59e",
+    "candidate": "3c361fb4b1ee1f3e1603ee7f61f0096909f71a22",
+    "s2": "9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99",
+    "archive": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+    "base": "1115f58960679291744e93a3fb59feb35d849cbb"
+  },
+  "original_owned_census": {
+    "both-different": 41,
+    "s2-only": 185,
+    "unchanged": 21,
+    "main-only": 1
+  },
+  "global_changed_census": {
+    "main-only": 2504,
+    "s2-only": 1003,
+    "both-different": 49
+  },
+  "owned_total": 248,
+  "generated_both_different": 38,
+  "handwritten_engineer_both_different": [
+    "backend/app/src/app.module.ts"
+  ],
+  "inspector_both_different": [
+    "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts",
+    "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts"
+  ],
+  "static_main_delta": "app.module removes unused AuditInterceptor import; two Inspector tests remove unused tuple bindings; rait-case-scope main-only let\u2192const. Preserve source on both sides; Inspector owns test reconciliation. No semantic equivalence claimed from blobs.",
+  "archive_normative_suffix_checks": [
+    {
+      "s2": "ADR-0058-rait-risk-source-transaction-locks.md",
+      "archive": "ADR-0061-rait-risk-source-transaction-locks.md",
+      "original_exact_suffix": true,
+      "identical": false
+    },
+    {
+      "s2": "ADR-0059-rait-candidate-universe-linearization.md",
+      "archive": "ADR-0062-rait-candidate-universe-linearization.md",
+      "original_exact_suffix": true,
+      "identical": false
+    },
+    {
+      "s2": "ADR-0060-rait-policy-provenance-and-risk-boundaries.md",
+      "archive": "ADR-0060-rait-policy-provenance-and-risk-boundaries.md",
+      "original_exact_suffix": true,
+      "identical": true
+    }
+  ],
+  "archive_custody": {
+    "checkout_exists": false,
+    "snapshot_commit": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+    "raw_index_file": "/Volumes/Development/.codex/artifacts/detran/pr211-binding-authority-refresh-20261023/preserved-index-stage-entries.bin",
+    "raw_index_sha256": "73396fc09b63d8418e679b7be18f3941cd4367771c74ef31f24172acd34976ec",
+    "raw_index_size": 1873061,
+    "interpretation": "External historical stage-entry bytes, NOT a live unresolved Git index. Archive tree is a snapshot distinct from raw unmerged index stages."
+  },
+  "collisions": [
+    "Current main ADR0060 roadmap collides with archive S2 normative0060 policy-provenance.",
+    "Current main ADR0061 adoption collides with archive S2 normative0061 risk locks.",
+    "Current main ADR0062 history compatibility collides with archive S2 normative0062 universe linearization.",
+    "Held S2 normative0058/59 already collide with current main0058/59; archive redirects55/58\u219261 and56/59\u219262 must be refreshed prospectively, and57\u219260 requires corresponding refresh. Preserve main55\u201362 occupants and all historical accepted bodies."
+  ],
+  "safe_A1_existing_scope": [
+    "Static source crosswalk and review packets now: no runtime or proof mutation needed.",
+    "Future exact candidate app.module reconciliation limited to original Engineer registration ownership; retain current import cleanup and S2 provider registration, subject to frozen candidate review.",
+    "Original source/generated envelopes and expressly approved parser, TEAT, batching and smoke amendments remain bounded authority evidence; presence in regex reference list is not edit permission.",
+    "Future Inspector-owned two test binding overlaps require Inspector source custody and unchanged assertions, not Engineer edits."
+  ],
+  "fresh_bounded_packet_needed": [
+    "Any prospective current-main reconciliation must rebind all sources/index custody and current drift before effects; parent owns isolated branch/merge operations.",
+    "Architect ADR renumber using ADR0035 requires then-free IDs and exact provenance/aliases/live reference inventory; NONE assigned here.",
+    "Current-main security native inventories/export/bootstrap need exact candidate/source admission and native supported action/release; no manual output merge.",
+    "Proof canonical selection/index/recovery and DEVAI adoption require actual capable published release and exact authority; historical2.7.0 absence audit does not establish current2.7.1 capability.",
+    "PERF-01 verifier optimization proposal is explicitly unapproved and has no Engineer runtime path; no optimization/calibration inferred.",
+    "Any additional runtime/test/source-producer path or changed fixture budget/policy/permissions requires new bounded approval."
+  ],
+  "holds": [
+    "PR211 head9b2a190a unmerged",
+    "C6blocked",
+    "S3runtimeheld",
+    "STYNXheavywindow: no tests/build/install/services/indexrefresh"
+  ],
+  "limitations": [
+    "Blob overlap does not prove textual conflict, compatibility or successful merge. No merge-tree or merge operation run.",
+    "Packet inventory carries preserved historical PROPOSED labels; later approval receipts must be read together, not rewritten.",
+    "PR226candidate is sourcebound3c361fb4 and not assumed merged; current mainbindingb796e2e0."
+  ]
+}
