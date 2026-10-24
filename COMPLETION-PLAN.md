@@ -592,3 +592,19 @@ No future RC outcome or integration identity is asserted here.
 empty effective bindings. Closed rounds, original acceptance, local/recovery work
 and both proof histories remain preserved. This bounded measurement closeout
 does not declare product or whole-campaign completion.
+
+### Milestone 2 begun — 2026-10-24
+
+The Owner directed checking post-merge main CI and then beginning M2 under this
+approved roadmap, retaining #211 unmerged, C6 blocked, acceptance, histories and
+local work. Main `b796e2e0` post-merge CI and trusted exact-tree verification passed;
+no CI repair was required. M1 adoption/measurement closures remain bounded and its
+26 PASS / 12 REVIEW / 5 FAIL plus two NAs remain an overall FAIL.
+
+The [M2 start packet](work/rounds/R-0025/reports/M2-start-20261024/README.md)
+records source/capability discovery, preserved recovery approvals and later
+proposed annexes, archived reconciliation/index custody, current-main drift and
+the independent already approved smoke-diagnostic insertion. It supplies no new
+upstream, recovery or merge authority. Newer release discovery is separate from
+exact capability qualification and D1-L approval. Keep #211 unmerged and C6 blocked;
+S3 runtime remains held. No original acceptance or historical packet is rewritten.
