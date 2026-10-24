@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "scope": "draft-CI push of DRAFT 224 only; not a final integration or test PASS",
+  "findings": [],
+  "checked": {
+    "head": "40cb4cdabe31dcc431cef87cb0d27a1fa08420ea",
+    "dirty": ["docs/site/package.json", "docs/site/package-lock.json"],
+    "diff": "4 lines changed; override fast-uri@3.x 3.1.8->3.1.9; one lock leaf node_modules/fast-uri, only version/resolved/integrity changed",
+    "integrity_matches_registry": true,
+    "resolved_tarball_matches_registry": true,
+    "registry_provenance": "slsa v1 attestation present",
+    "fast_uri_lock_entries": 1,
+    "ajv_edge": "^3.0.1 accepts 3.1.9",
+    "body_parser": "1.20.9 unchanged",
+    "root_pnpm_lock_sha256": "93131ac3...fc27 matches preservation",
+    "no_other_files_changed": true,
+    "patched_floor": "3.1.9 meets GHSA w74x-v6f9-j3xg and wjr9-j795-jxcr per brief, not checked independently"
+  },
+  "remaining_gates": [
+    "npm ci in docs/site with the lock unchanged",
+    "npm audit shows fast-uri advisories cleared",
+    "docs site build",
+    "required CI green on PR 224",
+    "post-merge 223 main audit refusal tracked separately",
+    "source 74 measurement held separately"
+  ]
+}
