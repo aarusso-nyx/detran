@@ -1,0 +1,82 @@
+{
+  "actual_merge": "f50b9ce7dd32dff66646fd01e99b0556e4d76bdb",
+  "preclose_source_commit": "49ee459f94091c781c1169e3420981974a25ca7e",
+  "delivery_head": "522e61d39d4a5fb063d29b9d5c58d6543e2a197c",
+  "measurement_source": "21427c25fe2e1c7977ca0311156d4c59d8cfea35",
+  "delivery_head522_all_five_required_green": true,
+  "postintegration_ci40060467337_all_jobs_pass": true,
+  "all_light_checks_pass": true,
+  "successful_postintegration_fallback_check": 120777117653,
+  "retained_failed_trusted_check": 120772707099,
+  "retained_failed_trusted_run": 40060467323,
+  "retained_failed_trusted_job": 120772645725,
+  "postintegration_jobs": [
+    {
+      "id": 120772645719,
+      "name": "senatran-mock-tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772645866,
+      "name": "senatran-mock",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772645889,
+      "name": "boat-documents-real",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772645893,
+      "name": "evidence-gate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772645933,
+      "name": "invariant-producers",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772646508,
+      "name": "stack-smoke",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 120772749557,
+      "name": "backend-kernel",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 120772982049,
+      "name": "foundation",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "CI40060467337 plus9lightgates; not every workflow onmain. Trusted-RC failure retained; no signed/attested main claim.",
+  "preexecution_review_conditions": "Pre-execution review PASS conditional; actualsourceD6adoption/retention checked separately before effects; finalC RC/review/integration still mandatory.",
+  "accepted_at": "2026-10-24T04:29:11.458257+00:00",
+  "all_preexecution_review_conditions_fulfilled": true,
+  "acceptance_artifacts_manifest_sha256": "4317a2e123772c299b3707743cafb650c8de0bb5ba65da5df6fcdfae67a0f8fe",
+  "helper_sha256": "b2e97ce513182b6699b2e011c0f17285e3eee2b2ab1424cd218eb1be3a093599",
+  "preexecution_review_sha256": "65d8cf6590ff02dcecb0546ebbc49cc69217933c3f6fff8224bc63b9b97fe729",
+  "conditions": {
+    "EC1": "Actual40060467337successfulalljobs_except_originaloptionalstackskip; actualfallback120777117653SUCCESS",
+    "EC2": "Failedtrusted40060467323/job120772645725/check120772707099retained, no rerun or signatureclaim",
+    "EC3": "57actualpreexecutionartifacts byte-exact retained with immutablemanifest; actualD6scopeadopted",
+    "EC4": "Helper validates12gatekeys/all5criteriaPASSwithactualoutput after authenticacceptanceappend; no PENDING/futurepromotion",
+    "EC5": "UnchangedAuthcommitted49ee; genuinegenericappend stillnext, noPC/tailpredicted",
+    "EC11": "Protectedcontrol/policy/descriptor/binding/threshold/C6surfacesunchanged"
+  },
+  "later_conditions": {
+    "EC6_EC7_EC8_EC9_EC10": "Executeofficialclose/declaration/index/seal/backlog+humanindex/postchecks once; verifyactualoutputs. Not yet executed.",
+    "final_candidate_RC": "NOT YET RUN. MandatorycleanC signedRC/exactcommitverification/allfivegreen/finalreviewbeforecloseoutPRmerge and exacttreeonmain."
+  }
+}

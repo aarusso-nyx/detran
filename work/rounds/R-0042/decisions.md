@@ -154,3 +154,44 @@ stronger global all-artifacts-present condition. This reporting clarification ch
 no native verification, selection, instance, threshold or historical-compatibility
 rule and supplies no authority exception. The new epoch still requires genuine
 current-candidate emissions, matching artifacts/receipts and intact same-root lineage.
+
+## D-6 — Bounded measurement closing judgment
+
+**Status: adopted.** Architect accepts only the original R-0042/BL-0024
+measurement scope under D-1/D-2 and approved M1. Actual #224 merge
+`f50b9ce7dd32dff66646fd01e99b0556e4d76bdb` preserves the independently reviewed delivery tree
+and the measured source `21427c25fe2e1c7977ca0311156d4c59d8cfea35`.
+
+Actual post-integration DETRAN CI **40060467337** passed its complete backend,
+foundation, mock, evidence, invariant and BOAT jobs; original optional stack-smoke
+remained skipped. Its own remote-backend fallback check is **120777117653**.
+The five required checks were green at delivery head `522e61d3` before #224
+merged. This does not describe every workflow on the merge as green:
+trusted-RC run **40060467323**, job **120772645725** and check
+**120772707099** remain failed for the missing exact-tree attestation tag and
+secondary missing-summary output. Those failures remain retained. The merged tree
+is not described as signed or attested.
+
+All 43 applicable cells have supported source-X observations and zero cell gaps;
+native **26 PASS / 12 REVIEW / 5 FAIL + two unchanged N/A, overall FAIL** remains.
+The original seven targets are supported: F3:T1/T6/T7/T8 PASS and F3:T2/T3/T5
+REVIEW. Complete measurement does not accept the residual quality findings.
+Independent closeout review PASS is bound by SHA-256 `65d8cf6590ff02dcecb0546ebbc49cc69217933c3f6fff8224bc63b9b97fe729`;
+actual CI, material equivalence, light gates and review receipts are retained in
+`reports/m1-closeout-20261024/`.
+
+D-1…D-5 remain intact. Local D-3 is the withheld, unexecuted companion proposal,
+not the generic register D-3 closing category. Historical and failed attempts,
+all available canonical bytes and the same 13 historical artifact limitations
+remain explicit; native proof-anchor verification is a separate dimension.
+Only registered verbs may append acceptance evidence, allocate the PC,
+materialize the declaration/index, seal and resolve BL-0024. No PC or seal is
+asserted by this judgment before actual machine emission.
+
+The final clean closeout candidate still requires a fresh signed RC, independent
+exact-commit verification, final review and all five required checks before its
+own protected PR merge; actual main must then verify by exact tree. Keep #211
+unmerged, S3 runtime held, all nine C6 producers inactive and the withheld protocol
+untouched. R-0020/0041/0044/0045, BL-0020/0025 and all genuine residual findings
+retain their separate obligations. No product, legal, qualification, operational
+or whole-campaign readiness follows.

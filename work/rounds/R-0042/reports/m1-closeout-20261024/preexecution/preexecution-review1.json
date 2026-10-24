@@ -1,0 +1,95 @@
+{
+  "overall_verdict": "PASS",
+  "native_closeout_proposal_verdict": "CONDITIONAL_PASS — the bounded R-0042/BL-0024 local measurement closure may go ahead only after actual post-integration DETRAN CI run 40060467337 finishes with every job a real success, and only once all execution conditions below are met. This verdict does not accept any future CI, PC or RC result. It does not call merge f50b9ce7/tree ded3a38d signed, attested, or green across all workflows. A fresh signed RC on the final clean closeout candidate, independent verification of that exact commit, and green required checks remain mandatory before the closeout PR merges.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "material-condition",
+      "title": "A required-name verified-local-rc check-run on the actual merge commit is already FAILED",
+      "detail": "Read-only `gh api` on f50b9ce7 shows check-run 120772707099 named verified-local-rc with conclusion failure (title 'Trusted local RC attestation', summary 'Binding: ; tree: ; tag: ', completed 2026-10-24T03:58:42Z). It came from trusted-RC workflow run 40060467323 (job 'Verify trusted local RC evidence' 120772645725, failure). In ci.yml the backend-kernel job runs on push, and when it finishes it posts a second check-run with the same name ('Remote backend fallback'), so f50b9ce7 will carry two verified-local-rc check-runs. The proposal's 'all required green' wording cannot be applied to f50b9ce7. The fallback must not be described as a signature, and the failure must not be overwritten or waived.",
+      "disposition": "Allowed only if the post-integration-verification gate scopes its pass to (a) protected integration of #224, where all five required checks were green at exact head 522e61d3, (b) actual DETRAN CI 40060467337 with all jobs successful, including its own fallback check-run identified by ID, and (c) the recorded light gates. The detail text must also name 120772707099 and 40060467323 as failed and retained, caused by a missing exact-tree attestation tag. Branch protection gates PRs, not pushes to main, so this failure does not block a local closure. It does mean no 'trusted/attested main' claim can be made until candidate C's own RC passes."
+    },
+    {
+      "id": "F2",
+      "severity": "blocking-if-violated",
+      "title": "`round close` accepts acknowledged failed gates, but `round seal` does not",
+      "detail": "In installed DEVAI 2.7.0, closePhase (release-host.js) only rejects failed gates that no failing validation criterion names. assertClosePreconditions, however, requires every root record gate (unchanged-product, unchanged-assertions-thresholds, C6-held, evidence-chain) to have status pass in the closure, and rejects any criterion whose verdict is fail (ROUND_ARCHIVE_GATE_NOT_GREEN / ROUND_ARCHIVE_VALIDATION_NOT_GREEN). The proposal currently has post-integration-verification=fail, independent-closeout-review=fail and criterion 4=fail. Running close now would allocate a PC that cannot be sealed and could only be corrected with `supersedes`.",
+      "disposition": "Do not invoke `round close` until all 10 gates and all 5 criteria are pass and each is backed by an actual retained output. Do not change any field to pass on the strength of a predicted or partial result."
+    },
+    {
+      "id": "F3",
+      "severity": "source-prerequisite",
+      "title": "The D-6 register heading is mechanically required, and register D-3 collides in meaning with R-0042's local D-3",
+      "detail": "decisionExists() resolves closed_by through the regex `^###\\s+D-6\\b` in law/register/DECISIONS.md. The register currently has only the generic ### D-1, D-2 and D-3. Generic register D-3 means 'later closing judgment', but R-0042's local D-3 is a withheld, unexecuted proposal. Leaving out D-4 and D-5 from the register is mechanically fine, because only declared_by and closed_by are resolved.",
+      "disposition": "Add a generic, additive ### D-6 entry that follows the D-3 wording style (it is not R-0042-specific and grants no extra authority). Put all R-0042 content in a scoped '## Anexo de R-0042' that lists the local D-1…D-6, says explicitly that local D-3 is the withheld proposal and not the generic register D-3, and makes no claim about a PC or seal before they are emitted. Also append D-6 to work/rounds/R-0042/decisions.md, as R-0043 did with its local D-3. Keep all existing bytes."
+    },
+    {
+      "id": "F4",
+      "severity": "sequencing",
+      "title": "The active-round guard sets the order of evidence, close and seal",
+      "detail": "authorizationIsActive() needs AUTHORIZATION.md (with `status: active` and GRANTED) and returns false once close-state.jsonl exists. Both `round close` and the evidence append need the round to be active. AUTHORIZATION.md is currently untracked (sha256 b0578405…c9af6). Its text matches D-1, D-2 and COMPLETION-PLAN §11 and invents no human reply or delegation.",
+      "disposition": "Order: commit AUTHORIZATION.md → official generic evidence record on R-0042 → read the emitted tail → `round close --as-role architect --write` → `round plan --declare` → render the derived index → seal → backlog resolve. No evidence append after the seal."
+    },
+    {
+      "id": "F5",
+      "severity": "accuracy",
+      "title": "Proposed D-6 text and closure details are incomplete on post-integration facts",
+      "detail": "proposed-D6.md (sha256 1ea34a36…0549) correctly preserves D-1…D-5, the withheld D-3, the overall FAIL and #211/S3/C6. It does not cite the actual post-integration CI result, or the failed trusted-RC run and check-run IDs. proposed-closure.json (sha256 b88e5bfe…0cb7) has W1/W2 batch commit = f50b9ce7. That is admissible, since the merge contains the delivered units, but it is less precise than the actual delivering ancestors.",
+      "disposition": "Before adoption, add the actual 40060467337 job outcomes and the retained 40060467323/120772707099 failures to the D-6 annex and the gate details. Optionally cite the exact delivering ancestor commits for W1/W2. Leave closed_at for the verb to assign."
+    },
+    {
+      "id": "F6",
+      "severity": "observation",
+      "title": "The light post-integration gates are recorded and all exited 0, on a dirty tree under Node 24.20",
+      "detail": "execution.json records 9/9 commands with exit 0: prettier on AUTHORIZATION.md, historical-compatibility, schema-citation census, task-originals (144 OK), law-corpus, state-index (45 rounds/26 closures), rounds-index, proof-anchors (128 anchored/53 declared orphans/0 undeclared; chain valid head 1296d260…8320) and devai doctor ok:true. Doctor reports candidate f50b9ce7/ded3a38d with clean:false (from the untracked AUTHORIZATION.md) and runtime v24.20.0. The historical-compatibility output keeps its ROUND_RECORD_MISSING and ROUND_ARCHIVE_MUTATED:R-0017 findings as a supplementary map, not as a native verdict.",
+      "disposition": "These are acceptable as light diagnostic gates only. They are not RC or attestation evidence. The RC on C must use the unchanged trust policy: Node 24.15 / pnpm 9.15 and canonical realpaths."
+    },
+    {
+      "id": "F7",
+      "severity": "observation",
+      "title": "Source equivalence and scope separation are supported",
+      "detail": "HEAD f50b9ce7 has tree ded3a38d, which equals the tree of reviewed delivery 522e61d3. 21427c25 is an ancestor. The diff from X to the merge contains only COMPLETION-PLAN, report, chain and the 55 reading paths. The 393→448 prefix and 268-file preservation are asserted in actual-integration-source-equivalence.json, and the Auditor support map lists all 10 gates with their conditions. The measurement source is not re-stamped. #211, S3, C6, BL-0025, BL-0020 and R-0020/0041/0044/0045 stay separate.",
+      "disposition": "No further source prerequisite, beyond rechecking it on candidate C."
+    }
+  ],
+  "execution_conditions": [
+    "EC1: Wait for actual DETRAN CI 40060467337 on f50b9ce7 to finish. Every job must be a real success (stack-smoke skipped as before), including backend-kernel, foundation and the fallback verified-local-rc check-run posted by CI. Record job and check-run IDs. If anything fails, stop: no close, no retry-to-green, no waiver.",
+    "EC2: Retain trusted-RC run 40060467323 and check-runs 120772707099 and 120772645725 as failures, cited in the post-integration gate detail and the D-6 annex. Do not re-run or dispatch them for f50b9ce7 to manufacture a pass. Never describe f50b9ce7 as signed or attested, or as green across all workflows.",
+    "EC3: Get an independent closeout review PASS (this review) and copy it, byte-exact with its hash, together with CI/source-equivalence/light-gate/material evidence, into work/rounds/R-0042/reports/<closeout dir>. Switch independent-closeout-review and post-integration-verification and criterion 4 to pass only with those actual artifacts cited.",
+    "EC4: Before `round close`, all 10 gate keys must be status pass and all 5 validation criteria verdict pass, with no remaining 'PENDING' text. The 4 root gates are mandatory for seal; the 6 wave gates and 2 extra gates are required by the support map.",
+    "EC5: Commit the tracked AUTHORIZATION.md unchanged in meaning while the round is still active. Run the official `pnpm exec devai evidence record` on the R-0042 generic epoch binding every acceptance artifact and the review, then read the actual emitted tail of record/proofs/work/generic/R-0042.jsonl. Fill closure.evidence {proof_epoch, terminal_sha256} with those actual values only.",
+    "EC6: Run `round close --as-role architect --write` once. Unwrap result.value, retain stdout/stderr and the allocated PC as emitted, and do not retry automatically after allocation. On refusal, stop, retain the refusal, and fix only a genuine source prerequisite.",
+    "EC7: Run `round plan --declare` from a schema-valid record that keeps every original field byte-for-byte in meaning: id, title, kind, date, authority, goal, declared_by D-1, isolation {branch codex/scorecard-seven-measurement-gaps, base_sha 4fbca6ce…}, all waves/lock_scopes/gates, orchestrator_prompt and plan_path. Add only status closed, closed_by D-6, phase_closure = actual PC, merged_as f50b9ce7dd32dff66646fd01e99b0556e4d76bdb.",
+    "EC8: Regenerate record/derived/indexes/rounds.md only through the deterministic renderer or native verb. The seal must find a terminal PC row. Then run the native `round seal` (close-state.jsonl must match closeStateLine) and native backlog resolve for BL-0024, keeping body, origin, request_id and created_at. Nothing in PC, record, seal, index, backlog or chain is handwritten.",
+    "EC9: Hand-edit only the work/rounds/README.md R-0042 row (currently 'aberta'), with factual PC/#224 values and no readiness claim. COMPLETION-PLAN changes are optional and must be additive and dated.",
+    "EC10: Rerun the affected checks on the final committed source: prettier, verify:law-corpus, verify:state-index, verify:rounds-index, verify:proof-anchors with full chain verify, verify:task-originals, historical compatibility, schema-citation census, devai doctor, and `devai round status R-0042`. Report pre-existing findings separately.",
+    "EC11: No guard, trust, control-surface, threshold, descriptor, N/A, binding, calibration or C6 change. evidence-gate's evidence_mode requires that no protected control surface changes on C."
+  ],
+  "required_source_prerequisites": [
+    "work/rounds/R-0042/AUTHORIZATION.md committed (status: active, GRANTED, projection of existing D-1/D-2/§11 authority only)",
+    "Additive generic '### D-6' heading in law/register/DECISIONS.md plus a scoped R-0042 annex that separates local D-3 (withheld) from register D-3, with all existing bytes preserved",
+    "Additive '## D-6' in work/rounds/R-0042/decisions.md with the accurate bounded closing judgment, citing the actual CI/RC IDs",
+    "Final closure input in which every gate and criterion is pass, backed by actual retained artifacts, and evidence.terminal_sha256 is taken from the actual emitted tail",
+    "Retained closeout report directory containing this review, the CI JSON for 40060467337/40060467323, source equivalence, the light-gate execution and outputs, and the proposal hashes"
+  ],
+  "final_rc_condition": "Freeze clean closeout candidate C only after all closure metadata, reports, native outputs and the final source-bound review are committed. Publish C. The Inspector then runs the existing trusted local RC prepare/publish flow on C's exact commit/tree under unchanged Node 24.15 / pnpm 9.15, trust policy and canonical realpaths. Independent exact-commit verification follows via devai-local-rc-verify workflow_dispatch candidate_sha=C, which must yield verified-local-rc success bound to C's tree with evidence_mode selected. All five required checks (evidence-gate, foundation, senatran-mock, senatran-mock-tests, verified-local-rc) and the final review must be green on exact C. Merge with a merge commit only if C's base is the current main, so the merge tree equals the attested tree. After merging, verify the exact tree on main through the push-triggered trusted-RC workflow. No source writes after C is frozen; results stay external, in the PR body or in tag checks. The 805 signature (80505ac) and the #224 remote fallback do not substitute for this RC. If the RC or verification fails, do not merge; retain the failure.",
+  "evidence": [
+    "HEAD f50b9ce7dd32dff66646fd01e99b0556e4d76bdb tree ded3a38dbc5050acbae48758ff761d88b9700e1c = origin/main; only untracked file is work/rounds/R-0042/AUTHORIZATION.md",
+    "Installed @aarusso-nyx/devai 2.7.0; closePhase/assertClosePreconditions/decisionExists/authorizationIsActive/renderRoundRecord read in dist/runtime/index/release-host.js",
+    "Branch protection required contexts: evidence-gate, foundation, senatran-mock, senatran-mock-tests, verified-local-rc",
+    "Run 40060467337 (push, f50b9ce7): in_progress; backend-kernel and foundation in_progress, 5 success, stack-smoke skipped",
+    "Run 40060467323 failure; check-runs 120772707099 (verified-local-rc failure) and 120772645725 (failure) on f50b9ce7",
+    "ci-522e61d3-final-green.json: all required checks success at 522e61d3; verified-local-rc 120770854151 = Remote backend fallback",
+    "actual-merged-pr224.json: merged 2026-10-24T03:58:19Z, merge_commit f50b9ce7, head 522e61d3",
+    "light-postintegration/execution.json: 9/9 exit 0; chain valid head 1296d260…8320, 128 anchored / 53 acknowledged",
+    "proposed-closure.json sha256 b88e5bfee4d205fc47b89a0a7e1aae0d7be7f5a3eb565e817adefa8a41f50cb7; proposed-D6.md sha256 1ea34a3611a0fb7a02361c8731b39269ac4f541618fb5b3ec161f253607d0549; AUTHORIZATION.md sha256 b0578405a12ccd0783c762b0c02763468d6fba5e4531d80f88403d607b2c9af6",
+    "R-0042 record/plan/decisions/prompt, BL-0024 (open, origin 4fbca6ce), COMPLETION-PLAN §11 and the 2026-10-24 update, R0042-future-closeout-support.md, and the R-0043/PC-0026 precedent were read"
+  ],
+  "limitations": [
+    "Static pre-execution review: the CI 40060467337 outcome, the future PC, the evidence tail, candidate C and its RC are not observed and not predicted.",
+    "I did not independently re-hash the 490-member archive, the 55 artifacts or the 268 baseline files. I relied on the committed audit manifest and source-equivalence JSON.",
+    "The devai doctor and 03 census outputs were read in part; their exit codes and ok flags were verified.",
+    "The RC trust-policy Node 24.15 pin was inferred from historical readings and the operator statement, not from the trust-policy file.",
+    "Read-only gh API reads only. No source writes, native actions, tests, installs or services."
+  ]
+}

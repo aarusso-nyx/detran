@@ -1,0 +1,67 @@
+{
+  "role": "Auditor source-only critique; no script execution/import/syntaxcheck/nativecommands/tests/sourceedits",
+  "source_path": "/Volumes/Development/.codex/artifacts/detran/m1-r0042-closeout-20261024/execute-native-closeout.py",
+  "source_sha256": "c5d4a832664d1dfb5bb18e4dd371e4c224c4cdfa4b04e960de1f601dbe6b390c",
+  "companion_inputs": [
+    {
+      "path": "/Volumes/Development/.codex/artifacts/detran/m1-r0042-closeout-20261024/proposed-closure.json",
+      "sha256": "b88e5bfee4d205fc47b89a0a7e1aae0d7be7f5a3eb565e817adefa8a41f50cb7"
+    },
+    {
+      "path": "/Volumes/Development/.codex/artifacts/detran/m1-r0042-closeout-20261024/proposed-D6.md",
+      "sha256": "1ea34a3611a0fb7a02361c8731b39269ac4f541618fb5b3ec161f253607d0549"
+    }
+  ],
+  "verdict": "REVIEW; apply bounded corrections before execution, while actual postintegration/review remain pending",
+  "findings": [
+    {
+      "id": "C1",
+      "severity": "high",
+      "lines": "37-38",
+      "problem": "Every fail validation criterion in the draft is promoted to pass with generic integration evidence. Only the known pending postintegration criterion is intended; an unrelated or newly failing criterion would also be silently promoted.",
+      "correction": "Assert the exact expected pending criterion identity/count and update only it from actual accepted postintegration evidence. Reject every other fail and preserve all original criteria/gates unchanged. Do not use blanket status conversion."
+    },
+    {
+      "id": "C2",
+      "severity": "medium",
+      "lines": "7,13,15-18,44-46",
+      "problem": "Only parsed round-close.json guards no-repeat, while native output files and before-custody are written nonexclusively. An early pre-append failure permits re-running with overwritten historical logs. If PC allocation succeeds but JSON parsing fails, parsed sentinel does not yet exist; full rerun is indirectly stopped by449count, but the source should explicitly preserve/read actual effect output and forbid fresh allocation.",
+      "correction": "Require a fresh immutable execution-attempt directory and exclusive log/manifest writes. Treat any prior round-close execution/stdout or canonicalR0042PC as a stop-and-reconcile condition, never rerun allocation automatically. Preserve rawenvelope and continue only through a separately reviewed recovery/continuation after inspecting actualeffect."
+    },
+    {
+      "id": "C3",
+      "severity": "medium",
+      "lines": "5-11 and proposed-D6.md",
+      "problem": "Presence checks accept a D6 heading even if its body still says PROPOSED/not adopted. Successful close requires the actual later Architect judgment after realCI/review, not just a proposal pasted under matchingheading. Sourceequivalence/acceptance/review are represented mostly by boolean declarations.",
+      "correction": "Before native effects require the actual D6adoption text/receipt bound to the accepted source packet, with completedactualCI/review sourceidentity and sourceequivalence. Refuse proposed/pending judgment. No new Ownerreply or expireddelegation inferred. Existing actualmergef50is valid; neverreplaceitwithfuturecloseoutPRSHA."
+    },
+    {
+      "id": "C4",
+      "severity": "medium",
+      "lines": "25-27,58-59",
+      "problem": "Protected hash census omits originalroot test-tasks.json, canonicallaw/policy inputs, constitutionpin and otherbacklogs; HEAD is checked only once. Final preservation assertions occur after declare/seal/resolve, too late to stop dependent effects if an earlier step unexpectedly changed protectedstate.",
+      "correction": "Include originaldescriptor/canonicalinput/adopterpolicy/pin and unaffectedbacklog/closedround bindings. Check sameHEAD and originalprefix/protectedhashes at native boundaries, especially immediately aftergenericappend and beforeallocation/seal. Allow onlydeclared generated PC/record/index/seal/BL24/chain/epoch effects; stop unexpected drift without manualrepair."
+    },
+    {
+      "id": "C5",
+      "severity": "medium",
+      "lines": "52-60",
+      "problem": "Helper regenerates only derived roundsindex, not humanwork/roundsREADME currentrow or activeplanprojection. It ends without post-transition state/round/law/chain/proof checks. Native seal checks derivedindex but not the humanrow, so native success can leave stale projections/gate failures.",
+      "correction": "Explicitly perform or require a later reviewed source step using actualPC to update currentR0042README/plan status, preserving oldhistory. Recheck originalscope/proof/state/round/law/schema/hash custody aftertransition before finalcleanfreeze. Do not claim finaldeliveryPASS from pre-transitionalllightchecks alone."
+    }
+  ],
+  "positive_checks": [
+    "Allactive effects gated by actualmergef50/currentHEAD, existingauthorization and completedreview/acceptance input files; currentpacketpending cannot legitimatelyexecute",
+    "Authentic genericacceptance emitted beforeseal; actualterminal linehash bound, not predicted; evidencepayload distinguishes128oldanchors from lateractualoutput",
+    "ActualPC allocatedonlythroughofficialroundclose; currentunwrap matches publicresult.value envelope",
+    "Closed declaration preserves every originalfrontmatterfield except intentionalstatus and addsactualD6/PC/merge; nativeplan/derivedindex/seal/backlog verbs used",
+    "BL24body/origin/creation/attribution preserved; original448recordprefix and available reading/closed36\u201339/config/legacyhashes asserted atfinal",
+    "Actual#224integration identity used, no futurePC/closeoutmerge/signature claim; latercleancloseoutcandidate RC stayspending"
+  ],
+  "execution_limits": [
+    "PostmainCI40060467337 and cross-familycloseoutreview stillpending at request; no nativeaction approved by this audit",
+    "All10originalroot/wavegates and original7supportedoutcomes remain mandatory; nativequalityFAIL/residuals/C6/#211holdspreserved",
+    "No missinghistoricalartifact restore/re-record or broadglobalcustodyPASS;13artifactlimitations separatefrom53proofgaps",
+    "Source-onlybugreview, no predictedruntimeoutcomes or nativeIDallocation"
+  ]
+}

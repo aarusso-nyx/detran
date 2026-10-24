@@ -184,3 +184,41 @@ confirmado por `round status`; recibos preservados em
 ### Observação de execução de R-0043 — 2026-10-24 UTC
 
 Após o anexo acima, os verbos oficiais emitiram `PC-0026`, materializaram `work/rounds/R-0043/record.md` fechado e `close-state.jsonl`, e resolveram BL-0016 sem alterar seu corpo, origem ou vínculo histórico R-0036. O índice terminal aponta para PC-0026; as saídas originais e a recusa inicial por declaração de autoridade ausente são retidas no relatório de closeout. A publicação desta atualização e a integração protegida continuam pendentes. BL-0025 e R-0042/BL-0024 permanecem abertos.
+
+### D-6
+
+**Fechamento posterior da rodada — Architect.** Quando os atos locais anteriores
+já usam outros IDs, D-6 pode registrar o julgamento posterior de fechamento após
+os gates próprios. A autorização e o escopo continuam limitados ao
+`AUTHORIZATION.md`, às decisões e ao anexo da própria rodada. Esta entrada não
+fecha nenhuma rodada nem amplia a autoridade do Owner.
+
+## Anexo de R-0042
+
+- **D-1 — Owner:** pedido original das sete lacunas em `work/rounds/R-0042/decisions.md`;
+  autoridade existente projetada em `work/rounds/R-0042/AUTHORIZATION.md`.
+- **D-2 — Owner/Architect:** continuidade M1 expressamente instruída e adoção governada
+  de DEVAI 2.7.0 sob ADR-0061, sem alterar aceitação, thresholds ou C6.
+- **D-3 — Architect:** proposta local de companion retida e não executada; não é o
+  D-3 genérico deste registro nem julgamento de fechamento desta rodada.
+- **D-4 — Architect:** época nova, fonte congelada e inventários genuínos antes da
+  primeira emissão de prova; nenhum resultado cruzado entre SHAs.
+- **D-5 — Architect:** custódia completa dos novos artefatos e preservação dos bytes
+  disponíveis, com as mesmas 13 limitações históricas explicitamente mantidas.
+- **D-6 — Architect:** julgamento de fechamento restrito às medições completas de
+  `21427c25`, integradas no PR #224 / `f50b9ce7dd32dff66646fd01e99b0556e4d76bdb`.
+  CI pós-integração **40060467337** aprovada, incluindo fallback remoto
+  **120777117653**, e gates leves aprovados. O run trusted-RC **40060467323**,
+  job **120772645725** e check **120772707099** continuam **FAIL** por tag de
+  atestação ausente e falha secundária do resumo, preservados sem waiver.
+  A árvore integrada não é declarada assinada/atestada nem verde em todos os workflows.
+  Revisão independente PASS `65d8cf6590ff02dcecb0546ebbc49cc69217933c3f6fff8224bc63b9b97fe729`; recibos em
+  `work/rounds/R-0042/reports/m1-closeout-20261024/`.
+
+O resultado nativo permanece 26 PASS / 12 REVIEW / 5 FAIL + 2 N/A, overall FAIL;
+43 células medidas e zero lacunas não aprovam qualidade ou prontidão. PC, declaração
+fechada, selo e resolução de BL-0024 só existem após os verbos oficiais.
+O candidato final limpo de closeout ainda exige RC assinado novo, verificação
+exact-commit, revisão e checks obrigatórios verdes antes da integração protegida.
+#211 não integrado, S3 retido e C6 bloqueado; demais rodadas, BL-0020/0025,
+históricos e limitações permanecem com seu próprio escopo.

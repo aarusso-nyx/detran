@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "review": "R0042 native closeout helper static review 2",
+  "role": "Auditor",
+  "method": "Read source and associated proposal/canonical record only; no helper import, execution, native command, tests, or repository writes.",
+  "reviewed_helper": "/Volumes/Development/.codex/artifacts/detran/m1-r0042-closeout-20261024/execute-native-closeout.py",
+  "reviewed_helper_sha256": "8e05af04c576a123931a1c30be53d4d46b13f79a58bd58e21702cdec89062438",
+  "verdict": "REVIEW",
+  "resolved": [
+    "Only exact expected validation criterion index3 may be promoted; other failed criteria reject.",
+    "Exclusive attempt directory/root marker and exclusive receipt files prevent automatic replay or overwritten outputs.",
+    "Actual preclose A HEAD with M224 ancestry and committed authorization bytes checked.",
+    "D6 must be adopted and lack PROPOSED marker before execution.",
+    "Protected census expanded; BL24 original body/origin preserved; human round index and affected postchecks included.",
+    "Delivery-head required checks, actual postintegration fallback, and failed trusted-RC standing kept separate.",
+    "Final formatted closure input retained before native PC allocation; runtime PC envelope unwrapped without replay."
+  ],
+  "findings": [
+    {
+      "id": "C4-boundary-guards",
+      "severity": "medium",
+      "status": "requires bounded correction before execution",
+      "lines": "56-86,103-126",
+      "finding": "Source HEAD is checked only at entry; original prefix and protected hashes are checked only after round close, declaration, seal and backlog resolution. A drift detected at that point would already have been accepted through multiple irreversible governance effects. Final postcheck assertion covers protected files but does not repeat prefix/HEAD/backlog checks.",
+      "correction": "Before round-close, assert HEAD A; chain has exactly449 records and identical original448 prefix; last generic event matches captured payload/hash and its chain binding; every protected hash matches; BL24 remains exactly unchanged/open. Reuse preservation assertions before dependent declaration/seal/resolve effects, and verify final chain prefix/expected append/head after all postchecks. Stop without automatic replay on any mismatch.",
+      "scope": "Guard only, no altered acceptance criterion, schema, threshold, native verb or historical data."
+    }
+  ],
+  "prerequisites": [
+    "Actual postintegration CI40060467337 and light gates genuinely pass and raw evidence is retained; no global-main-green claim.",
+    "Adopt actual D6 and matching law-register entry before execution; current proposal remains unadopted.",
+    "Acceptance file binds actual Auth-only A49ee459f94091c781c1169e3420981974a25ca7e and actual M224f50b9ce7dd32dff66646fd01e99b0556e4d76bdb; measurement remains X21427c25.",
+    "Exclusive canonical writer custody; pnpm, Node24.20, gh authentication and Python PyYAML available; do not print auth token.",
+    "Final clean published closeout candidate still requires its own fresh signed RC and protected PR integration; native metadata effects do not satisfy that future gate."
+  ],
+  "custody": "Read custody released at report creation. No canonical effect performed.",
+  "companion_hashes": {
+    "proposed-closure.json": "b88e5bfee4d205fc47b89a0a7e1aae0d7be7f5a3eb565e817adefa8a41f50cb7",
+    "proposed-D6.md": "1ea34a3611a0fb7a02361c8731b39269ac4f541618fb5b3ec161f253607d0549"
+  }
+}
