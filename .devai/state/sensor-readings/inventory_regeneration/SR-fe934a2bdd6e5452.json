@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-fe934a2bdd6e5452",
+  "sensor": {
+    "name": "inventory-regeneration",
+    "kind": "inventory_regeneration"
+  },
+  "timestamp": "2026-10-24T01:04:13.303Z",
+  "status": "unknown",
+  "deterministic": true,
+  "command": "devai sense run inventory_regeneration",
+  "command_hash": "1e21b0a3659eee9987e46daa21c7081523fb042f9b5200a474b6ac47a3dc7a97",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "INVENTORY_REGENERATION_SOURCE_DIRTY",
+      "message": "The working tree differs from HEAD 74b9eec83cd10d981f5ec5923c0f82ad7b2c13b5, so regenerated bodies would describe no commit. Regenerate on a clean tree before recording. Nothing was written."
+    }
+  ],
+  "metrics": {
+    "kinds_touched": 0,
+    "kinds_rebuilt": 0,
+    "kinds_up_to_date": 0,
+    "error_count": 0
+  }
+}
