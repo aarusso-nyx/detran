@@ -1,0 +1,50 @@
+{
+  "actual_merge": "6c953874eab8ec1a13a7013ee68e2e95a1015ec1",
+  "tree": "9c0e2b05993916735eb61b3b80986e47c727947e",
+  "pr226_required_checks_before_merge": "All five SUCCESS; no source repair required",
+  "trusted_main": {
+    "run": 40100295522,
+    "initial_job": 120890879161,
+    "initial_conclusion": "failure",
+    "initial_cause": "Protected tree tag lookup HTTP404 before genuine RC publication; downstream summary ENOENT retained",
+    "rerun_job": 120893539979,
+    "conclusion": "success",
+    "check": 120893639139,
+    "binding": "exact-tree",
+    "full_log_truncated": false
+  },
+  "independent_source_verifier": {
+    "run": 40101071294,
+    "job": 120893150674,
+    "check": 120893259489,
+    "conclusion": "success",
+    "candidate": "3c361fb4b1ee1f3e1603ee7f61f0096909f71a22",
+    "binding": "exact-commit"
+  },
+  "ordinary_main_ci_snapshot": {
+    "run": 40100295533,
+    "observed_at": "2026-10-24T14:10Z",
+    "passed": [
+      "invariant-producers",
+      "evidence-gate",
+      "senatran-mock",
+      "boat-documents-real",
+      "senatran-mock-tests"
+    ],
+    "in_progress": [
+      "backend-kernel",
+      "foundation"
+    ],
+    "skipped": [
+      "stack-smoke"
+    ],
+    "standing": "Pending jobs are not claimed as PASS; this is a dated snapshot."
+  },
+  "local_rc": {
+    "groups": 80,
+    "tests_passed": 6651,
+    "failures": 0,
+    "source_candidate": "3c361fb4b1ee1f3e1603ee7f61f0096909f71a22",
+    "standing": "Fresh exact-source observation; not proof historical held-S2 causes are repaired"
+  }
+}

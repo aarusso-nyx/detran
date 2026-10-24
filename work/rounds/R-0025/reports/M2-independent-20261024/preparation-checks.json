@@ -1,0 +1,31 @@
+{
+  "standing": "Lightweight preparation checks; no product/native execution on this new report branch",
+  "format": {
+    "command": "pnpm exec prettier --ignore-path /dev/null --write work/rounds/R-0025/reports/M2-independent-20261024/README.md",
+    "exit": 0
+  },
+  "knowledge_base": {
+    "command": "pnpm docs:kb:check",
+    "exit": 0,
+    "artifacts": 773,
+    "canonical_tokens": 446
+  },
+  "rounds_index": {
+    "command": "pnpm verify:rounds-index",
+    "exit": 0
+  },
+  "doctor": {
+    "command": "pnpm devai:doctor",
+    "exit": 0,
+    "ok": true,
+    "profile": "tier3",
+    "devai": "2.7.0",
+    "constitution": "1.1.0",
+    "candidate_commit": "6c953874eab8ec1a13a7013ee68e2e95a1015ec1",
+    "candidate_clean": false,
+    "note": "Additive untracked report files present; declaration-plan readiness is not native acceptance."
+  },
+  "warnings": [
+    "Local pnpm emitted unresolved NODE_AUTH_TOKEN config warnings for these offline commands; no registry access or token value output."
+  ]
+}
