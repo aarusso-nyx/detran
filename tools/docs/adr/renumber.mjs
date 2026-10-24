@@ -37,6 +37,19 @@ function stripBoldPrefix(s) {
 
 const STUB_LINE_RE = /^Renumerada para \[(ADR-\d{4})\]\(([^)\s]+)\)\.$/;
 
+function hasLeadingProvenance(text, origin) {
+  const lines = text.split('\n').map((line) => line.replace(/\r$/, ''));
+  if (!/^> \*\*Proveniência\.\*\* Renumerada de `[^`]+`/u.test(lines[2] ?? ''))
+    return false;
+  const separator = lines.findIndex((line) => line.trim() === '---');
+  if (separator <= 2) return false;
+  const block = lines.slice(2, separator);
+  if (block.some((line) => line.trim() !== '' && !line.startsWith('>')))
+    return false;
+  const expectedPrefix = `> **Proveniência.** Renumerada de \`${origin}\``;
+  return block.some((line) => line.startsWith(expectedPrefix));
+}
+
 function parseStubLine(text) {
   const status = firstStatusLine(text);
   if (!status) return null;
@@ -273,9 +286,7 @@ function analyzeEntry(root, entry) {
       };
     }
     const toText = fs.readFileSync(toAbs, 'utf8');
-    const provenanceLine = toText.split('\n')[2] ?? '';
-    const expectedPrefix = `> **Proveniência.** Renumerada de \`${entry.from}\``;
-    if (!provenanceLine.startsWith(expectedPrefix)) {
+    if (!hasLeadingProvenance(toText, entry.from)) {
       return {
         status: 'error',
         message: `to inconsistente com stub já aplicado: ${entry.to}`,
