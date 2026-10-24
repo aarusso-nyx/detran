@@ -1,0 +1,268 @@
+{
+  "status": "PASS",
+  "script_sha256": "9b83d4ba4d783acb48ec4b3148d988cbb03a7cfed539f039a1d602e253470673",
+  "cases": [
+    {
+      "name": "shell syntax",
+      "command": [
+        "bash",
+        "-n",
+        "/evidence/diagnostics.sh"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selection state=None, tmp=None",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "/tmp/detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state=None, tmp=None",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/tmp/detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state=None, tmp=''",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "./detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state=None, tmp=''",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state=None, tmp='/evidence/tmp with spaces'",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/tmp with spaces/detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state=None, tmp='/evidence/tmp with spaces'",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/tmp with spaces/detran-stack\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='', tmp=None",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": ".\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='', tmp=None",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='', tmp=''",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": ".\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='', tmp=''",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='', tmp='/evidence/tmp with spaces'",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": ".\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='', tmp='/evidence/tmp with spaces'",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='/evidence/state with spaces', tmp=None",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='/evidence/state with spaces', tmp=None",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='/evidence/state with spaces', tmp=''",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='/evidence/state with spaces', tmp=''",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "selection state='/evidence/state with spaces', tmp='/evidence/tmp with spaces'",
+      "command": [
+        "bash",
+        "/evidence/selection.sh"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "node reference state='/evidence/state with spaces', tmp='/evidence/tmp with spaces'",
+      "command": [
+        "node",
+        "-e",
+        "const p=require('node:path');console.log(p.resolve(process.env.DETRAN_STACK_STATE_DIR??p.join(process.env.TMPDIR??'/tmp','detran-stack')));"
+      ],
+      "exit": 0,
+      "stdout": "/evidence/state with spaces\n",
+      "stderr": ""
+    },
+    {
+      "name": "present exact reports",
+      "command": [
+        "bash",
+        "/evidence/diagnostics.sh"
+      ],
+      "exit": 0,
+      "stdout": "Smoke diagnostic: smoke-report.json\n{\"complete\":false,\"rows\":[{\"reason\":\"synthetic_failure\"}]}\nSmoke diagnostic: smoke-report-probe.txt\nsynthetic target\tfailed\tsynthetic_failure\t503\n",
+      "stderr": ""
+    },
+    {
+      "name": "missing reports",
+      "command": [
+        "bash",
+        "/evidence/diagnostics.sh"
+      ],
+      "exit": 0,
+      "stdout": "No smoke report was produced; inspect the preceding failed step.\n",
+      "stderr": ""
+    },
+    {
+      "name": "original smoke failure",
+      "command": [
+        "bash",
+        "-c",
+        "exit 1"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "always diagnostics",
+      "command": [
+        "bash",
+        "/evidence/diagnostics.sh"
+      ],
+      "exit": 0,
+      "stdout": "Smoke diagnostic: smoke-report.json\n{\"complete\":false,\"rows\":[{\"reason\":\"synthetic_failure\"}]}\nSmoke diagnostic: smoke-report-probe.txt\nsynthetic target\tfailed\tsynthetic_failure\t503\n",
+      "stderr": ""
+    },
+    {
+      "name": "always cleanup",
+      "command": [
+        "bash",
+        "-c",
+        "printf 'synthetic cleanup executed\\n'"
+      ],
+      "exit": 0,
+      "stdout": "synthetic cleanup executed\n",
+      "stderr": ""
+    },
+    {
+      "name": "simulated aggregate job",
+      "exit": 1,
+      "note": "Original nonzero remains failure; diagnostic and cleanup steps executed. Not live GitHub runner validation."
+    }
+  ],
+  "limitations": [
+    "No stack start, no production request, no repository edit.",
+    "Nullish matrix verifies directory selection only, avoiding access to unrelated /tmp reports.",
+    "Runner semantics simulated; actual CI diagnostic publication still requires candidate run."
+  ]
+}
