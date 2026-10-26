@@ -5,10 +5,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { deflateSync } from 'node:zlib';
 import {
   GOVERNED_UPGRADE_PATHS,
   UPGRADE_MANIFEST,
   UPGRADE_MANIFEST_SHA256,
+  V3_UPGRADE_MANIFEST,
+  V3_UPGRADE_MANIFEST_SHA256,
   verifyGovernedUpgradeCompatibility,
 } from '../governed-upgrade-compatibility.mjs';
 import {
@@ -22,6 +25,10 @@ import {
 const repository = fileURLToPath(new URL('../../../', import.meta.url));
 const manifestBytes = fs.readFileSync(path.join(repository, UPGRADE_MANIFEST));
 const manifest = JSON.parse(manifestBytes);
+const v3ManifestBytes = fs.readFileSync(
+  path.join(repository, V3_UPGRADE_MANIFEST),
+);
+const v3Manifest = JSON.parse(v3ManifestBytes);
 const git = (...args) =>
   execFileSync('git', ['--no-replace-objects', '-C', repository, ...args], {
     maxBuffer: 16 * 1024 * 1024,
@@ -30,7 +37,7 @@ const put = (root, file, bytes) => {
   fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
   fs.writeFileSync(path.join(root, file), bytes);
 };
-function fixture(run, { historical = false } = {}) {
+function fixture(run, { historical = false, v3 = false } = {}) {
   const root = fs.realpathSync(
     fs.mkdtempSync(path.join(os.tmpdir(), 'detran-upgrade-custody-test-')),
   );
@@ -90,6 +97,16 @@ function fixture(run, { historical = false } = {}) {
       ...manifest.dependencies.map((item) => item.after),
     ])
       put(root, item.path, git('show', `${item.commit}:${item.path}`));
+    if (v3) {
+      put(root, V3_UPGRADE_MANIFEST, v3ManifestBytes);
+      for (const item of [
+        ...v3Manifest.generated_files,
+        ...v3Manifest.authority_sources,
+        ...v3Manifest.preserved_sources,
+        ...v3Manifest.dependencies.map((item) => item.after),
+      ])
+        put(root, item.path, git('show', `${item.commit}:${item.path}`));
+    }
     const reference = JSON.parse(
       fs.readFileSync(path.join(repository, PRESERVATION_PATH)),
     );
@@ -332,5 +349,312 @@ test('ADR-0062 rejects both mixed old/new sealed-path states', () => {
         );
       },
       { historical: true },
+    );
+});
+
+test('ADR-0062 v3 accepts the authentic 2.8 adoption while preserving the original v1 and v2 objects', () =>
+  fixture(
+    (root, verify) => {
+      assert.equal(sha256(v3ManifestBytes), V3_UPGRADE_MANIFEST_SHA256);
+      assert.equal(v3Manifest.schemaVersion, '3.0.0');
+      assert.equal(v3Manifest.v2_manifest_sha256, sha256(manifestBytes));
+      assert.equal(
+        v3Manifest.gate_a_scope_sha256,
+        '2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5',
+      );
+      assert.equal(
+        v3Manifest.dependency_patch_sha256,
+        '6660c9c905b4c71ee467dc9a92beaaa01bf149c0f4a2b4f4248386e2daad6595',
+      );
+      assert.equal(v3Manifest.provider.to, '2.8.0');
+      assert.equal(v3Manifest.provider.constitution_to, '1.2.0');
+      assert.equal(
+        v3Manifest.before_commit,
+        '7abe89cd3e7049fdcf38b33411d38a3442a0e1e1',
+      );
+      assert.equal(
+        git('rev-parse', `${v3Manifest.adoption_commit}^`).toString().trim(),
+        v3Manifest.before_commit,
+      );
+      assert.equal(
+        sha256(
+          git('show', `${v3Manifest.adoption_commit}:${UPGRADE_MANIFEST}`),
+        ),
+        UPGRADE_MANIFEST_SHA256,
+      );
+      const result = verify();
+      assert.equal(result.manifest, V3_UPGRADE_MANIFEST);
+      assert.equal(result.manifest_sha256, V3_UPGRADE_MANIFEST_SHA256);
+      assert.equal(result.adoption_commit, v3Manifest.adoption_commit);
+      assert.deepEqual(result.sealed_paths, [...GOVERNED_UPGRADE_PATHS]);
+      assert.equal(result.generated_files_verified, 6);
+      assert.equal(result.native_verdict_replaced, false);
+      assert.equal(Object.hasOwn(result, 'native_readings_issued'), false);
+    },
+    { v3: true },
+  ));
+
+test('ADR-0062 v3 retains independent original baseline hash and byte validation', () => {
+  for (const file of GOVERNED_UPGRADE_PATHS) {
+    fixture(
+      (root, verify, reference) => {
+        reference[file] = '0'.repeat(64);
+        assert.throws(verify, /original preservation reference/);
+      },
+      { v3: true },
+    );
+    fixture(
+      (root, verify, reference, baselineFiles) => {
+        baselineFiles.set(file, Buffer.from('forged v3 baseline'));
+        assert.throws(verify, /original preservation reference/);
+      },
+      { v3: true },
+    );
+  }
+});
+
+test('ADR-0062 v3 digest boundary refuses malformed finite maps and forged authority or published identities', () => {
+  const changes = [
+    (m) => m.sealed_transitions.pop(),
+    (m) => m.sealed_transitions.push(m.sealed_transitions[0]),
+    (m) => m.sealed_transitions.reverse(),
+    (m) => (m.sealed_transitions[0].path = '.devai/config/thresholds.json'),
+    (m) => (m.sealed_transitions[0].after.sha256 = '0'.repeat(64)),
+    (m) => (m.sealed_transitions[0].after.git_blob = '0'.repeat(40)),
+    (m) => (m.before_commit = manifest.before_commit),
+    (m) => (m.adoption_commit = manifest.adoption_commit),
+    (m) => (m.authority = 'invented Owner waiver'),
+    (m) => (m.authority_sources[1].sha256 = '0'.repeat(64)),
+    (m) => m.generated_files.pop(),
+    (m) => m.generated_files.push(m.generated_files[0]),
+    (m) => (m.generated_files[5].path = 'forged-upgrade-receipt.json'),
+    (m) => (m.native_verdict_replacement = true),
+    (m) => (m.provider.to = '2.9.0'),
+    (m) => (m.provider.published_source = '0'.repeat(40)),
+    (m) => (m.provider.tar_sha256 = '0'.repeat(64)),
+    (m) => (m.gate_a_scope_sha256 = '0'.repeat(64)),
+    (m) => (m.dependency_patch_sha256 = '0'.repeat(64)),
+    (m) => (m.v2_manifest_sha256 = '0'.repeat(64)),
+    (m) => m.dependencies.pop(),
+    (m) => (m.authority_sources[2].path = 'forged-command.json'),
+  ];
+  // These refusals exercise the pinned digest boundary. No fixture bypasses
+  // the production identity pin to claim semantic-guard coverage.
+  assert.equal(changes.length, 22);
+  for (const change of changes)
+    fixture(
+      (root, verify) => {
+        rewrite(root, V3_UPGRADE_MANIFEST, change);
+        assert.throws(verify, /manifest digest/);
+      },
+      { v3: true },
+    );
+});
+
+test('ADR-0062 v3 rejects every changed or missing registered output including forged receipt content', () => {
+  for (const item of v3Manifest.generated_files) {
+    fixture(
+      (root, verify) => {
+        fs.appendFileSync(path.join(root, item.path), '\n');
+        assert.throws(verify, /current bytes/);
+      },
+      { v3: true },
+    );
+    fixture(
+      (root, verify) => {
+        fs.unlinkSync(path.join(root, item.path));
+        assert.throws(verify, /ENOENT|GOVERNED_UPGRADE_REFUSED/);
+      },
+      { v3: true },
+    );
+  }
+  fixture(
+    (root, verify) => {
+      rewrite(root, '.devai/config/upgrade-receipt.json', (m) => {
+        m.from = '2.6.3';
+        m.postchecks[0].ok = false;
+      });
+      assert.throws(verify, /current bytes/);
+    },
+    { v3: true },
+  );
+});
+
+test('ADR-0062 v3 refuses changed v1 or v2 history and every preserved policy source', () => {
+  for (const file of [
+    'docs/meta/security/historical-compatibility.json',
+    UPGRADE_MANIFEST,
+    ...v3Manifest.preserved_sources.map((item) => item.path),
+  ])
+    fixture(
+      (root, verify) => {
+        fs.appendFileSync(path.join(root, file), '\n');
+        assert.throws(
+          verify,
+          /manifest digest|original v1 manifest changed|current bytes/,
+        );
+      },
+      { v3: true },
+    );
+  fixture(
+    (root, verify) => {
+      rewrite(root, '.devai/config/invariant-producers.json', (m) =>
+        m.bindings.push({ id: 'invented-v3-producer' }),
+      );
+      assert.throws(verify, /current bytes|C6 bindings/);
+    },
+    { v3: true },
+  );
+});
+
+test('ADR-0062 v3 refuses missing or linked supplemental maps and linked current outputs', () => {
+  for (const file of [
+    V3_UPGRADE_MANIFEST,
+    ...v3Manifest.generated_files.map((m) => m.path),
+  ])
+    fixture(
+      (root, verify) => {
+        const bytes = fs.readFileSync(path.join(root, file));
+        put(root, 'v3-linked-target', bytes);
+        fs.unlinkSync(path.join(root, file));
+        fs.symlinkSync(
+          path.join(root, 'v3-linked-target'),
+          path.join(root, file),
+        );
+        assert.throws(verify, /nonregular or linked source/);
+      },
+      { v3: true },
+    );
+  fixture(
+    (root, verify) => {
+      fs.unlinkSync(path.join(root, V3_UPGRADE_MANIFEST));
+      assert.throws(
+        verify,
+        /current bytes|current provider dependency identity/,
+      );
+    },
+    { v3: true },
+  );
+});
+
+test('ADR-0062 v3 refuses an unregistered future provider and substituted dependency resolution', () => {
+  fixture(
+    (root, verify) => {
+      rewrite(
+        root,
+        'package.json',
+        (m) => (m.devDependencies['@aarusso-nyx/devai'] = '2.9.0'),
+      );
+      assert.throws(
+        verify,
+        /current provider dependency identity|current bytes/,
+      );
+    },
+    { v3: true },
+  );
+  fixture(
+    (root, verify) => {
+      const file = 'pnpm-lock.yaml';
+      put(
+        root,
+        file,
+        fs
+          .readFileSync(path.join(root, file), 'utf8')
+          .replaceAll('@aarusso-nyx/devai@2.8.0', '@aarusso-nyx/devai@2.9.0'),
+      );
+      assert.throws(
+        verify,
+        /unique DEVAI lock identity required|current DEVAI lock resolution identity|current bytes/,
+      );
+    },
+    { v3: true },
+  );
+});
+
+test('ADR-0062 v3 cannot substitute arbitrary mixed v2 and v3 registered bytes', () => {
+  for (const item of v3Manifest.generated_files)
+    fixture(
+      (root, verify) => {
+        put(
+          root,
+          item.path,
+          git('show', `${v3Manifest.before_commit}:${item.path}`),
+        );
+        assert.throws(verify, /current bytes/);
+      },
+      { v3: true },
+    );
+});
+
+test('ADR-0062 v3 refuses missing immutable adoption history instead of treating local bytes as evidence', () =>
+  fixture(
+    (root, verify) => {
+      fs.unlinkSync(path.join(root, '.git'));
+      execFileSync('git', ['init', '--quiet', root]);
+      assert.throws(verify);
+    },
+    { v3: true },
+  ));
+
+test('ADR-0062 v3 historical dispatch preserves all 1073 seals and refuses unrelated sealed mutations', () =>
+  fixture(
+    (root) => {
+      const result = verifyHistoricalCompatibility(root);
+      assert.equal(result.ok, true);
+      assert.equal(result.preservation.sealed_sources, 1073);
+      assert.equal(
+        result.preservation.governed_upgrade_transition.manifest,
+        V3_UPGRADE_MANIFEST,
+      );
+      assert.equal(
+        result.preservation.governed_upgrade_transition.adoption_commit,
+        v3Manifest.adoption_commit,
+      );
+      assert.equal(result.native_verdict_replaced, false);
+      fs.appendFileSync(
+        path.join(root, '.devai/state/evidence-chain.json'),
+        '\n',
+      );
+      assert.throws(
+        () => verifyHistoricalCompatibility(root),
+        /SEALED_BYTES_CHANGED/,
+      );
+    },
+    { historical: true, v3: true },
+  ));
+
+test('ADR-0062 v3 revalidates original v2 receipt and authority Git bodies instead of trusting the historical link', () => {
+  const receipt = manifest.generated_files.find(
+    (item) => item.path === '.devai/config/upgrade-receipt.json',
+  );
+  assert.ok(receipt);
+  for (const item of [receipt, ...manifest.authority_sources])
+    fixture(
+      (root, verify) => {
+        // Only this disposable repository gets forged loose objects. Its alternate
+        // is read-only; no authentic shared object or live worktree is modified.
+        const objects = git('rev-parse', '--git-path', 'objects')
+          .toString()
+          .trim();
+        fs.unlinkSync(path.join(root, '.git'));
+        execFileSync('git', ['init', '--quiet', root]);
+        put(
+          root,
+          '.git/objects/info/alternates',
+          path.resolve(repository, objects) + '\n',
+        );
+        put(root, '.git/HEAD', 'ref: refs/heads/fixture\n');
+        put(root, '.git/refs/heads/fixture', git('rev-parse', 'HEAD'));
+        const forged = Buffer.from('forged historical receipt or authority\n');
+        put(
+          root,
+          `.git/objects/${item.git_blob.slice(0, 2)}/${item.git_blob.slice(2)}`,
+          deflateSync(
+            Buffer.concat([Buffer.from(`blob ${forged.length}\0`), forged]),
+          ),
+        );
+        assert.throws(verify, /Git object\/hash mismatch/);
+      },
+      { v3: true },
     );
 });
