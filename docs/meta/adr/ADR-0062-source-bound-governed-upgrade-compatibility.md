@@ -158,3 +158,42 @@ provisioning, canonical selection, recovery, proof-index CAS, diagnostic
 publication, #211 merge, C6 activation or S3 runtime. Gate B requires a separate
 exact Owner decision bound to authentic future target, host, parents, manifests,
 index and chain-head identities.
+
+## Addendum — approved schema-corpus amendment (2026-10-25)
+
+The Owner approved schema-only amendment SHA256
+`7d1e22ce043959fe99b6a20bf8b57c4947255becfacb70800a46e5020cadace1`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting from
+`12b87fa6833ea19db75f146b80d5e681d2384dd4`. The exact approval is appended to
+`docs/meta/decisions/rait.md`.
+
+The first required law-corpus verification after the approved 2.8.0 dependency
+change failed with 19 findings. Read-only comparison confirmed the unchanged
+local 121-schema corpus matched retained installed DEVAI 2.7.0 exactly; the
+published 2.8.0 runtime has 127 schemas, with three changed and six new bodies.
+This was an introduced schema-mirror mismatch, not a pre-existing failure. The
+original failed observation remains retained; no check or threshold was relaxed.
+
+The approved correction copies the nine enumerated schema bodies byte-for-byte
+from the exact published package already bound above and updates only
+`law/schemas/manifest.json` to version 2.8.0 and the sorted full 127-schema
+SHA256 roster. The three updates are `action-registry.schema.json`,
+`authority-policy.schema.json` and `evidence.schema.json`. The six additions are
+`evidence-reconciliation-plan.schema.json`,
+`reconciliation-inventory-result.schema.json`,
+`reconciliation-materialize-result.schema.json`,
+`reconciliation-owner-action.schema.json`, `reconciliation-owner.schema.json`
+and `reconciliation-proof-index-result.schema.json`. All reside in `law/schemas/`.
+The resulting manifest SHA256 is
+`788af86f8812e7a2e02523569ceefaf89e7bc1164a61357722212e7bfd5ea86f`.
+
+All ten extra paths are outside the original 1,073 sealed reference paths. The
+authentic adoption commit, v1/v2/v3 manifests, code-pinned transition, generated
+binding outputs, proof histories and epochs remain unchanged. This adds no
+sealed-path exception or handwritten schema semantics. Schema validity grants
+no reconciliation capability. Retained required checks and bounded available
+shared-control regressions resume without waivers; any further path or effect
+requires its own exact review. Gate B remains held, #211 unmerged, C6 blocked
+and S3 held. No database or reconciliation-host provisioning, proof-record,
+recovery, proof-index CAS, diagnostic, merge or cross-family review authority is
+conveyed by this amendment.

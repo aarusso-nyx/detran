@@ -109,3 +109,49 @@ Gate B remains held for a separate exact Owner decision after authentic target,
 host, plan, manifest, index and expected-head identities exist. PR #211 remains
 unmerged, C6 blocked and S3 held. Original acceptance criteria, histories,
 local work and every prior decision above remain preserved.
+
+## Addendum — D1-L schema-only amendment approved, 2026-10-25
+
+Article 7 Owner decision, transcribed from the human approval in Codex chat
+`01a175a6-8a1b-7003-8915-c315e359dca6` on 2026-10-25:
+
+> Approve schema-only amendment SHA256 7d1e22ce043959fe99b6a20bf8b57c4947255becfacb70800a46e5020cadace1 as written. Apply it and resume validation; keep Gate B held, #211 unmerged, C6 blocked and S3 held.
+
+The exact approved amendment is `proposed-schema-corpus-amendment.json`, SHA256
+`7d1e22ce043959fe99b6a20bf8b57c4947255becfacb70800a46e5020cadace1`,
+retained in
+`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-Gate-A-execution`.
+It supplements the original Gate A scope SHA256
+`2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5`
+at current base `12b87fa6833ea19db75f146b80d5e681d2384dd4`, tree
+`5d8ff1aa11e092c52201eb431af3cdf75b73f92e`, in the same isolated target
+`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`.
+
+The ten additional repository paths are exactly:
+
+- `law/schemas/action-registry.schema.json` — update.
+- `law/schemas/authority-policy.schema.json` — update.
+- `law/schemas/evidence-reconciliation-plan.schema.json` — create.
+- `law/schemas/evidence.schema.json` — update.
+- `law/schemas/reconciliation-inventory-result.schema.json` — create.
+- `law/schemas/reconciliation-materialize-result.schema.json` — create.
+- `law/schemas/reconciliation-owner-action.schema.json` — create.
+- `law/schemas/reconciliation-owner.schema.json` — create.
+- `law/schemas/reconciliation-proof-index-result.schema.json` — create.
+- `law/schemas/manifest.json` — update.
+
+Only the nine enumerated schema bodies may be copied byte-for-byte from the
+exact published DEVAI 2.8.0 package, tar SHA256
+`d63d2da92427ef8f5e947ca2fd72e14b393caaf6623275e7bffa0b89be15ec59`;
+only the specified schema manifest metadata may be derived. The amendment's
+exact before/after hashes, path authority, validation and stop conditions apply.
+The existing allowlist permits only append-only approval and ADR-0062 additions.
+No handwritten schema semantic changes, v3 sealed-path exception extension,
+waiver or additional effect is approved. This entry records approval without
+claiming materialization, passing validation, integration or acceptance.
+
+Gate B remains held; PR #211 remains unmerged, C6 blocked and S3 held. This
+approval grants no proof-chain, epoch, recovery, reconciliation host, index-CAS,
+diagnostic, S2 fixture/source import or merge authority. Authentic adoption/v3
+ancestry, prior manifests and records, receipts, proof chains, epochs, local
+work, original acceptance criteria and gates remain preserved.
