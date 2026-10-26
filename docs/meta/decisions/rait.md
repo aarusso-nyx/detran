@@ -80,3 +80,32 @@ close T0 design classification while leaving runtime implementation, production
 qualification and R-0025 closure unexecuted. Earlier decisions above retain their
 historical sources; no numeric deadline, threshold or institutional appointment is
 chosen by this addendum. Local and scorecard work remain separate.
+
+## Addendum — D1-L Gate A approved, 2026-10-25
+
+Article 7 Owner decision, transcribed from the human approval in Codex chat
+`01a175a6-8a1b-7003-8915-c315e359dca6` on 2026-10-25:
+
+> Approve D1-L Gate A scope SHA256 2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5 as written. Proceed within that exact scope; keep Gate B held, #211 unmerged, C6 blocked and S3 held.
+
+The exact approved scope is `gate-A-scope.json`, SHA256
+`2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5`,
+in the retained packet directory
+`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-final`.
+The corresponding `approval-text.md` SHA256 is
+`f1ee698f9f6dac45be812e3229de1e83bf2d63248be0c6b53abfb6b5131330bd`.
+Its full Gate A decision is approved as written:
+
+**Gate A:** “Approve D1-L Gate A scope SHA256 `2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5` as written: the exact published DEVAI 2.8.0 dependency patch, registered Constitution 1.2.0 upgrade in the named new isolated target, and the five-path finite ADR0062 compatibility proposal, with the exact Owner decision and machine-result report paths, role separation, derivation rules, validation and stop conditions. Preserve original acceptance criteria, histories and local work. Gate A permits the specified registered binding write and bounded compatibility implementation; it does not authorize proof-chain/epoch mutation, reconciliation host provisioning, canonical selection, recovery, proof-index CAS, diagnostic publication, merge of #211, C6 activation or S3 runtime.”
+
+The named isolated target is
+`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`, starting from
+exact reviewed main `7abe89cd3e7049fdcf38b33411d38a3442a0e1e1`.
+Only the scope's finite path allowlist, role separation, derivation, validation
+and stop conditions are authorized. This entry records approval; it does not
+claim execution, successful validation, integration or product acceptance.
+
+Gate B remains held for a separate exact Owner decision after authentic target,
+host, plan, manifest, index and expected-head identities exist. PR #211 remains
+unmerged, C6 blocked and S3 held. Original acceptance criteria, histories,
+local work and every prior decision above remain preserved.
