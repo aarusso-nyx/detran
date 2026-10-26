@@ -155,3 +155,38 @@ approval grants no proof-chain, epoch, recovery, reconciliation host, index-CAS,
 diagnostic, S2 fixture/source import or merge authority. Authentic adoption/v3
 ancestry, prior manifests and records, receipts, proof chains, epochs, local
 work, original acceptance criteria and gates remain preserved.
+
+## Addendum — D1-L current-provider header amendment approved, 2026-10-25
+
+Article 7 Owner decision, transcribed from the human approval in Codex chat
+`01a175a6-8a1b-7003-8915-c315e359dca6` on 2026-10-25:
+
+> Approve header amendment SHA256 d176e7f598b3a70a0da8c04a64795b92874b4a10e5a68d7e08aa512f16a8dd99 as written. Apply it and resume validation; keep Gate B held, #211 unmerged, C6 blocked and S3 held.
+
+The exact approved amendment is `proposed-current-provider-header-amendment.json`,
+SHA256 `d176e7f598b3a70a0da8c04a64795b92874b4a10e5a68d7e08aa512f16a8dd99`,
+retained in
+`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-Gate-A-execution`.
+It supplements the approved Gate A scope and schema-only amendment at base
+`f91f6c380ecda6e1e4f2e5fa4cbf6dca4f3c4418`, tree
+`922ef3e719c5f787dce5502e86ee0d0c93fa6173`, in the isolated target
+`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`.
+
+The sole additional path is `work/rounds/README.md`: replace exactly
+`Governed rounds of this repository (DEVAI 2.7.0).` with
+`Governed rounds of this repository (DEVAI 2.8.0).` The one-byte version change
+must match before SHA256
+`f2d51bc60b6b9b9226149f22b98d4aafc0878ed62debcdb435002423c84952eb`
+and after SHA256
+`ef66ce2962afb1275ac8d49d2d506c1615445ecf00074ec42dd5ded83b9fc05a`.
+Every other byte remains identical. Only append-only approval and ADR-0062 notes
+are permitted in existing allowed paths; no round table, status, date, closure,
+scope, acceptance or history change is authorized. The amendment's role separation,
+validation and stop conditions remain binding. This entry records approval without
+claiming execution, passing validation, integration or acceptance.
+
+Gate B remains held, PR #211 unmerged, C6 blocked and S3 held. No proof record,
+epoch, recovery, index-CAS, canonical selection, host provisioning, diagnostic,
+native inventory, DB permission, S2 source import, waiver or merge operation is
+authorized. Original failed observations, proof chains, epochs, authentic
+adoption/v3 objects and local work remain preserved.

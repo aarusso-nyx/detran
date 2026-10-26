@@ -197,3 +197,27 @@ requires its own exact review. Gate B remains held, #211 unmerged, C6 blocked
 and S3 held. No database or reconciliation-host provisioning, proof-record,
 recovery, proof-index CAS, diagnostic, merge or cross-family review authority is
 conveyed by this amendment.
+
+## Addendum — approved current-provider header amendment (2026-10-25)
+
+The Owner approved header amendment SHA256
+`d176e7f598b3a70a0da8c04a64795b92874b4a10e5a68d7e08aa512f16a8dd99`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting at
+`f91f6c380ecda6e1e4f2e5fa4cbf6dca4f3c4418`. The exact approval is appended
+to `docs/meta/decisions/rait.md`.
+
+After the schema-corpus correction, `verify:state-index` retained a C-01-23
+failure: the unchanged current-provider introduction in `work/rounds/README.md`
+still named DEVAI 2.7.0, while the approved dependency is 2.8.0. The approved
+correction changes only that version token to 2.8.0. It changes one byte; every
+other byte, including round tables, status, closure links, dates and historical
+notes, remains identical. The resulting file SHA256 is
+`ef66ce2962afb1275ac8d49d2d506c1615445ecf00074ec42dd5ded83b9fc05a`.
+The original failure observation remains preserved. No checker or test is changed.
+
+This one additional path is outside the original 1,073 sealed references. No
+proof history, epoch, generated binding, code-pinned compatibility map, adoption
+object, acceptance criterion or local work is changed. Validation resumes with
+actual source identities and no waiver. Gate B remains held, #211 unmerged, C6
+blocked and S3 held; no database or host provisioning, recovery, proof-index CAS,
+native inventory, merge or cross-family review is authorized by this amendment.
