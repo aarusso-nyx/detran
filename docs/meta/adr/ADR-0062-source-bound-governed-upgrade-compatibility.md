@@ -109,7 +109,7 @@ and S3 held. No acceptance criterion, historical result or local work is replace
 
 The sole new transition starts at
 `7abe89cd3e7049fdcf38b33411d38a3442a0e1e1` in the isolated target
-`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`. It applies
+`d1l-devai280-binding`. It applies
 the exact approved dependency patch SHA256
 `6660c9c905b4c71ee467dc9a92beaaa01bf149c0f4a2b4f4248386e2daad6595`
 and the published registered `init upgrade --constitution --as-role architect
@@ -221,3 +221,35 @@ object, acceptance criterion or local work is changed. Validation resumes with
 actual source identities and no waiver. Gate B remains held, #211 unmerged, C6
 blocked and S3 held; no database or host provisioning, recovery, proof-index CAS,
 native inventory, merge or cross-family review is authorized by this amendment.
+
+## Addendum — approved portable metadata correction (2026-10-25)
+
+The Owner explicitly approved portable-metadata amendment SHA256
+`4a423f37316353900e3e7aa9e9017c1307c1e01f04fd4a06adba604397d6e9e4`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting at
+`5c5d5c74336bfffc96941a51eef31ad20fd55f71`. The recorded response was
+“Approve exact amendment”; the separate Owner entry preserves that response.
+
+The required KB gate correctly rejected seven workstation-specific location
+strings introduced in the D1-L metadata of this ADR and the RAIT decision ledger.
+This correction grants a finite exception to the prior append-only instruction
+only for those seven enumerated derived metadata strings. Current published prose
+now uses logical external custody identifiers `D1-L-final`,
+`D1-L-Gate-A-execution` and worktree identifier `d1l-devai280-binding`. These are
+logical identifiers, not claims of repository-relative directories. Exact physical
+identities remain in the original hash-bound external packets and immutable Git
+documents; neither location labels nor hashes confer a reconciliation capability.
+
+Every original human quotation, scope hash and other existing byte is retained
+except the seven approved metadata substitutions. The original authority objects
+at adoption `92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0` and later commits remain
+unchanged and reachable; the code-pinned v3 verifier still reads those exact
+objects. The original pre-D1-L decisions remain byte-identical. No Git history,
+proof, epoch, binding, schema, code, test, round table, acceptance criterion or
+local work is rewritten.
+
+The KB checker remains unchanged, with no exclusion, encoding workaround, skip or
+waiver. The original Foundation failure remains retained. Affected validation and
+fresh exact-candidate CI are required after this correction. Gate B remains held,
+#211 unmerged, C6 blocked and S3 held; no merge or cross-family review authority is
+conveyed.

@@ -91,7 +91,7 @@ Article 7 Owner decision, transcribed from the human approval in Codex chat
 The exact approved scope is `gate-A-scope.json`, SHA256
 `2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5`,
 in the retained packet directory
-`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-final`.
+`D1-L-final`.
 The corresponding `approval-text.md` SHA256 is
 `f1ee698f9f6dac45be812e3229de1e83bf2d63248be0c6b53abfb6b5131330bd`.
 Its full Gate A decision is approved as written:
@@ -99,7 +99,7 @@ Its full Gate A decision is approved as written:
 **Gate A:** “Approve D1-L Gate A scope SHA256 `2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5` as written: the exact published DEVAI 2.8.0 dependency patch, registered Constitution 1.2.0 upgrade in the named new isolated target, and the five-path finite ADR0062 compatibility proposal, with the exact Owner decision and machine-result report paths, role separation, derivation rules, validation and stop conditions. Preserve original acceptance criteria, histories and local work. Gate A permits the specified registered binding write and bounded compatibility implementation; it does not authorize proof-chain/epoch mutation, reconciliation host provisioning, canonical selection, recovery, proof-index CAS, diagnostic publication, merge of #211, C6 activation or S3 runtime.”
 
 The named isolated target is
-`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`, starting from
+`d1l-devai280-binding`, starting from
 exact reviewed main `7abe89cd3e7049fdcf38b33411d38a3442a0e1e1`.
 Only the scope's finite path allowlist, role separation, derivation, validation
 and stop conditions are authorized. This entry records approval; it does not
@@ -120,12 +120,12 @@ Article 7 Owner decision, transcribed from the human approval in Codex chat
 The exact approved amendment is `proposed-schema-corpus-amendment.json`, SHA256
 `7d1e22ce043959fe99b6a20bf8b57c4947255becfacb70800a46e5020cadace1`,
 retained in
-`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-Gate-A-execution`.
+`D1-L-Gate-A-execution`.
 It supplements the original Gate A scope SHA256
 `2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5`
 at current base `12b87fa6833ea19db75f146b80d5e681d2384dd4`, tree
 `5d8ff1aa11e092c52201eb431af3cdf75b73f92e`, in the same isolated target
-`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`.
+`d1l-devai280-binding`.
 
 The ten additional repository paths are exactly:
 
@@ -166,11 +166,11 @@ Article 7 Owner decision, transcribed from the human approval in Codex chat
 The exact approved amendment is `proposed-current-provider-header-amendment.json`,
 SHA256 `d176e7f598b3a70a0da8c04a64795b92874b4a10e5a68d7e08aa512f16a8dd99`,
 retained in
-`/Volumes/Development/.codex/artifacts/detran/u1b1-native33-independent-20261025/D1-L-Gate-A-execution`.
+`D1-L-Gate-A-execution`.
 It supplements the approved Gate A scope and schema-only amendment at base
 `f91f6c380ecda6e1e4f2e5fa4cbf6dca4f3c4418`, tree
 `922ef3e719c5f787dce5502e86ee0d0c93fa6173`, in the isolated target
-`/Volumes/Development/.codex/worktrees/d1l-devai280-binding/detran`.
+`d1l-devai280-binding`.
 
 The sole additional path is `work/rounds/README.md`: replace exactly
 `Governed rounds of this repository (DEVAI 2.7.0).` with
@@ -190,3 +190,39 @@ epoch, recovery, index-CAS, canonical selection, host provisioning, diagnostic,
 native inventory, DB permission, S2 source import, waiver or merge operation is
 authorized. Original failed observations, proof chains, epochs, authentic
 adoption/v3 objects and local work remain preserved.
+
+## Addendum — D1-L portable metadata amendment approved, 2026-10-25
+
+Article 7 Owner decision, transcribed from the human answer to the interactive
+approval question in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`
+on 2026-10-25. The question identified the exact portable metadata amendment by
+SHA256 `4a423f37316353900e3e7aa9e9017c1307c1e01f04fd4a06adba604397d6e9e4`.
+The actual human answer was:
+
+> Approve exact amendment
+
+The approved artifact is
+`D1-L-Gate-A-execution/proposed-portable-metadata-amendment.json`, with the
+SHA256 above, at base `5c5d5c74336bfffc96941a51eef31ad20fd55f71`, tree
+`96cc7ba91443274233de96bca3dd88d78cfdc5d1`.
+This grants a finite exception to the earlier append-only restriction for exactly
+seven derived metadata fields across two existing documents: six replacements
+in `docs/meta/decisions/rait.md` by the Owner and one replacement in
+`docs/meta/adr/ADR-0062-source-bound-governed-upgrade-compatibility.md` by the
+Architect. Every other existing byte remains unchanged before each role's
+append-only approval or rationale note. The corrected Owner prefix SHA256 is
+`959f48b977ce2ae055a7aada0bb4d0bab68b1a7d7d0f14a4a7a35f35f20f21f3`.
+
+`D1-L-final`, `D1-L-Gate-A-execution` and `d1l-devai280-binding` are logical
+external custody and worktree labels mapped to the full physical identities in
+the original approved scope packets and immutable original Git documents. They
+are not repository-relative filesystem claims. Original human quotations,
+scope hashes, decision meanings, the pre-Gate-A 5,585-byte ledger prefix and old
+immutable commits remain preserved. Authentic adoption and code-pinned v3 source
+objects remain unchanged and reachable. The prior failed observations remain
+recorded; this note does not claim passing validation or acceptance.
+
+Gate B remains held, PR #211 unmerged, C6 blocked and S3 held. Cross-family review
+remains unsatisfied. No additional path, security semantic, producer, threshold,
+host, proof, epoch, recovery, diagnostic, canonical-selection, index-CAS or merge
+effect is authorized. The approved validation and stop conditions still apply.
