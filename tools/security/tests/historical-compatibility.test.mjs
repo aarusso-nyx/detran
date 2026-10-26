@@ -85,6 +85,20 @@ function fixture(run, { closures = false, all = false, retain = false } = {}) {
         ]))
           copy(file);
       }
+      const successorManifest =
+        'docs/meta/security/governed-upgrade-compatibility-v3.json';
+      if (fs.existsSync(path.join(repository, successorManifest))) {
+        copy(successorManifest);
+        const successor = JSON.parse(
+          fs.readFileSync(path.join(repository, successorManifest)),
+        );
+        for (const file of new Set([
+          ...successor.generated_files.map((item) => item.path),
+          ...successor.preserved_sources.map((item) => item.path),
+          ...successor.dependencies.map((item) => item.after.path),
+        ]))
+          copy(file);
+      }
       for (const entry of manifest.diagnostic_captures) copy(entry.path);
       put(root, AUTHORIZED_APPEND.path, authenticAppend);
       put(root, AUTHORIZED_MAIN_APPEND.path, authenticMainAppend);
@@ -664,3 +678,28 @@ test('an unknown proof stream cannot become a new append exception even with bas
       /KEYS_INVALID/,
     );
   }));
+
+test('D1-L approved successor dispatch binds current adoption without changing original historical findings', () => {
+  const successor = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        repository,
+        'docs/meta/security/governed-upgrade-compatibility-v3.json',
+      ),
+    ),
+  );
+  const result = verifyHistoricalCompatibility(acceptedRoot);
+  assert.equal(result.preservation.sealed_sources, 1073);
+  assert.equal(
+    result.preservation.governed_upgrade_transition.adoption_commit,
+    successor.adoption_commit,
+  );
+  assert.equal(
+    result.preservation.governed_upgrade_transition.generated_files_verified,
+    6,
+  );
+  assert.equal(result.native_verdict_replaced, false);
+  assert.equal(result.native_readings_issued, false);
+  assert.deepEqual(result.missing_records, [...MISSING_ROUNDS].sort());
+  assert.ok(result.retained_findings.includes('ROUND_ARCHIVE_MUTATED:R-0017'));
+});

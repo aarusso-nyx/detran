@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "3.0.0",
+  "kind": "detran-governed-upgrade-compatibility",
+  "authority": "ADR-0062",
+  "native_verdict_replacement": false,
+  "baseline_commit": "92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c",
+  "before_commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+  "adoption_commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+  "provider": {
+    "from": "2.7.0",
+    "to": "2.8.0",
+    "constitution_from": "1.1.0",
+    "constitution_to": "1.2.0",
+    "published_source": "82ae9d9000d2ed71a7c38f4b3aa8f06bc2eabb2b",
+    "published_tree": "c12b34faf9f7e1bb0db5d33046c817bd63605f3e",
+    "tar_sha256": "d63d2da92427ef8f5e947ca2fd72e14b393caaf6623275e7bffa0b89be15ec59",
+    "registry_integrity": "sha512-JeuRcppdvm3jCidDsas7mSsytnMYcf8apgTyPJAKEXJeLIK/kZu0CPxsdfRHueoqqSSilTeIE5m6p6VANJ/YNQ=="
+  },
+  "v1_manifest_sha256": "38cf0b0ddeb7219c430748de9226f9fd26f578085615f68198e7358e82828e78",
+  "v2_manifest_sha256": "62fc9d193fb03c72e5fcf48c517da20f7458431cdb48724d0082c33352cdf1d0",
+  "gate_a_scope_sha256": "2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5",
+  "dependency_patch_sha256": "6660c9c905b4c71ee467dc9a92beaaa01bf149c0f4a2b4f4248386e2daad6595",
+  "sealed_transitions": [
+    {
+      "path": ".devai/config/project.json",
+      "baseline": {
+        "path": ".devai/config/project.json",
+        "commit": "92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c",
+        "git_blob": "ba1cf37fc0fbf23b896cf300b386db35df18f03d",
+        "sha256": "4af18ddfe257896db047b74ea43ffcfb8a94115d875dfe0a04d466658e72bd79"
+      },
+      "before": {
+        "path": ".devai/config/project.json",
+        "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+        "git_blob": "959ad1af8cf87278ecdcc245b58c6e2041cdab37",
+        "sha256": "4d8c5f68117d3b4998d423b0198d4acd6bdb86765d6df0c9bdf879599735e01e"
+      },
+      "after": {
+        "path": ".devai/config/project.json",
+        "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+        "git_blob": "4087f3ee615e551f114e70fb0ad29b28501a06d6",
+        "sha256": "1955486826109b2af53177aad07d49a7b578ac4ffb0f7704c3a5c30919909183"
+      }
+    },
+    {
+      "path": ".devai/pin/constitution.md",
+      "baseline": {
+        "path": ".devai/pin/constitution.md",
+        "commit": "92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c",
+        "git_blob": "ff11c50159843ee0bd3e6dc194ebf4ce8f30ea0f",
+        "sha256": "d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d"
+      },
+      "before": {
+        "path": ".devai/pin/constitution.md",
+        "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+        "git_blob": "199cf2787904f64599abd0828620d903a9cb2368",
+        "sha256": "8353c3b81d38e0f9b913cbeb6762bc149605989c1b16f52d2c63ba9892f71270"
+      },
+      "after": {
+        "path": ".devai/pin/constitution.md",
+        "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+        "git_blob": "80bf6468a94131138374f0106ffbc6162c93a83c",
+        "sha256": "d5dfdc972161e0f848dd859be7bbfa510973c5c9a449a0f9e6b8960e4f5ac96a"
+      }
+    }
+  ],
+  "generated_files": [
+    {
+      "path": ".devai/config/project.json",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "4087f3ee615e551f114e70fb0ad29b28501a06d6",
+      "sha256": "1955486826109b2af53177aad07d49a7b578ac4ffb0f7704c3a5c30919909183"
+    },
+    {
+      "path": ".devai/config/adopter-policy-binding.json",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "aa46df9e6c7c045873bcc041df42826f5e5d5948",
+      "sha256": "a9d56151afcd692ea2e899a6ed6eaa8a5335161aae3d8ea8fae9c9a934a36ac4"
+    },
+    {
+      "path": ".devai/config/authority-policy.json",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "d9de9eb1a02871868cda3a8fedf03fcb069f4c2c",
+      "sha256": "2ab63314c95946c3e105dc8d1882e646391ce466cd609b1294140436bf72d250"
+    },
+    {
+      "path": ".devai/pin/constitution.md",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "80bf6468a94131138374f0106ffbc6162c93a83c",
+      "sha256": "d5dfdc972161e0f848dd859be7bbfa510973c5c9a449a0f9e6b8960e4f5ac96a"
+    },
+    {
+      "path": ".devai/constitution.md",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "a7fc3f9ba04c8f4eaf01fb5618870c33d291d8cd",
+      "sha256": "d3b9787d4dcb77469ebca91d59bd8bc97024247d57d254ff79573650043bc864"
+    },
+    {
+      "path": ".devai/config/upgrade-receipt.json",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "2da2c6a946ed5d52c23797ab040080ab8fec3c6b",
+      "sha256": "06ce7e4c10e785e18488758b4dcdd5346c3de6be05086f3b6d4f791f23d8c4f1"
+    }
+  ],
+  "dependencies": [
+    {
+      "before": {
+        "path": "package.json",
+        "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+        "git_blob": "e8f39cf98c08884c7cc81c3e2149b223b7f6186f",
+        "sha256": "9d7b629f840fea193214ee1ea2ef7655815fbacb942287bef2b31ffbfd229619"
+      },
+      "after": {
+        "path": "package.json",
+        "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+        "git_blob": "2ed8f2d80b43bfb4b8bcd22c2ba018a580e9c8c9",
+        "sha256": "db2bce211046f1b3f1a32689f65f7c8ad2aa96730a6519451592a6e2e4933177"
+      }
+    },
+    {
+      "before": {
+        "path": "pnpm-lock.yaml",
+        "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+        "git_blob": "c6815aba6b791bcc784e61cb38bb93d4ee874483",
+        "sha256": "93131ac3d4879adcdc9c883b912381d73f01a12648de3c1d1467ff761254fc27"
+      },
+      "after": {
+        "path": "pnpm-lock.yaml",
+        "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+        "git_blob": "4a0a6bcbea4523abaa30b44acb385ed06bc95c7c",
+        "sha256": "c9dc443869890220e86cd3bcca7e1ef2e3fce25d7b9afc194d90881db803ed7d"
+      }
+    }
+  ],
+  "authority_sources": [
+    {
+      "path": "docs/meta/adr/ADR-0062-source-bound-governed-upgrade-compatibility.md",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "71aa900479926f7456f941c2a69c0d196d14718f",
+      "sha256": "b2544367304089c3bb368ac477c4fb52184baa823b361c17e4cc7f84670895ca"
+    },
+    {
+      "path": "docs/meta/decisions/rait.md",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "9bf981998a6ffff88f43cc55feb241023629a45f",
+      "sha256": "9a5aac8fa22d0259790207ed35222181697b8d1a808229e112ca11e6a022f56b"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/D1-L-280/upgrade-write.json",
+      "commit": "92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0",
+      "git_blob": "aeb48e048e7603199e398dd5364b59708a468970",
+      "sha256": "42b81633fd4839ec11911e48ec1c8d23f8a37630b05116585faac40e8cc116c1"
+    }
+  ],
+  "preserved_sources": [
+    {
+      "path": "law/policy/adopter-policy.json",
+      "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+      "git_blob": "8fb6d7ef77f18a1b86464b9a03be0c27bc9e606a",
+      "sha256": "3364681471dfd86ec0ad3213d0851f6413a15e68eb522389be540278c4012de4"
+    },
+    {
+      "path": ".devai/config/invariant-producers.json",
+      "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+      "git_blob": "082a1702e3a8d08ad7f39edc135d7dfe540abb68",
+      "sha256": "32c058fdc22a517bb47ea2b504bd9164c22c099217320fe997af37276dae5e55"
+    },
+    {
+      "path": ".devai/config/sensor-inputs.json",
+      "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+      "git_blob": "c0492b918b4ce9175ec2ddf33ba13ed23c122bf8",
+      "sha256": "38782bf4f29b3208dbaee10a972b7913f770b3fd7aa22e0e57db8e07c6ca95cb"
+    },
+    {
+      "path": ".devai/config/thresholds.json",
+      "commit": "7abe89cd3e7049fdcf38b33411d38a3442a0e1e1",
+      "git_blob": "96f80fcb7f7b878b4b0c772b8f351ebd8d53dcf2",
+      "sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4"
+    }
+  ]
+}

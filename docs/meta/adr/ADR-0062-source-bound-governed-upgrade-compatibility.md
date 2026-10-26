@@ -97,3 +97,159 @@ Implementation occurs in an isolated worktree while the Inspector completes the
 separate measurement epoch at `74b9eec8`. No fix, rebase or dependency change enters
 that frozen epoch. Its results retain their own source identity; later delivery
 commits cannot inherit those results as measurements of a different source tree.
+
+## Addendum — D1-L Gate A, DEVAI 2.8.0 (2026-10-25)
+
+The Owner explicitly approved Gate A scope SHA256
+`2fd770788290b52cb5edb50301e65e9626d1f582aeea817b805dc5552cd2dfb5`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`. The literal decision is
+appended to `docs/meta/decisions/rait.md`; this addendum preserves the original
+accepted decision above. Gate B remains held; #211 stays unmerged, C6 blocked
+and S3 held. No acceptance criterion, historical result or local work is replaced.
+
+The sole new transition starts at
+`7abe89cd3e7049fdcf38b33411d38a3442a0e1e1` in the isolated target
+`d1l-devai280-binding`. It applies
+the exact approved dependency patch SHA256
+`6660c9c905b4c71ee467dc9a92beaaa01bf149c0f4a2b4f4248386e2daad6595`
+and the published registered `init upgrade --constitution --as-role architect
+--write --format json` transaction. The source is DEVAI 2.8.0 commit
+`82ae9d9000d2ed71a7c38f4b3aa8f06bc2eabb2b`, tree
+`c12b34faf9f7e1bb0db5d33046c817bd63605f3e`, package SHA256
+`d63d2da92427ef8f5e947ca2fd72e14b393caaf6623275e7bffa0b89be15ec59`.
+The transition is 2.7.0 to 2.8.0 and Constitution 1.1.0 to 1.2.0. Five planned
+updates and the sixth registered receipt are the entire binding effect set.
+The authentic command result belongs at
+`work/rounds/R-0025/reports/D1-L-280/upgrade-write.json`. No generated binding
+output is hand-edited. Any additional effect or proof-record requirement stops
+execution; Gate A's proof-record allowlist is empty.
+
+A separate code-pinned v3 manifest at
+`docs/meta/security/governed-upgrade-compatibility-v3.json` binds the authentic
+adoption commit, its exact parent, all six generated blobs and receipt hashes,
+the complete approved package/lock before-and-after objects, and the immutable
+Owner, Architect and registered command-result objects. The adoption identity
+and v3 digest are derived from actual outputs, never invented fixture values.
+The adoption commit must remain reachable through ordinary merge ancestry;
+no squash or rebase may replace it.
+
+Verification first validates all original baseline hashes and the authentic v2
+transition, including its source objects, authority, receipt and preserved
+policy objects. With v3 selected, v2 is an immutable historical link: its old
+2.7.0 current-byte assertions become source-object checks, and the finite v3
+after-objects alone govern current 2.8.0 bytes. With v3 absent, every original
+v2-only acceptance and refusal remains effective. The v1 and v2 manifests, all
+original baseline objects, thresholds, sensor inputs and empty C6 bindings remain
+byte-identical. Unknown, missing, duplicate or substituted paths, forged
+authority or receipts, wrong parents, altered current bytes and missing history
+fail closed. There is no caller-selected waiver, override or wildcard.
+
+Only the five reviewed compatibility paths may implement this addition: this
+ADR, the v3 manifest, `tools/security/governed-upgrade-compatibility.mjs`, and
+the historical and dedicated governed-upgrade test files. Architect, Engineer
+and Inspector changes use distinct role sessions. Original v2-only tests and
+assertions are retained; new positive and adversarial v3 tests supplement them.
+Required affected checks, doctor, historical and security gates retain their
+actual outcomes and source identities. Full required CI and cross-family review
+remain delivery gates, never implied by this decision or by local checks.
+
+Gate A authorizes no proof-chain or epoch mutation, reconciliation host
+provisioning, canonical selection, recovery, proof-index CAS, diagnostic
+publication, #211 merge, C6 activation or S3 runtime. Gate B requires a separate
+exact Owner decision bound to authentic future target, host, parents, manifests,
+index and chain-head identities.
+
+## Addendum — approved schema-corpus amendment (2026-10-25)
+
+The Owner approved schema-only amendment SHA256
+`7d1e22ce043959fe99b6a20bf8b57c4947255becfacb70800a46e5020cadace1`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting from
+`12b87fa6833ea19db75f146b80d5e681d2384dd4`. The exact approval is appended to
+`docs/meta/decisions/rait.md`.
+
+The first required law-corpus verification after the approved 2.8.0 dependency
+change failed with 19 findings. Read-only comparison confirmed the unchanged
+local 121-schema corpus matched retained installed DEVAI 2.7.0 exactly; the
+published 2.8.0 runtime has 127 schemas, with three changed and six new bodies.
+This was an introduced schema-mirror mismatch, not a pre-existing failure. The
+original failed observation remains retained; no check or threshold was relaxed.
+
+The approved correction copies the nine enumerated schema bodies byte-for-byte
+from the exact published package already bound above and updates only
+`law/schemas/manifest.json` to version 2.8.0 and the sorted full 127-schema
+SHA256 roster. The three updates are `action-registry.schema.json`,
+`authority-policy.schema.json` and `evidence.schema.json`. The six additions are
+`evidence-reconciliation-plan.schema.json`,
+`reconciliation-inventory-result.schema.json`,
+`reconciliation-materialize-result.schema.json`,
+`reconciliation-owner-action.schema.json`, `reconciliation-owner.schema.json`
+and `reconciliation-proof-index-result.schema.json`. All reside in `law/schemas/`.
+The resulting manifest SHA256 is
+`788af86f8812e7a2e02523569ceefaf89e7bc1164a61357722212e7bfd5ea86f`.
+
+All ten extra paths are outside the original 1,073 sealed reference paths. The
+authentic adoption commit, v1/v2/v3 manifests, code-pinned transition, generated
+binding outputs, proof histories and epochs remain unchanged. This adds no
+sealed-path exception or handwritten schema semantics. Schema validity grants
+no reconciliation capability. Retained required checks and bounded available
+shared-control regressions resume without waivers; any further path or effect
+requires its own exact review. Gate B remains held, #211 unmerged, C6 blocked
+and S3 held. No database or reconciliation-host provisioning, proof-record,
+recovery, proof-index CAS, diagnostic, merge or cross-family review authority is
+conveyed by this amendment.
+
+## Addendum — approved current-provider header amendment (2026-10-25)
+
+The Owner approved header amendment SHA256
+`d176e7f598b3a70a0da8c04a64795b92874b4a10e5a68d7e08aa512f16a8dd99`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting at
+`f91f6c380ecda6e1e4f2e5fa4cbf6dca4f3c4418`. The exact approval is appended
+to `docs/meta/decisions/rait.md`.
+
+After the schema-corpus correction, `verify:state-index` retained a C-01-23
+failure: the unchanged current-provider introduction in `work/rounds/README.md`
+still named DEVAI 2.7.0, while the approved dependency is 2.8.0. The approved
+correction changes only that version token to 2.8.0. It changes one byte; every
+other byte, including round tables, status, closure links, dates and historical
+notes, remains identical. The resulting file SHA256 is
+`ef66ce2962afb1275ac8d49d2d506c1615445ecf00074ec42dd5ded83b9fc05a`.
+The original failure observation remains preserved. No checker or test is changed.
+
+This one additional path is outside the original 1,073 sealed references. No
+proof history, epoch, generated binding, code-pinned compatibility map, adoption
+object, acceptance criterion or local work is changed. Validation resumes with
+actual source identities and no waiver. Gate B remains held, #211 unmerged, C6
+blocked and S3 held; no database or host provisioning, recovery, proof-index CAS,
+native inventory, merge or cross-family review is authorized by this amendment.
+
+## Addendum — approved portable metadata correction (2026-10-25)
+
+The Owner explicitly approved portable-metadata amendment SHA256
+`4a423f37316353900e3e7aa9e9017c1307c1e01f04fd4a06adba604397d6e9e4`
+in Codex chat `01a175a6-8a1b-7003-8915-c315e359dca6`, starting at
+`5c5d5c74336bfffc96941a51eef31ad20fd55f71`. The recorded response was
+“Approve exact amendment”; the separate Owner entry preserves that response.
+
+The required KB gate correctly rejected seven workstation-specific location
+strings introduced in the D1-L metadata of this ADR and the RAIT decision ledger.
+This correction grants a finite exception to the prior append-only instruction
+only for those seven enumerated derived metadata strings. Current published prose
+now uses logical external custody identifiers `D1-L-final`,
+`D1-L-Gate-A-execution` and worktree identifier `d1l-devai280-binding`. These are
+logical identifiers, not claims of repository-relative directories. Exact physical
+identities remain in the original hash-bound external packets and immutable Git
+documents; neither location labels nor hashes confer a reconciliation capability.
+
+Every original human quotation, scope hash and other existing byte is retained
+except the seven approved metadata substitutions. The original authority objects
+at adoption `92ca1cef70e3fd21e736359b7d0cb5aa3a7e83b0` and later commits remain
+unchanged and reachable; the code-pinned v3 verifier still reads those exact
+objects. The original pre-D1-L decisions remain byte-identical. No Git history,
+proof, epoch, binding, schema, code, test, round table, acceptance criterion or
+local work is rewritten.
+
+The KB checker remains unchanged, with no exclusion, encoding workaround, skip or
+waiver. The original Foundation failure remains retained. Affected validation and
+fresh exact-candidate CI are required after this correction. Gate B remains held,
+#211 unmerged, C6 blocked and S3 held; no merge or cross-family review authority is
+conveyed.
