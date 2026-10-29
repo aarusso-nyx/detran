@@ -1,0 +1,126 @@
+[
+  {
+    "path": "tools/docs/adr/renumber.mjs",
+    "semantic": "proven rewrite and existing-stub validation consumer",
+    "spans": [
+      [
+        75,
+        90
+      ],
+      [
+        94,
+        106
+      ],
+      [
+        152,
+        248
+      ],
+      [
+        264,
+        300
+      ],
+      [
+        305,
+        387
+      ],
+      [
+        405,
+        431
+      ]
+    ],
+    "effects": "Future exact config entries generate MOVE/STUB/header+original bytes; only livePaths processed. Bare IDs require manual review; main-retained slug untouched. buildHeader currently hardcodes R-0018(CTG-0001); future new application provenance requires Architect disposition. No invocation performed.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "ff5456c198731471178d36dfc9fd60ed898efbf0",
+    "sha256": "d64ff794fa2f8961153126f06e2281fffd8cc482284eaa8a20c40bd276163030"
+  },
+  {
+    "path": "tools/docs/state-index/check.mjs",
+    "semantic": "proven structural alias/provenance/index gate",
+    "spans": [
+      [
+        340,
+        447
+      ],
+      [
+        455,
+        555
+      ]
+    ],
+    "effects": "No redirect-to-redirect allowed; every old stub must directly target final normative ADR, each with one exact alias row and initial provenance origin. Current line3 restriction conflicts with multiple aliases; archived delta available separately.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "0069a71533ad985038f3eb351df9ea263d8306f6",
+    "sha256": "fa3c2ad65af73edaa20b3e178e06cc69c5c3c9dcb6c85727b8d52e0ed8b40d00"
+  },
+  {
+    "path": "tools/security/verify-historical-compatibility.mjs",
+    "semantic": "proven current-main executable authority identity",
+    "spans": [
+      [
+        350,
+        360
+      ]
+    ],
+    "effects": "ADR0055 authority means main scorecard-harness historical-compatibility, not S2 risk locks. Preserve manifest/body hashes and check.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "f771c08187ef91b4f1c0612fb0ecc68b9411f649",
+    "sha256": "5ded11020b710159819603303d6ee889d218d567f4877c71adae2e84480aaba0"
+  },
+  {
+    "path": "tools/security/governed-upgrade-compatibility.mjs",
+    "semantic": "proven current-main finite migration identity/source verifier",
+    "spans": [
+      [
+        10,
+        18
+      ],
+      [
+        45,
+        60
+      ],
+      [
+        90,
+        105
+      ],
+      [
+        155,
+        178
+      ]
+    ],
+    "effects": "authority ADR0062 means main governed-upgrade compatibility; ADR0061 substring is authentic frozen adoption source. Exact manifest digest+Git commit/blob/SHA verify authority_sources. Do not relabel these to S2 ADR identities.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "f0214af361a0beb49812e3cceebaf68c08bfd523",
+    "sha256": "9fcb2cd37242b26eb05668592dfd5790492fca0416c84955e3f344cf36d5e9f0"
+  },
+  {
+    "path": "docs/meta/security/governed-upgrade-compatibility-v2.json",
+    "semantic": "proven finite manifest consumed by source-verifying helper",
+    "spans": [
+      [
+        1,
+        9
+      ],
+      [
+        130,
+        150
+      ]
+    ],
+    "effects": "Current main authority0062 and frozen74b9adoption ADR0061 path/hash stay unchanged.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "2b8bbec2c1167862f35ce003cf1805cab9fa61ee",
+    "sha256": "62fc9d193fb03c72e5fcf48c517da20f7458431cdb48724d0082c33352cdf1d0"
+  },
+  {
+    "path": "docs/meta/security/historical-compatibility.json",
+    "semantic": "proven v1 manifest consumed by historical helper",
+    "spans": [
+      [
+        1,
+        8
+      ]
+    ],
+    "effects": "Main authority0055 retained, cannot normalize to risk lock decision.",
+    "commit": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+    "git_blob": "6475ab9699380f348e77d608e0c2b82f2539bc66",
+    "sha256": "38cf0b0ddeb7219c430748de9226f9fd26f578085615f68198e7358e82828e78"
+  }
+]

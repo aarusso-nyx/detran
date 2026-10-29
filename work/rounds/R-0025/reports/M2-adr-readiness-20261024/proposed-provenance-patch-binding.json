@@ -1,0 +1,27 @@
+{
+  "standing": "Derived zero-context review rendering of preserved archive source; not applied and not edit approval",
+  "base": "5dec824a5b3d099c71d05b8ef2699f8ecfb9918b",
+  "archive": "68084d5b5d0d5ce9d0b81d6a4f7b618b4b08c871",
+  "paths": [
+    "tools/docs/adr/renumber.mjs",
+    "tools/docs/adr/tests/renumber.test.mjs",
+    "tools/docs/state-index/check.mjs",
+    "tools/docs/state-index/tests/gate.test.mjs"
+  ],
+  "command": [
+    "git",
+    "diff",
+    "--no-ext-diff",
+    "--unified=0",
+    "BASE",
+    "ARCHIVE",
+    "--",
+    "tools/docs/adr/renumber.mjs",
+    "tools/docs/adr/tests/renumber.test.mjs",
+    "tools/docs/state-index/check.mjs",
+    "tools/docs/state-index/tests/gate.test.mjs"
+  ],
+  "bytes": 9519,
+  "sha256": "a82d114e560c3d09a1731ac2c746f603128b69f559479344aafc53350839c2bf",
+  "original_diff_preserved_in": "adr-source-captures.tar.gz"
+}
